@@ -53,15 +53,15 @@ function saveProject() {
 
 function loadProject() {
 
-    const savedProject =
+    const data =
         localStorage.getItem("SPAE_PROJECT");
 
-    if (savedProject) {
+    if (data) {
 
-        const project =
-            JSON.parse(savedProject);
-
-        Object.assign(SPAE, project);
+        Object.assign(
+            SPAE,
+            JSON.parse(data)
+        );
 
     }
 
@@ -118,7 +118,7 @@ function renderStep() {
 
 /* =====================================================
    PASO 1
-   CURSO
+   CREAR CURSO
    ===================================================== */
 
 function renderCurso(container) {
@@ -127,13 +127,62 @@ function renderCurso(container) {
 
         <h2>Paso 1 - Crear Curso</h2>
 
-        <div class="card">
+        <div class="form-group">
 
-            <p>
-                Registre la información general del curso.
-            </p>
+            <label>Nombre del curso</label>
+
+            <input
+                type="text"
+                id="cursoNombre"
+                value="${SPAE.curso.nombre || ""}">
 
         </div>
+
+
+        <div class="form-group">
+
+            <label>Programa académico</label>
+
+            <input
+                type="text"
+                id="cursoPrograma"
+                value="${SPAE.curso.programa || ""}">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Nivel del curso</label>
+
+            <input
+                type="text"
+                id="cursoNivel"
+                value="${SPAE.curso.nivel || ""}">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Periodo académico</label>
+
+            <input
+                type="text"
+                id="cursoPeriodo"
+                value="${SPAE.curso.periodo || ""}">
+
+        </div>
+
+
+        <button
+            class="secondary-button"
+            onclick="saveCurso()">
+
+            Guardar Curso
+
+        </button>
+
 
         <button
             class="primary-button"
@@ -144,6 +193,38 @@ function renderCurso(container) {
         </button>
 
     `;
+
+}
+
+
+/* =====================================================
+   GUARDAR CURSO
+   ===================================================== */
+
+function saveCurso() {
+
+    SPAE.curso = {
+
+        nombre:
+            document.getElementById("cursoNombre").value.trim(),
+
+        programa:
+            document.getElementById("cursoPrograma").value.trim(),
+
+        nivel:
+            document.getElementById("cursoNivel").value.trim(),
+
+        periodo:
+            document.getElementById("cursoPeriodo").value.trim()
+
+    };
+
+
+    saveProject();
+
+    alert(
+        "La información del curso ha sido guardada correctamente."
+    );
 
 }
 
@@ -162,24 +243,17 @@ function renderEvaluacion(container) {
         <div class="card">
 
             <p>
-                Configure los datos básicos de la evaluación.
+                Módulo pendiente de implementación.
             </p>
 
         </div>
+
 
         <button
             class="secondary-button"
             onclick="previousStep()">
 
             Volver
-
-        </button>
-
-        <button
-            class="primary-button"
-            onclick="nextStep()">
-
-            Continuar
 
         </button>
 
@@ -195,36 +269,7 @@ function renderEvaluacion(container) {
 
 function renderPreguntas(container) {
 
-    container.innerHTML = `
-
-        <h2>Paso 3 - Crear Preguntas</h2>
-
-        <div class="card">
-
-            <p>
-                Cree las preguntas que formarán parte
-                del instrumento de evaluación.
-            </p>
-
-        </div>
-
-        <button
-            class="secondary-button"
-            onclick="previousStep()">
-
-            Volver
-
-        </button>
-
-        <button
-            class="primary-button"
-            onclick="nextStep()">
-
-            Continuar
-
-        </button>
-
-    `;
+    container.innerHTML = "<h2>Paso 3 - Preguntas</h2>";
 
 }
 
@@ -236,36 +281,7 @@ function renderPreguntas(container) {
 
 function renderBlueprint(container) {
 
-    container.innerHTML = `
-
-        <h2>Paso 4 - Blueprint</h2>
-
-        <div class="card">
-
-            <p>
-                El blueprint será generado automáticamente
-                a partir de la información registrada.
-            </p>
-
-        </div>
-
-        <button
-            class="secondary-button"
-            onclick="previousStep()">
-
-            Volver
-
-        </button>
-
-        <button
-            class="primary-button"
-            onclick="nextStep()">
-
-            Continuar
-
-        </button>
-
-    `;
+    container.innerHTML = "<h2>Paso 4 - Blueprint</h2>";
 
 }
 
@@ -277,35 +293,7 @@ function renderBlueprint(container) {
 
 function renderExamen(container) {
 
-    container.innerHTML = `
-
-        <h2>Paso 5 - Vista Previa del Examen</h2>
-
-        <div class="card">
-
-            <p>
-                El examen será construido automáticamente.
-            </p>
-
-        </div>
-
-        <button
-            class="secondary-button"
-            onclick="previousStep()">
-
-            Volver
-
-        </button>
-
-        <button
-            class="primary-button"
-            onclick="nextStep()">
-
-            Continuar
-
-        </button>
-
-    `;
+    container.innerHTML = "<h2>Paso 5 - Examen</h2>";
 
 }
 
@@ -317,36 +305,7 @@ function renderExamen(container) {
 
 function renderExportacion(container) {
 
-    container.innerHTML = `
-
-        <h2>Paso 6 - Exportación</h2>
-
-        <div class="card">
-
-            <p>
-                El MVP permitirá exportar proyectos en
-                formato JSON y exámenes en HTML.
-            </p>
-
-        </div>
-
-        <button
-            class="secondary-button"
-            onclick="previousStep()">
-
-            Volver
-
-        </button>
-
-        <button
-            class="primary-button"
-            onclick="restartProject()">
-
-            Nuevo Proyecto
-
-        </button>
-
-    `;
+    container.innerHTML = "<h2>Paso 6 - Exportación</h2>";
 
 }
 
@@ -356,6 +315,21 @@ function renderExportacion(container) {
    ===================================================== */
 
 function nextStep() {
+
+    if (SPAE.currentStep === 1) {
+
+        if (!SPAE.curso.nombre) {
+
+            alert(
+                "Debe guardar la información del curso antes de continuar."
+            );
+
+            return;
+
+        }
+
+    }
+
 
     if (SPAE.currentStep < 6) {
 
@@ -385,12 +359,16 @@ function previousStep() {
 }
 
 
+/* =====================================================
+   REINICIAR PROYECTO
+   ===================================================== */
+
 function restartProject() {
 
-    SPAE.currentStep = 1;
+    localStorage.removeItem(
+        "SPAE_PROJECT"
+    );
 
-    saveProject();
-
-    renderStep();
+    location.reload();
 
 }
