@@ -1,5 +1,6 @@
 /* =====================================================
    SPAE MVP
+   Sistema Profesional de Autoría de Evaluaciones
    ===================================================== */
 
 
@@ -10,7 +11,12 @@
 const SPAE = {
 
     curso: {
-        nombre: ""
+
+        nombre: "",
+        programa: "",
+        nivel: "",
+        periodo: ""
+
     },
 
     evaluacion: {},
@@ -52,9 +58,10 @@ function saveProject() {
 
 function loadProject() {
 
-    const data = localStorage.getItem(
-        "SPAE_PROJECT"
-    );
+    const data =
+        localStorage.getItem(
+            "SPAE_PROJECT"
+        );
 
     if (data) {
 
@@ -74,11 +81,13 @@ function loadProject() {
 
 function renderApp() {
 
-    const content =
-        document.getElementById("content");
+    const container =
+        document.getElementById(
+            "content"
+        );
 
 
-    content.innerHTML = `
+    container.innerHTML = `
 
         <section class="card">
 
@@ -93,7 +102,11 @@ function renderApp() {
 
             <h2>2. Evaluación</h2>
 
-            <p>Pendiente de implementación.</p>
+            <div class="notice">
+                <p>
+                    Módulo pendiente de implementación.
+                </p>
+            </div>
 
         </section>
 
@@ -102,7 +115,11 @@ function renderApp() {
 
             <h2>3. Preguntas</h2>
 
-            <p>Pendiente de implementación.</p>
+            <div class="notice">
+                <p>
+                    Módulo pendiente de implementación.
+                </p>
+            </div>
 
         </section>
 
@@ -111,7 +128,11 @@ function renderApp() {
 
             <h2>4. Blueprint</h2>
 
-            <p>Se generará automáticamente.</p>
+            <div class="notice">
+                <p>
+                    El Blueprint pedagógico será generado automáticamente.
+                </p>
+            </div>
 
         </section>
 
@@ -120,7 +141,11 @@ function renderApp() {
 
             <h2>5. Vista Previa del Examen</h2>
 
-            <p>Pendiente de implementación.</p>
+            <div class="notice">
+                <p>
+                    La vista previa del examen será construida automáticamente.
+                </p>
+            </div>
 
         </section>
 
@@ -129,7 +154,12 @@ function renderApp() {
 
             <h2>6. Exportación</h2>
 
-            <p>Pendiente de implementación.</p>
+            <div class="notice">
+                <p>
+                    Los formatos HTML, Word y JSON estarán disponibles
+                    al finalizar la construcción del instrumento.
+                </p>
+            </div>
 
         </section>
 
@@ -139,7 +169,7 @@ function renderApp() {
 
 
 /* =====================================================
-   CURSO
+   MÓDULO CURSO
    ===================================================== */
 
 function renderCurso() {
@@ -153,8 +183,47 @@ function renderCurso() {
             <input
                 type="text"
                 id="cursoNombre"
-                value="${SPAE.curso.nombre || ""}"
-                placeholder="Ejemplo: Gestión Organizacional">
+                value="${SPAE.curso.nombre}"
+                placeholder="Ejemplo: Liderazgo Organizacional">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Programa académico</label>
+
+            <input
+                type="text"
+                id="cursoPrograma"
+                value="${SPAE.curso.programa}"
+                placeholder="Ejemplo: Administración de Empresas">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Nivel del curso</label>
+
+            <input
+                type="text"
+                id="cursoNivel"
+                value="${SPAE.curso.nivel}"
+                placeholder="Ejemplo: Media Carrera">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Periodo académico</label>
+
+            <input
+                type="text"
+                id="cursoPeriodo"
+                value="${SPAE.curso.periodo}"
+                placeholder="Ejemplo: 2026-01">
 
         </div>
 
@@ -163,9 +232,51 @@ function renderCurso() {
             class="primary-button"
             onclick="saveCurso()">
 
-            Guardar Curso
+            Guardar
 
         </button>
+
+
+        ${renderResumenCurso()}
+
+    `;
+
+}
+
+
+/* =====================================================
+   RESUMEN DEL CURSO
+   ===================================================== */
+
+function renderResumenCurso() {
+
+    return `
+
+        <div class="summary">
+
+            <h3>Resumen del Curso</h3>
+
+            <p>
+                <strong>Curso:</strong>
+                ${SPAE.curso.nombre || "-"}
+            </p>
+
+            <p>
+                <strong>Programa:</strong>
+                ${SPAE.curso.programa || "-"}
+            </p>
+
+            <p>
+                <strong>Nivel:</strong>
+                ${SPAE.curso.nivel || "-"}
+            </p>
+
+            <p>
+                <strong>Periodo:</strong>
+                ${SPAE.curso.periodo || "-"}
+            </p>
+
+        </div>
 
     `;
 
@@ -179,9 +290,29 @@ function renderCurso() {
 function saveCurso() {
 
     SPAE.curso.nombre =
-
         document
             .getElementById("cursoNombre")
+            .value
+            .trim();
+
+
+    SPAE.curso.programa =
+        document
+            .getElementById("cursoPrograma")
+            .value
+            .trim();
+
+
+    SPAE.curso.nivel =
+        document
+            .getElementById("cursoNivel")
+            .value
+            .trim();
+
+
+    SPAE.curso.periodo =
+        document
+            .getElementById("cursoPeriodo")
             .value
             .trim();
 
@@ -189,8 +320,11 @@ function saveCurso() {
     saveProject();
 
 
+    renderApp();
+
+
     alert(
-        "Curso guardado correctamente."
+        "La información del curso se ha guardado correctamente."
     );
 
 }
