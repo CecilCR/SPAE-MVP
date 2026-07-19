@@ -1,6 +1,12 @@
-/*********************************
-SPAE MVP
-*********************************/
+/* =====================================================
+   SPAE MVP
+   Sistema Profesional de Autoría de Evaluaciones
+   ===================================================== */
+
+
+/* =====================================================
+   ESTADO DE LA APLICACIÓN
+   ===================================================== */
 
 const SPAE = {
 
@@ -19,9 +25,9 @@ const SPAE = {
 };
 
 
-/*********************************
-INICIALIZACIÓN
-*********************************/
+/* =====================================================
+   INICIALIZACIÓN
+   ===================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -31,11 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/*********************************
-LOCAL STORAGE
-*********************************/
+/* =====================================================
+   LOCAL STORAGE
+   ===================================================== */
 
-function saveProject(){
+function saveProject() {
 
     localStorage.setItem(
         "SPAE_PROJECT",
@@ -45,13 +51,15 @@ function saveProject(){
 }
 
 
-function loadProject(){
+function loadProject() {
 
-    const data = localStorage.getItem("SPAE_PROJECT");
+    const savedProject =
+        localStorage.getItem("SPAE_PROJECT");
 
-    if(data){
+    if (savedProject) {
 
-        const project = JSON.parse(data);
+        const project =
+            JSON.parse(savedProject);
 
         Object.assign(SPAE, project);
 
@@ -60,195 +68,296 @@ function loadProject(){
 }
 
 
-/*********************************
-RENDERIZADO
-*********************************/
+/* =====================================================
+   RENDERIZADO GENERAL
+   ===================================================== */
 
-function renderStep(){
+function renderStep() {
 
     document.getElementById("current-step").textContent =
-    SPAE.currentStep;
+        SPAE.currentStep;
 
-    const content =
-    document.getElementById("content");
+    const container =
+        document.getElementById("content");
 
 
-    switch(SPAE.currentStep){
+    switch (SPAE.currentStep) {
 
         case 1:
-            renderCurso(content);
+            renderCurso(container);
             break;
 
         case 2:
-            renderEvaluacion(content);
+            renderEvaluacion(container);
             break;
 
         case 3:
-            renderPreguntas(content);
+            renderPreguntas(container);
             break;
 
         case 4:
-            renderBlueprint(content);
+            renderBlueprint(container);
             break;
 
         case 5:
-            renderExamen(content);
+            renderExamen(container);
             break;
 
         case 6:
-            renderExportacion(content);
+            renderExportacion(container);
             break;
+
+        default:
+            SPAE.currentStep = 1;
+            renderCurso(container);
 
     }
 
 }
 
 
-/*********************************
-CURSO
-*********************************/
+/* =====================================================
+   PASO 1
+   CURSO
+   ===================================================== */
 
-function renderCurso(container){
+function renderCurso(container) {
 
     container.innerHTML = `
 
-    <h2>Crear Curso</h2>
+        <h2>Paso 1 - Crear Curso</h2>
 
-    <p>Formulario pendiente de implementación.</p>
+        <div class="card">
 
-    <button
-        class="primary-button"
-        onclick="nextStep()">
-        Continuar
-    </button>
+            <p>
+                Registre la información general del curso.
+            </p>
+
+        </div>
+
+        <button
+            class="primary-button"
+            onclick="nextStep()">
+
+            Continuar
+
+        </button>
 
     `;
 
 }
 
 
-/*********************************
-EVALUACIÓN
-*********************************/
+/* =====================================================
+   PASO 2
+   EVALUACIÓN
+   ===================================================== */
 
-function renderEvaluacion(container){
+function renderEvaluacion(container) {
 
     container.innerHTML = `
 
-    <h2>Configurar Evaluación</h2>
+        <h2>Paso 2 - Configurar Evaluación</h2>
 
-    <p>Formulario pendiente de implementación.</p>
+        <div class="card">
 
-    <button
-        class="primary-button"
-        onclick="nextStep()">
-        Continuar
-    </button>
+            <p>
+                Configure los datos básicos de la evaluación.
+            </p>
+
+        </div>
+
+        <button
+            class="secondary-button"
+            onclick="previousStep()">
+
+            Volver
+
+        </button>
+
+        <button
+            class="primary-button"
+            onclick="nextStep()">
+
+            Continuar
+
+        </button>
 
     `;
 
 }
 
 
-/*********************************
-PREGUNTAS
-*********************************/
+/* =====================================================
+   PASO 3
+   PREGUNTAS
+   ===================================================== */
 
-function renderPreguntas(container){
+function renderPreguntas(container) {
 
     container.innerHTML = `
 
-    <h2>Preguntas</h2>
+        <h2>Paso 3 - Crear Preguntas</h2>
 
-    <p>Módulo pendiente de implementación.</p>
+        <div class="card">
 
-    <button
-        class="primary-button"
-        onclick="nextStep()">
-        Continuar
-    </button>
+            <p>
+                Cree las preguntas que formarán parte
+                del instrumento de evaluación.
+            </p>
+
+        </div>
+
+        <button
+            class="secondary-button"
+            onclick="previousStep()">
+
+            Volver
+
+        </button>
+
+        <button
+            class="primary-button"
+            onclick="nextStep()">
+
+            Continuar
+
+        </button>
 
     `;
 
 }
 
 
-/*********************************
-BLUEPRINT
-*********************************/
+/* =====================================================
+   PASO 4
+   BLUEPRINT
+   ===================================================== */
 
-function renderBlueprint(container){
+function renderBlueprint(container) {
 
     container.innerHTML = `
 
-    <h2>Blueprint</h2>
+        <h2>Paso 4 - Blueprint</h2>
 
-    <p>Generación automática pendiente.</p>
+        <div class="card">
 
-    <button
-        class="primary-button"
-        onclick="nextStep()">
-        Continuar
-    </button>
+            <p>
+                El blueprint será generado automáticamente
+                a partir de la información registrada.
+            </p>
+
+        </div>
+
+        <button
+            class="secondary-button"
+            onclick="previousStep()">
+
+            Volver
+
+        </button>
+
+        <button
+            class="primary-button"
+            onclick="nextStep()">
+
+            Continuar
+
+        </button>
 
     `;
 
 }
 
 
-/*********************************
-EXAMEN
-*********************************/
+/* =====================================================
+   PASO 5
+   EXAMEN
+   ===================================================== */
 
-function renderExamen(container){
+function renderExamen(container) {
 
     container.innerHTML = `
 
-    <h2>Vista Previa del Examen</h2>
+        <h2>Paso 5 - Vista Previa del Examen</h2>
 
-    <p>Construcción automática pendiente.</p>
+        <div class="card">
 
-    <button
-        class="primary-button"
-        onclick="nextStep()">
-        Continuar
-    </button>
+            <p>
+                El examen será construido automáticamente.
+            </p>
+
+        </div>
+
+        <button
+            class="secondary-button"
+            onclick="previousStep()">
+
+            Volver
+
+        </button>
+
+        <button
+            class="primary-button"
+            onclick="nextStep()">
+
+            Continuar
+
+        </button>
 
     `;
 
 }
 
 
-/*********************************
-EXPORTACIÓN
-*********************************/
+/* =====================================================
+   PASO 6
+   EXPORTACIÓN
+   ===================================================== */
 
-function renderExportacion(container){
+function renderExportacion(container) {
 
     container.innerHTML = `
 
-    <h2>Exportación</h2>
+        <h2>Paso 6 - Exportación</h2>
 
-    <p>HTML y JSON pendientes de implementación.</p>
+        <div class="card">
 
-    <button
-        class="secondary-button"
-        onclick="restartWizard()">
-        Nuevo Proyecto
-    </button>
+            <p>
+                El MVP permitirá exportar proyectos en
+                formato JSON y exámenes en HTML.
+            </p>
+
+        </div>
+
+        <button
+            class="secondary-button"
+            onclick="previousStep()">
+
+            Volver
+
+        </button>
+
+        <button
+            class="primary-button"
+            onclick="restartProject()">
+
+            Nuevo Proyecto
+
+        </button>
 
     `;
 
 }
 
 
-/*********************************
-NAVEGACIÓN
-*********************************/
+/* =====================================================
+   NAVEGACIÓN
+   ===================================================== */
 
-function nextStep(){
+function nextStep() {
 
-    if(SPAE.currentStep < 6){
+    if (SPAE.currentStep < 6) {
 
         SPAE.currentStep++;
 
@@ -261,7 +370,22 @@ function nextStep(){
 }
 
 
-function restartWizard(){
+function previousStep() {
+
+    if (SPAE.currentStep > 1) {
+
+        SPAE.currentStep--;
+
+        saveProject();
+
+        renderStep();
+
+    }
+
+}
+
+
+function restartProject() {
 
     SPAE.currentStep = 1;
 
