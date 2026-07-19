@@ -1,14 +1,20 @@
+/* =====================================================
+   SPAE MVP
+   Sistema Profesional de Autoría de Evaluaciones
+   ===================================================== */
+
 *{
-    box-sizing:border-box;
     margin:0;
     padding:0;
+    box-sizing:border-box;
 }
 
 body{
     font-family:Arial, Helvetica, sans-serif;
-    background:#f5f7fa;
+    background:#f4f6f9;
     color:#222;
     padding:30px;
+    line-height:1.6;
 }
 
 header{
@@ -16,26 +22,52 @@ header{
     margin-bottom:30px;
 }
 
-h1{
-    margin-bottom:10px;
+header h1{
+    margin-bottom:8px;
+    font-size:2rem;
+}
+
+header p{
+    color:#666;
 }
 
 main{
-    max-width:900px;
+    max-width:1000px;
     margin:auto;
 }
 
 #app{
     background:#ffffff;
+    border-radius:12px;
     padding:30px;
-    border-radius:10px;
-    box-shadow:0 2px 12px rgba(0,0,0,.08);
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
 }
+
+
+/* =====================================================
+   INDICADOR DE PASOS
+   ===================================================== */
 
 .step-indicator{
     margin-bottom:25px;
+    padding-bottom:15px;
+    border-bottom:1px solid #dddddd;
     font-weight:bold;
 }
+
+
+/* =====================================================
+   TÍTULOS
+   ===================================================== */
+
+h2{
+    margin-bottom:20px;
+}
+
+
+/* =====================================================
+   FORMULARIOS
+   ===================================================== */
 
 .form-group{
     margin-bottom:20px;
@@ -44,7 +76,7 @@ main{
 label{
     display:block;
     margin-bottom:8px;
-    font-weight:bold;
+    font-weight:600;
 }
 
 input,
@@ -54,18 +86,25 @@ textarea{
     padding:12px;
     border:1px solid #cccccc;
     border-radius:6px;
+    font-size:1rem;
 }
 
 textarea{
+    min-height:120px;
     resize:vertical;
-    min-height:100px;
 }
+
+
+/* =====================================================
+   BOTONES
+   ===================================================== */
 
 button{
     cursor:pointer;
-    padding:12px 18px;
     border:none;
     border-radius:6px;
+    padding:12px 20px;
+    font-size:1rem;
     margin-top:10px;
 }
 
@@ -74,21 +113,44 @@ button{
     color:white;
 }
 
-.secondary-button{
-    background:#e4e4e4;
+.primary-button:hover{
+    opacity:.95;
 }
+
+.secondary-button{
+    background:#e5e5e5;
+}
+
+.secondary-button:hover{
+    opacity:.95;
+}
+
+
+/* =====================================================
+   TARJETAS
+   ===================================================== */
 
 .card{
     background:#fafafa;
-    border:1px solid #dddddd;
+    border:1px solid #e2e2e2;
+    border-radius:8px;
     padding:20px;
     margin-bottom:20px;
-    border-radius:8px;
 }
+
+
+/* =====================================================
+   LISTAS
+   ===================================================== */
 
 ul{
     margin-left:20px;
 }
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
 
 @media(max-width:768px){
 
