@@ -723,13 +723,16 @@ iniciarSPAE
 /* =====================================================
    SPAE MVP
 
-   MÓDULO 2
-   CURSO
+   MÓDULO 2 v2
+
+   GESTIÓN DEL CURSO
+
 ===================================================== */
 
 
+
 /* =====================================================
-   VISTA CURSO
+   RENDER DEL MÓDULO CURSO
 ===================================================== */
 
 
@@ -743,13 +746,18 @@ return `
 
 
 <h2>
-1. Curso
+
+1. Información del curso
+
 </h2>
 
 
 
+
 <label>
+
 Nombre del curso
+
 </label>
 
 
@@ -757,13 +765,20 @@ Nombre del curso
 
 id="cursoNombre"
 
-value="${SPAE.curso.nombre}"
+value="${SPAE.curso.nombre || ""}"
 
-placeholder="Ejemplo: Liderazgo">
+placeholder="Ejemplo: Liderazgo"
+
+
+
+>
+
 
 
 <label>
+
 Programa académico
+
 </label>
 
 
@@ -771,14 +786,21 @@ Programa académico
 
 id="cursoPrograma"
 
-value="${SPAE.curso.programa}"
+value="${SPAE.curso.programa || ""}"
 
-placeholder="Ejemplo: Administración">
+placeholder="Ejemplo: Administración"
+
+
+
+>
+
 
 
 
 <label>
-Nivel del curso
+
+Nivel / ciclo
+
 </label>
 
 
@@ -786,14 +808,20 @@ Nivel del curso
 
 id="cursoNivel"
 
-value="${SPAE.curso.nivel}"
+value="${SPAE.curso.nivel || ""}"
 
-placeholder="Ejemplo: 7 ciclo">
+placeholder="Ejemplo: Media carrera"
+
+
+
+>
 
 
 
 <label>
+
 Periodo académico
+
 </label>
 
 
@@ -801,87 +829,46 @@ Periodo académico
 
 id="cursoPeriodo"
 
-value="${SPAE.curso.periodo}"
+value="${SPAE.curso.periodo || ""}"
 
-placeholder="Ejemplo: 2026 I">
+placeholder="Ejemplo: 2026-I"
 
 
 
-<br>
+>
+
+
+
+
+<br><br>
+
 
 
 <button onclick="guardarCurso()">
 
-Guardar
+Guardar curso
 
 </button>
 
 
 
-</section>
+<div id="mensajeCurso">
 
-
-
-
-<section class="card">
-
-
-<h2>
-Resumen del Curso
-</h2>
-
-
-
-<p>
-<strong>
-Curso:
-</strong>
-
-${SPAE.curso.nombre || "-"}
-
-</p>
-
-
-
-<p>
-<strong>
-Programa:
-</strong>
-
-${SPAE.curso.programa || "-"}
-
-</p>
-
-
-
-<p>
-<strong>
-Nivel:
-</strong>
-
-${SPAE.curso.nivel || "-"}
-
-</p>
-
-
-
-<p>
-<strong>
-Periodo:
-</strong>
-
-${SPAE.curso.periodo || "-"}
-
-</p>
+</div>
 
 
 
 </section>
+
 
 
 `;
 
 }
+
+
+
+
 
 
 
@@ -894,51 +881,94 @@ function guardarCurso(){
 
 
 
-SPAE.curso.nombre =
-
-cleanText(
+const nombre =
 
 document.getElementById(
+
 "cursoNombre"
-).value
 
-);
-
+).value.trim();
 
 
-SPAE.curso.programa =
 
-cleanText(
+
+
+const programa =
 
 document.getElementById(
+
 "cursoPrograma"
-).value
 
-);
-
+).value.trim();
 
 
-SPAE.curso.nivel =
 
-cleanText(
+
+
+const nivel =
 
 document.getElementById(
+
 "cursoNivel"
-).value
 
-);
-
+).value.trim();
 
 
-SPAE.curso.periodo =
 
-cleanText(
+
+
+const periodo =
 
 document.getElementById(
+
 "cursoPeriodo"
-).value
+
+).value.trim();
+
+
+
+
+
+
+
+if(!nombre){
+
+
+
+mostrarMensajeCurso(
+
+"Debe ingresar el nombre del curso"
 
 );
+
+
+
+return;
+
+}
+
+
+
+/* ==========================
+   ACTUALIZACIÓN DEL ESTADO
+========================== */
+
+
+SPAE.curso.nombre = nombre;
+
+
+
+SPAE.curso.programa = programa;
+
+
+
+SPAE.curso.nivel = nivel;
+
+
+
+SPAE.curso.periodo = periodo;
+
+
 
 
 
@@ -946,15 +976,69 @@ saveProject();
 
 
 
-alert(
 
-"Curso guardado correctamente."
+
+mostrarMensajeCurso(
+
+"Curso guardado correctamente"
 
 );
 
 
 
-renderApp();
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   MENSAJE
+===================================================== */
+
+
+function mostrarMensajeCurso(texto){
+
+
+
+const zona =
+
+document.getElementById(
+
+"mensajeCurso"
+
+);
+
+
+
+if(zona){
+
+
+
+zona.innerHTML = `
+
+
+<p>
+
+<strong>
+
+${texto}
+
+</strong>
+
+</p>
+
+
+`;
+
+
+
+}
 
 
 
@@ -962,13 +1046,18 @@ renderApp();
 /* =====================================================
    SPAE MVP
 
-   MÓDULO 3
-   EVALUACIÓN
+   MÓDULO 3 v2
+
+   GESTIÓN DE EVALUACIÓN
+
 ===================================================== */
 
 
+
+
+
 /* =====================================================
-   VISTA EVALUACIÓN
+   RENDER DEL MÓDULO EVALUACIÓN
 ===================================================== */
 
 
@@ -982,13 +1071,18 @@ return `
 
 
 <h2>
-2. Evaluación
+
+2. Configuración de evaluación
+
 </h2>
 
 
 
+
 <label>
+
 Nombre de la evaluación
+
 </label>
 
 
@@ -996,50 +1090,63 @@ Nombre de la evaluación
 
 id="evaluacionNombre"
 
-value="${SPAE.evaluacion.nombre}"
+value="${SPAE.evaluacion.nombre || ""}"
 
-placeholder="Ejemplo: Examen Final">
+placeholder="Ejemplo: Examen Final Liderazgo"
+
+
+
+>
+
 
 
 
 <label>
+
 Tipo de evaluación
+
 </label>
+
 
 
 <select id="evaluacionTipo">
 
 
-<option value="Examen Parcial"
-${SPAE.evaluacion.tipo==="Examen Parcial"?"selected":""}>
 
-Examen Parcial
+<option value="sumativa"
 
-</option>
+${SPAE.evaluacion.tipo==="sumativa"?"selected":""}
 
+>
 
-<option value="Examen Final"
-${SPAE.evaluacion.tipo==="Examen Final"?"selected":""}>
-
-Examen Final
+Sumativa
 
 </option>
 
 
-<option value="Trabajo Aplicativo"
-${SPAE.evaluacion.tipo==="Trabajo Aplicativo"?"selected":""}>
 
-Trabajo Aplicativo
+<option value="formativa"
+
+${SPAE.evaluacion.tipo==="formativa"?"selected":""}
+
+>
+
+Formativa
+
+</option>
+
+
+
+<option value="diagnostica"
+
+${SPAE.evaluacion.tipo==="diagnostica"?"selected":""}
+
+>
+
+Diagnóstica
 
 </option>
 
-
-<option value="Proyecto"
-${SPAE.evaluacion.tipo==="Proyecto"?"selected":""}>
-
-Proyecto
-
-</option>
 
 
 </select>
@@ -1047,187 +1154,161 @@ Proyecto
 
 
 
+
 <label>
-Tiempo estimado (minutos)
+
+Tiempo disponible (minutos)
+
 </label>
 
 
-<input
 
-type="number"
+<input
 
 id="evaluacionTiempo"
 
-value="${SPAE.evaluacion.tiempo}"
+type="number"
 
-placeholder="Ejemplo: 120">
+value="${SPAE.evaluacion.tiempo || ""}"
 
+placeholder="Ejemplo: 90"
+
+
+
+>
 
 
 
 
 <label>
+
 Ponderación (%)
+
 </label>
+
 
 
 <input
 
-type="number"
-
 id="evaluacionPonderacion"
 
-value="${SPAE.evaluacion.ponderacion}"
+type="number"
 
-placeholder="Ejemplo: 20">
+value="${SPAE.evaluacion.ponderacion || ""}"
+
+placeholder="Ejemplo: 30"
+
+
+
+>
 
 
 
 
 
 <label>
-Competencias
+
+Competencias evaluadas
+
 </label>
+
 
 
 <textarea
 
 id="evaluacionCompetencias"
 
-placeholder="Una competencia por línea">${SPAE.evaluacion.competencias}</textarea>
+placeholder="Una competencia por línea"
+
+>${
+
+Array.isArray(SPAE.evaluacion.competencias)
+
+?
+
+SPAE.evaluacion.competencias.join("\n")
+
+:
+
+""
+
+}
+
+</textarea>
+
+
 
 
 
 
 
 <label>
+
 Resultados de aprendizaje
+
 </label>
+
 
 
 <textarea
 
 id="evaluacionResultados"
 
-placeholder="Un resultado por línea">${SPAE.evaluacion.resultados}</textarea>
+placeholder="Un resultado por línea"
+
+>${
+
+Array.isArray(SPAE.evaluacion.resultados)
+
+?
+
+SPAE.evaluacion.resultados.join("\n")
+
+:
+
+""
+
+}
+
+</textarea>
 
 
 
 
 
-<br>
+
+
+<br><br>
+
 
 
 <button onclick="guardarEvaluacion()">
 
-Guardar
+Guardar evaluación
 
 </button>
 
 
 
-</section>
 
+<div id="mensajeEvaluacion">
 
-
-
-
-<section class="card">
-
-
-<h2>
-Resumen de la Evaluación
-</h2>
-
-
-
-<p>
-
-<strong>
-Nombre:
-</strong>
-
-${SPAE.evaluacion.nombre || "-"}
-
-</p>
-
-
-
-
-<p>
-
-<strong>
-Tipo:
-</strong>
-
-${SPAE.evaluacion.tipo || "-"}
-
-</p>
-
-
-
-
-<p>
-
-<strong>
-Tiempo estimado:
-</strong>
-
-${SPAE.evaluacion.tiempo || "-"} minutos
-
-</p>
-
-
-
-
-<p>
-
-<strong>
-Ponderación:
-</strong>
-
-${SPAE.evaluacion.ponderacion || "-"} %
-
-</p>
-
-
-
-
-<p>
-
-<strong>
-Competencias registradas:
-</strong>
-
-${contarLineas(
-SPAE.evaluacion.competencias
-)}
-
-</p>
-
-
-
-
-<p>
-
-<strong>
-Resultados de aprendizaje registrados:
-</strong>
-
-${contarLineas(
-SPAE.evaluacion.resultados
-)}
-
-</p>
+</div>
 
 
 
 </section>
+
 
 
 `;
 
 }
+
+
+
+
+
 
 
 
@@ -1240,51 +1321,119 @@ function guardarEvaluacion(){
 
 
 
-SPAE.evaluacion.nombre =
-
-cleanText(
+const nombre =
 
 document.getElementById(
+
 "evaluacionNombre"
-).value
 
-);
-
+).value.trim();
 
 
-SPAE.evaluacion.tipo =
+
+
+
+const tipo =
 
 document.getElementById(
+
 "evaluacionTipo"
+
 ).value;
 
 
 
 
 
-SPAE.evaluacion.tiempo =
-
-cleanText(
+const tiempo =
 
 document.getElementById(
+
 "evaluacionTiempo"
-).value
 
-);
-
+).value;
 
 
 
 
-SPAE.evaluacion.ponderacion =
 
-cleanText(
+const ponderacion =
 
 document.getElementById(
+
 "evaluacionPonderacion"
-).value
+
+).value;
+
+
+
+
+
+const competenciasTexto =
+
+document.getElementById(
+
+"evaluacionCompetencias"
+
+).value;
+
+
+
+
+
+const resultadosTexto =
+
+document.getElementById(
+
+"evaluacionResultados"
+
+).value;
+
+
+
+
+
+
+
+if(!nombre){
+
+
+
+mostrarMensajeEvaluacion(
+
+"Debe ingresar el nombre de la evaluación"
 
 );
+
+
+
+return;
+
+}
+
+
+
+
+
+/* =========================
+   ACTUALIZAR MODELO SPAE
+========================= */
+
+
+
+SPAE.evaluacion.nombre = nombre;
+
+
+
+SPAE.evaluacion.tipo = tipo;
+
+
+
+SPAE.evaluacion.tiempo = tiempo;
+
+
+
+SPAE.evaluacion.ponderacion = ponderacion;
 
 
 
@@ -1292,11 +1441,13 @@ document.getElementById(
 
 SPAE.evaluacion.competencias =
 
-cleanText(
+competenciasTexto
 
-document.getElementById(
-"evaluacionCompetencias"
-).value
+.split("\n")
+
+.filter(
+
+x=>x.trim()!==""
 
 );
 
@@ -1306,13 +1457,17 @@ document.getElementById(
 
 SPAE.evaluacion.resultados =
 
-cleanText(
+resultadosTexto
 
-document.getElementById(
-"evaluacionResultados"
-).value
+.split("\n")
+
+.filter(
+
+x=>x.trim()!==""
 
 );
+
+
 
 
 
@@ -1322,48 +1477,72 @@ saveProject();
 
 
 
-alert(
 
-"Evaluación guardada correctamente."
+
+mostrarMensajeEvaluacion(
+
+"Evaluación guardada correctamente"
 
 );
 
 
 
-renderApp();
-
-
-
 }
+
+
+
+
+
 
 
 
 /* =====================================================
-   UTILIDAD
+   MENSAJE
 ===================================================== */
 
 
-function contarLineas(texto){
+function mostrarMensajeEvaluacion(texto){
 
 
-if(!texto){
 
-return 0;
+const zona =
+
+document.getElementById(
+
+"mensajeEvaluacion"
+
+);
+
+
+
+
+
+if(zona){
+
+
+
+zona.innerHTML = `
+
+
+
+<p>
+
+<strong>
+
+${texto}
+
+</strong>
+
+</p>
+
+
+
+`;
+
+
 
 }
 
-
-return texto
-
-.split("\n")
-
-.filter(
-
-linea => linea.trim() !== ""
-
-)
-
-.length;
 
 
 }
@@ -1379,7 +1558,7 @@ linea => linea.trim() !== ""
 
 
 /* =====================================================
-   VISTA PRINCIPAL PREGUNTAS
+   RENDER PRINCIPAL
 ===================================================== */
 
 
@@ -1393,13 +1572,17 @@ return `
 
 
 <h2>
-4. Banco de preguntas
+
+3. Construcción de preguntas
+
 </h2>
 
 
 
 <label>
+
 Tipo de pregunta
+
 </label>
 
 
@@ -1410,31 +1593,41 @@ onchange="renderFormularioPregunta()">
 
 
 <option value="">
-Seleccione
+
+Seleccione tipo
+
 </option>
 
 
 
 <option value="opcion_multiple">
-Opción múltiple
+
+Selección múltiple
+
 </option>
 
 
 
 <option value="caso_aplicacion">
+
 Caso de aplicación profesional
+
 </option>
 
 
 
 <option value="caso_analisis">
+
 Caso de análisis
+
 </option>
 
 
 
 <option value="pregunta_abierta">
+
 Pregunta abierta
+
 </option>
 
 
@@ -1443,9 +1636,12 @@ Pregunta abierta
 
 
 
+
 <div id="formularioPregunta">
 
+
 </div>
+
 
 
 
@@ -1454,20 +1650,25 @@ Pregunta abierta
 
 
 <h3>
+
 Preguntas registradas
+
 </h3>
 
 
 
 <div id="listaPreguntas">
 
+
 ${renderListaPreguntas()}
+
 
 </div>
 
 
 
 </section>
+
 
 
 `;
@@ -1477,8 +1678,12 @@ ${renderListaPreguntas()}
 
 
 
+
+
+
+
 /* =====================================================
-   FORMULARIOS DINÁMICOS
+   FORMULARIO DINÁMICO
 ===================================================== */
 
 
@@ -1496,6 +1701,8 @@ document.getElementById(
 
 
 
+
+
 const contenedor =
 
 document.getElementById(
@@ -1503,6 +1710,8 @@ document.getElementById(
 "formularioPregunta"
 
 );
+
+
 
 
 
@@ -1524,37 +1733,43 @@ if(tipo==="opcion_multiple"){
 
 
 
-html = `
+html += `
 
 
 
 <input id="preguntaTexto"
+
 placeholder="Enunciado de la pregunta">
 
 
 
 <input id="altA"
+
 placeholder="Alternativa A">
 
 
 
 <input id="altB"
+
 placeholder="Alternativa B">
 
 
 
 <input id="altC"
+
 placeholder="Alternativa C">
 
 
 
 <input id="altD"
+
 placeholder="Alternativa D">
 
 
 
 <input id="respuestaCorrecta"
-placeholder="Respuesta correcta">
+
+placeholder="Respuesta correcta (A,B,C o D)">
 
 
 
@@ -1563,6 +1778,7 @@ placeholder="Respuesta correcta">
 
 
 }
+
 
 
 
@@ -1573,18 +1789,21 @@ if(tipo==="caso_aplicacion"){
 
 
 
-html=`
+html += `
+
 
 
 <textarea id="casoSituacion"
-placeholder="Describa la situación profesional">
+
+placeholder="Situación profesional">
 
 </textarea>
 
 
 
 <textarea id="casoPregunta"
-placeholder="Pregunta de aplicación">
+
+placeholder="Pregunta que debe responder el estudiante">
 
 </textarea>
 
@@ -1601,15 +1820,18 @@ placeholder="Pregunta de aplicación">
 
 
 
+
 if(tipo==="caso_analisis"){
 
 
 
-html=`
+html += `
+
 
 
 <textarea id="analisisSituacion"
-placeholder="Situación de análisis">
+
+placeholder="Caso de análisis">
 
 </textarea>
 
@@ -1617,7 +1839,12 @@ placeholder="Situación de análisis">
 
 
 <textarea id="analisisPreguntas"
-placeholder="Preguntas que debe responder el estudiante">
+
+placeholder="Preguntas de análisis:
+
+¿Qué conceptos explican la situación?
+
+¿Qué estrategia desarrollaría?">
 
 </textarea>
 
@@ -1639,11 +1866,13 @@ if(tipo==="pregunta_abierta"){
 
 
 
-html=`
+html += `
+
 
 
 <textarea id="abiertaPregunta"
-placeholder="Pregunta abierta">
+
+placeholder="Pregunta abierta de redacción">
 
 </textarea>
 
@@ -1651,7 +1880,8 @@ placeholder="Pregunta abierta">
 
 
 <textarea id="abiertaCriterio"
-placeholder="Criterios esperados">
+
+placeholder="Criterios esperados de respuesta">
 
 </textarea>
 
@@ -1670,19 +1900,23 @@ placeholder="Criterios esperados">
 if(tipo){
 
 
+
 html += `
 
 
 
 <h4>
+
 Alineación pedagógica
+
 </h4>
 
 
 
 <input id="preguntaCompetencia"
 
-placeholder="Competencia">
+placeholder="Competencia evaluada">
+
 
 
 <input id="preguntaResultado"
@@ -1699,12 +1933,16 @@ placeholder="Retroalimentación esperada">
 
 
 
+<br>
+
+
 
 <button onclick="guardarPregunta()">
 
-Guardar pregunta
+Agregar pregunta
 
 </button>
+
 
 
 `;
@@ -1715,13 +1953,14 @@ Guardar pregunta
 
 
 
-
-
 contenedor.innerHTML = html;
 
 
 
 }
+
+
+
 
 
 
@@ -1756,14 +1995,13 @@ if(!tipo){
 
 alert(
 
-"Seleccione tipo de pregunta"
+"Seleccione un tipo de pregunta"
 
 );
 
 
 
 return;
-
 
 }
 
@@ -1772,32 +2010,28 @@ return;
 
 
 
-let pregunta =
 
-crearPreguntaBase();
-
-
-
-
-
-pregunta.id =
-
-generarID();
+let pregunta = crearPreguntaBase();
 
 
 
 
 
-pregunta.tipo =
+pregunta.id = generarID();
 
-tipo;
+
+
+
+
+pregunta.tipo = tipo;
+
 
 
 
 
 
 /* =========================
-   ALINEACIÓN
+   INFORMACIÓN PEDAGÓGICA
 ========================= */
 
 
@@ -1837,6 +2071,8 @@ document.getElementById(
 
 
 
+
+
 /* =========================
    OPCIÓN MÚLTIPLE
 ========================= */
@@ -1857,7 +2093,8 @@ document.getElementById(
 
 
 
-pregunta.alternativas=[
+
+pregunta.alternativas = [
 
 
 document.getElementById("altA").value,
@@ -1872,8 +2109,8 @@ document.getElementById("altC").value,
 document.getElementById("altD").value
 
 
-
 ];
+
 
 
 
@@ -1889,6 +2126,9 @@ document.getElementById(
 
 
 }
+
+
+
 
 
 
@@ -1914,6 +2154,7 @@ document.getElementById(
 
 
 
+
 pregunta.pregunta =
 
 document.getElementById(
@@ -1925,6 +2166,9 @@ document.getElementById(
 
 
 }
+
+
+
 
 
 
@@ -1969,8 +2213,10 @@ document.getElementById(
 
 
 
+
+
 /* =========================
-   ABIERTA
+   PREGUNTA ABIERTA
 ========================= */
 
 
@@ -2014,17 +2260,7 @@ pregunta
 
 
 
-
 saveProject();
-
-
-
-
-alert(
-
-"Pregunta agregada correctamente"
-
-);
 
 
 
@@ -2041,8 +2277,10 @@ renderApp();
 
 
 
+
+
 /* =====================================================
-   LISTADO DE PREGUNTAS
+   LISTADO
 ===================================================== */
 
 
@@ -2057,11 +2295,16 @@ SPAE.preguntas.length===0
 ){
 
 
+
 return `
 
+
 <p>
+
 No existen preguntas registradas.
+
 </p>
+
 
 `;
 
@@ -2072,31 +2315,39 @@ No existen preguntas registradas.
 
 
 
+
 return SPAE.preguntas.map(
 
-(p,index)=>`
+(p,index)=>{
+
+
+
+return `
 
 
 
 <div class="question">
 
 
+<h4>
 
-<strong>
+Pregunta ${index+1}
 
-${index+1}
-
-</strong>
+</h4>
 
 
+
+<p>
+
+Tipo:
 
 ${p.tipo}
 
+</p>
 
 
-<br>
 
-
+<p>
 
 ${p.contenido ||
 
@@ -2104,11 +2355,12 @@ p.situacion ||
 
 ""}
 
+</p>
 
 
-<button
 
-onclick="eliminarPregunta(${p.id})">
+
+<button onclick="eliminarPregunta(${p.id})">
 
 Eliminar
 
@@ -2120,7 +2372,11 @@ Eliminar
 
 
 
-`
+`;
+
+
+
+}
 
 ).join("");
 
@@ -2134,8 +2390,10 @@ Eliminar
 
 
 
+
+
 /* =====================================================
-   ELIMINAR PREGUNTA
+   ELIMINAR
 ===================================================== */
 
 
@@ -2147,9 +2405,10 @@ SPAE.preguntas =
 
 SPAE.preguntas.filter(
 
-p => p.id !== id
+p=>p.id!==id
 
 );
+
 
 
 
@@ -2157,6 +2416,7 @@ saveProject();
 
 
 
+
 renderApp();
 
 
@@ -2165,1383 +2425,9 @@ renderApp();
 /* =====================================================
    SPAE MVP
 
-   MÓDULO 5
-   BLUEPRINT DE EVALUACIÓN
-===================================================== */
+   MÓDULO 5 v2
 
-
-/* =====================================================
-   VISTA BLUEPRINT
-===================================================== */
-
-
-function renderBlueprint(){
-
-
-const preguntas = SPAE.preguntas || [];
-
-
-
-const totalMCQ = preguntas.filter(
-
-p => p.tipo === "opcion_multiple"
-
-).length;
-
-
-
-const totalCasosAplicacion = preguntas.filter(
-
-p => p.tipo === "caso_aplicacion"
-
-).length;
-
-
-
-const totalCasosAnalisis = preguntas.filter(
-
-p => p.tipo === "caso_analisis"
-
-).length;
-
-
-
-const totalAbiertas = preguntas.filter(
-
-p => p.tipo === "pregunta_abierta"
-
-).length;
-
-
-
-return `
-
-
-<section class="card">
-
-
-<h2>
-4. Blueprint de Evaluación
-</h2>
-
-
-<p>
-Configure la estructura del instrumento evaluativo.
-</p>
-
-
-
-<label>
-Número de preguntas de selección múltiple
-</label>
-
-
-<input
-
-type="number"
-
-id="blueprintMCQ"
-
-value="${SPAE.blueprint.preguntasMCQ || totalMCQ}">
-
-
-
-
-
-<label>
-Casos de aplicación profesional
-</label>
-
-
-<input
-
-type="number"
-
-id="blueprintCasos"
-
-value="${SPAE.blueprint.casos || 
-(totalCasosAplicacion + totalCasosAnalisis)}">
-
-
-
-
-
-<label>
-Preguntas abiertas
-</label>
-
-
-<input
-
-type="number"
-
-id="blueprintAbiertas"
-
-value="${SPAE.blueprint.abiertas || totalAbiertas}">
-
-
-
-
-
-<br>
-
-
-<button onclick="guardarBlueprint()">
-
-Guardar estructura
-
-</button>
-
-
-
-</section>
-
-
-
-
-
-<section class="card">
-
-
-<h2>
-Resumen del Blueprint
-</h2>
-
-
-<p>
-
-<strong>
-Selección múltiple:
-</strong>
-
-${SPAE.blueprint.preguntasMCQ || totalMCQ}
-
-</p>
-
-
-
-<p>
-
-<strong>
-Casos profesionales:
-</strong>
-
-${SPAE.blueprint.casos || 
-(totalCasosAplicacion + totalCasosAnalisis)}
-
-</p>
-
-
-
-<p>
-
-<strong>
-Preguntas abiertas:
-</strong>
-
-${SPAE.blueprint.abiertas || totalAbiertas}
-
-</p>
-
-
-
-<p>
-
-<strong>
-Total preguntas:
-</strong>
-
-${calcularTotalBlueprint()}
-
-</p>
-
-
-</section>
-
-
-`;
-
-}
-
-
-
-/* =====================================================
-   GUARDAR BLUEPRINT
-===================================================== */
-
-
-function guardarBlueprint(){
-
-
-
-SPAE.blueprint.preguntasMCQ =
-
-Number(
-
-document.getElementById(
-"blueprintMCQ"
-).value
-
-);
-
-
-
-SPAE.blueprint.casos =
-
-Number(
-
-document.getElementById(
-"blueprintCasos"
-).value
-
-);
-
-
-
-SPAE.blueprint.abiertas =
-
-Number(
-
-document.getElementById(
-"blueprintAbiertas"
-).value
-
-);
-
-
-
-saveProject();
-
-
-
-alert(
-
-"Blueprint guardado correctamente."
-
-);
-
-
-
-renderApp();
-
-
-}
-
-
-
-/* =====================================================
-   TOTAL DE PREGUNTAS
-===================================================== */
-
-
-function calcularTotalBlueprint(){
-
-
-return (
-
-Number(
-SPAE.blueprint.preguntasMCQ || 0
-)
-
-+
-
-Number(
-SPAE.blueprint.casos || 0
-)
-
-+
-
-Number(
-SPAE.blueprint.abiertas || 0
-)
-
-);
-
-
-}
-/* =====================================================
-   SPAE MVP
-
-   MÓDULO 6
-   VISTA PREVIA DEL EXAMEN
-===================================================== */
-
-
-/* =====================================================
-   VISTA PRINCIPAL PREVIEW
-===================================================== */
-
-
-function renderPreview(){
-
-
-const preguntas = SPAE.preguntas || [];
-
-
-
-const preguntasMCQ = preguntas.filter(
-
-p => p.tipo === "opcion_multiple"
-
-);
-
-
-
-const casosAplicacion = preguntas.filter(
-
-p => p.tipo === "caso_aplicacion"
-
-);
-
-
-
-const casosAnalisis = preguntas.filter(
-
-p => p.tipo === "caso_analisis"
-
-);
-
-
-
-const preguntasAbiertas = preguntas.filter(
-
-p => p.tipo === "pregunta_abierta"
-
-);
-
-
-
-
-return `
-
-
-<section class="card">
-
-
-<h2>
-5. Vista previa del examen
-</h2>
-
-
-
-<div class="exam-preview">
-
-
-
-<header>
-
-
-<h1>
-
-${SPAE.curso.nombre || "Nombre del curso"}
-
-</h1>
-
-
-
-<h2>
-
-${SPAE.evaluacion.nombre || "Evaluación"}
-
-</h2>
-
-
-
-<p>
-
-Programa:
-
-${SPAE.curso.programa || "-"}
-
-</p>
-
-
-
-<p>
-
-Tiempo:
-
-${SPAE.evaluacion.tiempo || "-"}
-
-minutos
-
-</p>
-
-
-
-<p>
-
-Ponderación:
-
-${SPAE.evaluacion.ponderacion || "-"} %
-
-</p>
-
-
-</header>
-
-
-
-
-
-<hr>
-
-
-
-<h2>
-Sección I
-<br>
-Selección de la mejor respuesta
-</h2>
-
-
-
-${renderPreviewMCQ(preguntasMCQ)}
-
-
-
-
-<h2>
-Sección II
-<br>
-Casos de análisis profesional
-</h2>
-
-
-
-${renderPreviewCasos(
-
-casosAplicacion,
-
-casosAnalisis
-
-)}
-
-
-
-
-
-<h2>
-Sección III
-<br>
-Preguntas abiertas
-</h2>
-
-
-
-${renderPreviewAbiertas(
-
-preguntasAbiertas
-
-)}
-
-
-
-</div>
-
-
-</section>
-
-
-`;
-
-}
-
-
-
-/* =====================================================
-   PREVIEW OPCIÓN MÚLTIPLE
-===================================================== */
-
-
-function renderPreviewMCQ(lista){
-
-
-
-if(lista.length===0){
-
-
-return `
-
-<p>
-No existen preguntas registradas.
-</p>
-
-`;
-
-}
-
-
-
-return lista.map(
-
-(p,index)=>`
-
-
-<div class="question">
-
-
-<p>
-
-<strong>
-${index+1}.
-</strong>
-
-${p.contenido}
-
-</p>
-
-
-
-<ol type="A">
-
-
-${p.alternativas.map(
-
-a=>`
-
-<li>
-${a}
-</li>
-
-`
-
-).join("")}
-
-
-
-</ol>
-
-
-</div>
-
-
-`
-
-).join("");
-
-
-
-}
-
-
-
-/* =====================================================
-   PREVIEW CASOS
-===================================================== */
-
-
-function renderPreviewCasos(
-
-aplicacion,
-
-analisis
-
-){
-
-
-
-let html = "";
-
-
-
-
-aplicacion.forEach(
-
-(p,index)=>{
-
-
-html += `
-
-
-<div class="question">
-
-
-<h3>
-Caso ${index+1}
-</h3>
-
-
-
-<p>
-
-${p.situacion}
-
-</p>
-
-
-
-<p>
-
-<strong>
-Pregunta:
-</strong>
-
-${p.pregunta}
-
-</p>
-
-
-</div>
-
-
-`;
-
-
-});
-
-
-
-
-
-analisis.forEach(
-
-(p,index)=>{
-
-
-html += `
-
-
-<div class="question">
-
-
-<h3>
-Caso de análisis ${index+1}
-</h3>
-
-
-
-<p>
-
-${p.situacion}
-
-</p>
-
-
-
-<p>
-
-<strong>
-Preguntas orientadoras:
-</strong>
-
-</p>
-
-
-
-<p>
-
-${p.preguntas}
-
-</p>
-
-
-</div>
-
-
-`;
-
-
-});
-
-
-
-
-if(html===""){
-
-
-html = `
-
-<p>
-No existen casos registrados.
-</p>
-
-`;
-
-}
-
-
-
-return html;
-
-
-
-}
-
-
-
-/* =====================================================
-   PREVIEW PREGUNTAS ABIERTAS
-===================================================== */
-
-
-function renderPreviewAbiertas(lista){
-
-
-
-if(lista.length===0){
-
-
-return `
-
-<p>
-No existen preguntas abiertas registradas.
-</p>
-
-`;
-
-}
-
-
-
-return lista.map(
-
-(p,index)=>`
-
-
-<div class="question">
-
-
-<p>
-
-<strong>
-
-${index+1}.
-
-</strong>
-
-
-${p.contenido}
-
-</p>
-
-
-
-<p>
-
-<b>
-Criterio esperado:
-</b>
-
-
-${p.criterio || "-"}
-
-</p>
-
-
-</div>
-
-
-`
-
-).join("");
-
-
-
-}
-/* =====================================================
-   SPAE MVP
-
-   MÓDULO 7
-   EXPORTACIÓN
-===================================================== */
-
-
-/* =====================================================
-   VISTA EXPORTACIÓN
-===================================================== */
-
-
-function renderExportacion(){
-
-
-return `
-
-
-<section class="card">
-
-
-<h2>
-6. Exportación del instrumento
-</h2>
-
-
-
-<p>
-Seleccione el formato de salida del examen.
-</p>
-
-
-
-<button onclick="exportarHTML()">
-
-Exportar HTML
-
-</button>
-
-
-<br><br>
-
-
-
-<button onclick="exportarJSON()">
-
-Exportar proyecto JSON
-
-</button>
-
-
-
-<br><br>
-
-
-
-<label>
-Importar proyecto JSON
-</label>
-
-
-<input
-
-type="file"
-
-id="archivoJSON"
-
-accept=".json">
-
-
-
-<button onclick="importarJSON()">
-
-Importar JSON
-
-</button>
-
-
-
-<hr>
-
-
-
-<h3>
-Exportación Word
-</h3>
-
-
-<p>
-
-El documento Word permitirá editar,
-revisar y distribuir el examen.
-
-</p>
-
-
-
-<button onclick="exportarWord()">
-
-Generar documento Word
-
-</button>
-
-
-
-</section>
-
-
-`;
-
-}
-
-
-
-/* =====================================================
-   EXPORTAR HTML
-===================================================== */
-
-
-function exportarHTML(){
-
-
-const contenido = `
-
-
-<!DOCTYPE html>
-
-<html>
-
-
-<head>
-
-<title>
-
-${SPAE.evaluacion.nombre}
-
-</title>
-
-
-<meta charset="UTF-8">
-
-
-</head>
-
-
-<body>
-
-
-<h1>
-
-${SPAE.curso.nombre}
-
-</h1>
-
-
-<h2>
-
-${SPAE.evaluacion.nombre}
-
-</h2>
-
-
-${renderPreview()}
-
-
-
-</body>
-
-
-</html>
-
-
-`;
-
-
-
-descargarArchivo(
-
-contenido,
-
-"examen_spae.html",
-
-"text/html"
-
-);
-
-
-
-}
-
-
-
-/* =====================================================
-   EXPORTAR JSON
-===================================================== */
-
-
-function exportarJSON(){
-
-
-
-const contenido =
-
-JSON.stringify(
-
-SPAE,
-
-null,
-
-2
-
-);
-
-
-
-descargarArchivo(
-
-contenido,
-
-"proyecto_spae.json",
-
-"application/json"
-
-);
-
-
-
-}
-
-
-
-/* =====================================================
-   IMPORTAR JSON
-===================================================== */
-
-
-function importarJSON(){
-
-
-
-const archivo =
-
-document.getElementById(
-"archivoJSON"
-).files[0];
-
-
-
-if(!archivo){
-
-
-alert(
-
-"Seleccione un archivo JSON"
-
-);
-
-
-return;
-
-
-}
-
-
-
-const lector =
-
-new FileReader();
-
-
-
-lector.onload = function(e){
-
-
-
-try{
-
-
-SPAE = JSON.parse(
-
-e.target.result
-
-);
-
-
-
-saveProject();
-
-
-
-alert(
-
-"Proyecto importado correctamente."
-
-);
-
-
-
-renderApp();
-
-
-
-}
-
-catch(error){
-
-
-alert(
-
-"El archivo no tiene formato SPAE válido."
-
-);
-
-
-}
-
-
-
-};
-
-
-
-lector.readAsText(archivo);
-
-
-
-}
-
-
-
-/* =====================================================
-   EXPORTAR WORD
-===================================================== */
-
-
-function exportarWord(){
-
-
-
-const contenido = `
-
-
-${SPAE.curso.nombre}
-
-
-${SPAE.evaluacion.nombre}
-
-
-
-${renderPreview()}
-
-
-
-`;
-
-
-
-descargarArchivo(
-
-contenido,
-
-"examen_spae.doc",
-
-"application/msword"
-
-);
-
-
-
-}
-
-
-
-/* =====================================================
-   DESCARGA GENERAL
-===================================================== */
-
-
-function descargarArchivo(
-
-contenido,
-
-nombre,
-
-tipo
-
-){
-
-
-
-const blob = new Blob(
-
-[contenido],
-
-{
-
-type: tipo
-
-}
-
-);
-
-
-
-const url =
-
-URL.createObjectURL(blob);
-
-
-
-const enlace =
-
-document.createElement("a");
-
-
-
-enlace.href = url;
-
-
-enlace.download = nombre;
-
-
-
-document.body.appendChild(enlace);
-
-
-
-enlace.click();
-
-
-
-document.body.removeChild(enlace);
-
-
-
-URL.revokeObjectURL(url);
-
-
-
-}
-/* =====================================================
-   SPAE MVP
-
-   MÓDULO 8
-   INICIALIZACIÓN FINAL Y VALIDACIÓN
-===================================================== */
-
-
-/* =====================================================
-   VALIDACIÓN DEL SISTEMA
-===================================================== */
-
-
-function validarSPAE(){
-
-
-const errores = [];
-
-
-
-if(typeof SPAE === "undefined"){
-
-    errores.push(
-        "Estado principal SPAE no disponible."
-    );
-
-}
-
-
-
-if(typeof renderApp !== "function"){
-
-    errores.push(
-        "Motor de renderizado no disponible."
-    );
-
-}
-
-
-
-if(typeof saveProject !== "function"){
-
-    errores.push(
-        "Sistema de persistencia no disponible."
-    );
-
-}
-
-
-
-if(!document.getElementById("app")){
-
-    errores.push(
-        "Contenedor principal #app no encontrado."
-    );
-
-}
-
-
-
-return errores;
-
-
-}
-
-
-
-/* =====================================================
-   INICIO DEL SISTEMA
-===================================================== */
-
-
-function iniciarSistemaSPAE(){
-
-
-const errores = validarSPAE();
-
-
-
-if(errores.length > 0){
-
-
-console.error(
-
-"SPAE presenta errores:",
-
-errores
-
-);
-
-
-
-alert(
-
-"SPAE no pudo iniciar correctamente."
-
-);
-
-
-
-return;
-
-
-}
-
-
-
-
-console.log(
-
-"SPAE MVP OPERATIVO"
-
-);
-
-
-
-console.log(
-
-"Versión:",
-
-SPAE_CONFIG.version
-
-);
-
-
-
-alert(
-
-"SPAE MVP cargado correctamente."
-
-);
-
-
-
-renderApp();
-
-
-
-}
-
-
-
-/* =====================================================
-   EVENTO DE CARGA
-===================================================== */
-
-
-window.addEventListener(
-
-"load",
-
-iniciarSistemaSPAE
-
-);
-/* =====================================================
-   SPAE MVP
-
-   MÓDULO 9
-
-   VISTA ESTUDIANTE
-   VISTA DOCENTE
-   CLAVE DE RESPUESTAS
+   BLUEPRINT / TABLA DE ESPECIFICACIONES
 
 ===================================================== */
 
@@ -3552,7 +2438,7 @@ iniciarSistemaSPAE
 ===================================================== */
 
 
-function renderRevision(){
+function renderBlueprint(){
 
 
 return `
@@ -3562,42 +2448,42 @@ return `
 
 
 <h2>
-7. Revisión del instrumento
+
+4. Blueprint de evaluación
+
 </h2>
 
 
 
 <p>
 
-Seleccione la vista que desea revisar.
+Resumen de la estructura del instrumento.
 
 </p>
 
 
 
-<button onclick="mostrarVistaAlumno()">
+<button onclick="generarBlueprint()">
 
-Vista estudiante
-
-</button>
-
-
-
-<button onclick="mostrarVistaDocente()">
-
-Vista docente
+Actualizar blueprint
 
 </button>
 
 
 
-<div id="contenedorRevision">
+
+<div id="resultadoBlueprint">
+
+
+${mostrarBlueprint()}
+
 
 </div>
 
 
 
 </section>
+
 
 
 `;
@@ -3609,12 +2495,548 @@ Vista docente
 
 
 
+
+/* =====================================================
+   GENERAR BLUEPRINT
+===================================================== */
+
+
+function generarBlueprint(){
+
+
+
+let resumen = {
+
+
+opcion_multiple:0,
+
+
+caso_aplicacion:0,
+
+
+caso_analisis:0,
+
+
+pregunta_abierta:0
+
+
+
+};
+
+
+
+
+
+
+SPAE.preguntas.forEach(
+
+p=>{
+
+
+if(resumen[p.tipo]!==undefined){
+
+
+resumen[p.tipo]++;
+
+
+}
+
+
+
+}
+
+);
+
+
+
+
+
+
+SPAE.blueprint = {
+
+
+preguntasMCQ:
+
+resumen.opcion_multiple,
+
+
+
+casos:
+
+resumen.caso_aplicacion +
+
+resumen.caso_analisis,
+
+
+
+abiertas:
+
+resumen.pregunta_abierta
+
+
+
+};
+
+
+
+
+
+
+saveProject();
+
+
+
+
+renderApp();
+
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   MOSTRAR BLUEPRINT
+===================================================== */
+
+
+function mostrarBlueprint(){
+
+
+
+if(
+
+!SPAE.blueprint
+
+){
+
+
+
+return `
+
+
+<p>
+
+No existe información.
+
+</p>
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+return `
+
+
+
+<div class="blueprint-summary">
+
+
+
+<h3>
+
+Distribución del examen
+
+</h3>
+
+
+
+<table>
+
+
+<tr>
+
+<th>
+
+Tipo
+
+</th>
+
+
+<th>
+
+Cantidad
+
+</th>
+
+
+</tr>
+
+
+
+<tr>
+
+<td>
+
+Selección múltiple
+
+</td>
+
+
+<td>
+
+${SPAE.blueprint.preguntasMCQ || 0}
+
+</td>
+
+
+</tr>
+
+
+
+<tr>
+
+<td>
+
+Casos de análisis/aplicación
+
+</td>
+
+
+<td>
+
+${SPAE.blueprint.casos || 0}
+
+</td>
+
+
+</tr>
+
+
+
+
+<tr>
+
+<td>
+
+Preguntas abiertas
+
+</td>
+
+
+<td>
+
+${SPAE.blueprint.abiertas || 0}
+
+</td>
+
+
+</tr>
+
+
+
+</table>
+
+
+
+
+
+<h3>
+
+Alineación pedagógica
+
+</h3>
+
+
+
+${mostrarAlineacion()}
+
+
+
+</div>
+
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   ALINEACIÓN COMPETENCIAS
+===================================================== */
+
+
+function mostrarAlineacion(){
+
+
+
+if(
+
+SPAE.preguntas.length===0
+
+){
+
+
+return `
+
+<p>
+
+No existen preguntas.
+
+</p>
+
+`;
+
+
+
+}
+
+
+
+
+
+return SPAE.preguntas.map(
+
+(p,index)=>{
+
+
+return `
+
+
+
+<div class="alignment-card">
+
+
+<h4>
+
+Pregunta ${index+1}
+
+</h4>
+
+
+
+<p>
+
+<strong>
+
+Tipo:
+
+</strong>
+
+${p.tipo}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Competencia:
+
+</strong>
+
+
+${p.competencia || "No definida"}
+
+</p>
+
+
+
+
+<p>
+
+<strong>
+
+Resultado:
+
+</strong>
+
+
+${p.resultado || "No definido"}
+
+</p>
+
+
+
+</div>
+
+
+
+`;
+
+
+
+}
+
+).join("");
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   CALCULAR PORCENTAJES
+===================================================== */
+
+
+function calcularDistribucion(){
+
+
+
+const total =
+
+SPAE.preguntas.length;
+
+
+
+if(total===0){
+
+return null;
+
+}
+
+
+
+return {
+
+
+mcq:
+
+Math.round(
+
+(SPAE.blueprint.preguntasMCQ / total)
+
+*100
+
+),
+
+
+
+casos:
+
+Math.round(
+
+(SPAE.blueprint.casos / total)
+
+*100
+
+),
+
+
+
+abiertas:
+
+Math.round(
+
+(SPAE.blueprint.abiertas / total)
+
+*100
+
+)
+
+
+
+};
+
+
+
+}
+/* =====================================================
+   SPAE MVP
+
+   MÓDULO 6 v2
+
+   VISTA PREVIA DEL EXAMEN
+
+===================================================== */
+
+
+
+/* =====================================================
+   RENDER PRINCIPAL
+===================================================== */
+
+
+function renderVistaPrevia(){
+
+
+return `
+
+
+<section class="card">
+
+
+<h2>
+
+5. Vista previa del examen
+
+</h2>
+
+
+
+<button onclick="mostrarPreviewAlumno()">
+
+Vista estudiante
+
+</button>
+
+
+
+<button onclick="mostrarPreviewDocente()">
+
+Vista docente
+
+</button>
+
+
+
+<div id="previewExamen">
+
+</div>
+
+
+
+</section>
+
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
 /* =====================================================
    VISTA ESTUDIANTE
 ===================================================== */
 
 
-function mostrarVistaAlumno(){
+function mostrarPreviewAlumno(){
 
 
 
@@ -3622,7 +3044,7 @@ const contenedor =
 
 document.getElementById(
 
-"contenedorRevision"
+"previewExamen"
 
 );
 
@@ -3645,9 +3067,12 @@ contenedor.innerHTML = `
 <div class="exam-preview">
 
 
+<header>
+
+
 <h1>
 
-${SPAE.curso.nombre || ""}
+${SPAE.evaluacion.nombre || "Evaluación"}
 
 </h1>
 
@@ -3655,10 +3080,19 @@ ${SPAE.curso.nombre || ""}
 
 <h2>
 
-${SPAE.evaluacion.nombre || ""}
+${SPAE.curso.nombre || ""}
 
 </h2>
 
+
+
+<p>
+
+Programa:
+
+${SPAE.curso.programa || ""}
+
+</p>
 
 
 
@@ -3674,25 +3108,25 @@ minutos
 
 
 
+<p>
+
+Ponderación:
+
+${SPAE.evaluacion.ponderacion || ""} %
+
+</p>
+
+
+
+</header>
+
+
 
 <hr>
 
 
 
-<h2>
-
-Sección I
-
-<br>
-
-Preguntas
-
-</h2>
-
-
-
-
-${renderPreguntasAlumno()}
+${renderPreguntasPreviewAlumno()}
 
 
 
@@ -3714,11 +3148,11 @@ ${renderPreguntasAlumno()}
 
 
 /* =====================================================
-   PREGUNTAS PARA ALUMNO
+   PREGUNTAS ESTUDIANTE
 ===================================================== */
 
 
-function renderPreguntasAlumno(){
+function renderPreguntasPreviewAlumno(){
 
 
 
@@ -3729,11 +3163,16 @@ SPAE.preguntas.length===0
 ){
 
 
+
 return `
 
+
 <p>
+
 No existen preguntas registradas.
+
 </p>
+
 
 `;
 
@@ -3745,20 +3184,57 @@ No existen preguntas registradas.
 
 
 
-
 return SPAE.preguntas.map(
 
 (p,index)=>{
 
 
-
-let contenido="";
-
+return `
 
 
 
+<div class="question">
 
-/* OPCIÓN MÚLTIPLE */
+
+
+<h3>
+
+${index+1}
+
+</h3>
+
+
+
+${crearContenidoAlumno(p)}
+
+
+
+</div>
+
+
+
+`;
+
+
+
+}
+
+).join("");
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function crearContenidoAlumno(p){
+
 
 
 if(
@@ -3769,16 +3245,10 @@ p.tipo==="opcion_multiple"
 
 
 
-contenido = `
+return `
 
 
 <p>
-
-<strong>
-
-${index+1}.
-
-</strong>
 
 ${p.contenido}
 
@@ -3793,16 +3263,11 @@ ${p.alternativas.map(
 
 a=>`
 
-<li>
-
-${a}
-
-</li>
+<li>${a}</li>
 
 `
 
 ).join("")}
-
 
 
 </ol>
@@ -3820,9 +3285,6 @@ ${a}
 
 
 
-/* CASO APLICACIÓN */
-
-
 if(
 
 p.tipo==="caso_aplicacion"
@@ -3831,15 +3293,15 @@ p.tipo==="caso_aplicacion"
 
 
 
-contenido = `
+return `
 
 
 
-<h3>
+<h4>
 
-Caso ${index+1}
+Caso profesional
 
-</h3>
+</h4>
 
 
 
@@ -3864,7 +3326,6 @@ ${p.pregunta}
 </p>
 
 
-
 `;
 
 
@@ -3877,9 +3338,6 @@ ${p.pregunta}
 
 
 
-/* CASO ANÁLISIS */
-
-
 if(
 
 p.tipo==="caso_analisis"
@@ -3888,15 +3346,15 @@ p.tipo==="caso_analisis"
 
 
 
-contenido = `
+return `
 
 
 
-<h3>
+<h4>
 
-Caso de análisis ${index+1}
+Caso de análisis
 
-</h3>
+</h4>
 
 
 
@@ -3915,7 +3373,6 @@ ${p.preguntas}
 </p>
 
 
-
 `;
 
 
@@ -3927,8 +3384,6 @@ ${p.preguntas}
 
 
 
-
-/* ABIERTA */
 
 
 if(
@@ -3939,18 +3394,11 @@ p.tipo==="pregunta_abierta"
 
 
 
-contenido = `
+return `
 
 
 
 <p>
-
-<strong>
-
-${index+1}.
-
-</strong>
-
 
 ${p.contenido}
 
@@ -3958,22 +3406,14 @@ ${p.contenido}
 
 
 
-<p>
+<br><br>
 
 Respuesta:
-
-</p>
-
-
 
 <br><br>
 
 
 
-<hr>
-
-
-
 `;
 
 
@@ -3982,32 +3422,12 @@ Respuesta:
 
 
 
-
-
-
-return `
-
-
-<div class="question">
-
-
-${contenido}
-
-
-</div>
-
-
-`;
+return "";
 
 
 
 }
 
-).join("");
-
-
-
-}
 
 
 
@@ -4021,7 +3441,7 @@ ${contenido}
 ===================================================== */
 
 
-function mostrarVistaDocente(){
+function mostrarPreviewDocente(){
 
 
 
@@ -4029,7 +3449,7 @@ const contenedor =
 
 document.getElementById(
 
-"contenedorRevision"
+"previewExamen"
 
 );
 
@@ -4048,8 +3468,11 @@ contenedor.innerHTML = `
 
 
 
-<div class="teacher-view">
+<div class="exam-preview docente">
 
+
+
+<header>
 
 
 <h1>
@@ -4060,16 +3483,22 @@ Clave docente
 
 
 
-<p>
+<h2>
 
-Documento de apoyo para corrección.
+${SPAE.evaluacion.nombre || ""}
 
-</p>
-
-
+</h2>
 
 
-${renderClaveDocente()}
+</header>
+
+
+
+<hr>
+
+
+
+${renderPreguntasPreviewDocente()}
 
 
 
@@ -4090,12 +3519,13 @@ ${renderClaveDocente()}
 
 
 
+
 /* =====================================================
-   CLAVE DOCENTE
+   PREGUNTAS DOCENTE
 ===================================================== */
 
 
-function renderClaveDocente(){
+function renderPreguntasPreviewDocente(){
 
 
 
@@ -4147,24 +3577,67 @@ Pregunta ${index+1}
 
 
 
+${crearContenidoAlumno(p)}
+
+
+
+<hr>
+
+
 
 <p>
 
 <strong>
 
-Tipo:
+Respuesta correcta:
 
 </strong>
 
-${p.tipo}
+${p.respuestaCorrecta || "No aplica"}
 
 </p>
 
 
 
+<p>
+
+<strong>
+
+Justificación:
+
+</strong>
+
+${p.justificacion || "Pendiente"}
+
+</p>
 
 
-${renderInformacionDocente(p)}
+
+<p>
+
+<strong>
+
+Respuesta esperada:
+
+</strong>
+
+${p.respuestaEsperada || "Pendiente"}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Criterios:
+
+</strong>
+
+${p.criterios || "Pendiente"}
+
+</p>
 
 
 
@@ -4179,272 +3652,6 @@ ${renderInformacionDocente(p)}
 }
 
 ).join("");
-
-
-
-}
-
-
-
-
-
-
-
-
-/* =====================================================
-   INFORMACIÓN DOCENTE
-===================================================== */
-
-
-function renderInformacionDocente(p){
-
-
-
-let html="";
-
-
-
-
-
-
-if(
-
-p.tipo==="opcion_multiple"
-
-){
-
-
-
-html += `
-
-
-
-<p>
-
-<strong>
-
-Respuesta correcta:
-
-</strong>
-
-
-${p.respuestaCorrecta || "No registrada"}
-
-</p>
-
-
-
-`;
-
-
-
-}
-
-
-
-
-
-
-html += `
-
-
-
-<label>
-
-Justificación pedagógica
-
-</label>
-
-
-
-<textarea
-
-onchange="actualizarJustificacion('${p.id}',this.value)"
-
->${p.justificacion || ""}</textarea>
-
-
-
-
-<label>
-
-Respuesta esperada
-
-</label>
-
-
-
-<textarea
-
-onchange="actualizarRespuestaEsperada('${p.id}',this.value)"
-
->${p.respuestaEsperada || ""}</textarea>
-
-
-
-
-<label>
-
-Criterios de evaluación
-
-</label>
-
-
-
-<textarea
-
-onchange="actualizarCriterios('${p.id}',this.value)"
-
->${p.criterios || ""}</textarea>
-
-
-
-`;
-
-
-
-
-return html;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   ACTUALIZAR INFORMACIÓN DOCENTE
-===================================================== */
-
-
-function actualizarJustificacion(
-
-id,
-
-valor
-
-){
-
-
-
-const pregunta =
-
-SPAE.preguntas.find(
-
-p=>p.id==id
-
-);
-
-
-
-if(pregunta){
-
-
-
-pregunta.justificacion = valor;
-
-
-
-saveProject();
-
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-function actualizarRespuestaEsperada(
-
-id,
-
-valor
-
-){
-
-
-
-const pregunta =
-
-SPAE.preguntas.find(
-
-p=>p.id==id
-
-);
-
-
-
-if(pregunta){
-
-
-
-pregunta.respuestaEsperada = valor;
-
-
-
-saveProject();
-
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
-function actualizarCriterios(
-
-id,
-
-valor
-
-){
-
-
-
-const pregunta =
-
-SPAE.preguntas.find(
-
-p=>p.id==id
-
-);
-
-
-
-if(pregunta){
-
-
-
-pregunta.criterios = valor;
-
-
-
-saveProject();
-
-
-
-}
 
 
 
