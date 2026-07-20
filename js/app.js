@@ -1,11 +1,153 @@
 /* =====================================================
    SPAE MVP
-   SISTEMA PROFESIONAL DE AUTORÍA DE EVALUACIONES
 
-   MÓDULO 0
-   CONFIGURACIÓN + ESTADO + PERSISTENCIA
+   MÓDULO 0 v2
+   ESTADO DEL SISTEMA
+===================================================== */
+const SPAE_CONFIG = {
+
+version:"0.2",
+
+nombre:"SPAE MVP"
+
+
+};
+
+
+
+let SPAE = {
+
+
+curso:{
+
+
+nombre:"",
+
+programa:"",
+
+nivel:"",
+
+periodo:""
+
+
+},
+
+
+
+evaluacion:{
+
+
+nombre:"",
+
+tipo:"",
+
+tiempo:"",
+
+ponderacion:"",
+
+competencias:"",
+
+resultados:""
+
+
+},
+
+
+
+preguntas:[],
+
+
+
+blueprint:{
+
+
+preguntasMCQ:0,
+
+casos:0,
+
+abiertas:0
+
+
+}
+
+
+};
+
+
+
+
+/* =====================================================
+   PLANTILLA DE PREGUNTA
 ===================================================== */
 
+
+function crearPreguntaBase(){
+
+
+return {
+
+
+id:null,
+
+
+tipo:"",
+
+
+
+// Contenido
+
+contenido:"",
+
+
+
+alternativas:[],
+
+
+respuestaCorrecta:"",
+
+
+
+// Casos
+
+situacion:"",
+
+
+pregunta:"",
+
+
+preguntas:"",
+
+
+
+// Evaluación docente
+
+justificacion:"",
+
+
+respuestaEsperada:"",
+
+
+criterios:"",
+
+
+
+// Alineación
+
+competencia:"",
+
+
+resultado:"",
+
+
+
+retroalimentacion:""
+
+
+
+};
+
+
+}
 
 /* =====================================================
    CONFIGURACIÓN GENERAL
@@ -1624,7 +1766,7 @@ break;
 
 
 /* =====================================================
-   GUARDAR PREGUNTA
+   GUARDAR PREGUNTA v2
 ===================================================== */
 
 
@@ -1640,49 +1782,48 @@ document.getElementById(
 
 
 
-
-let pregunta = {
-
-
-id:
-
-generateID(),
+let pregunta = crearPreguntaBase();
 
 
-tipo:
+
+pregunta.id = generateID();
 
 
-tipo,
+pregunta.tipo = tipo;
 
 
-competencia:
+
+pregunta.competencia =
 
 document.getElementById(
 "preguntaCompetencia"
-).value,
+).value;
 
 
-resultado:
+
+pregunta.resultado =
 
 document.getElementById(
 "preguntaResultado"
-).value,
+).value;
 
 
-retroalimentacion:
+
+pregunta.retroalimentacion =
 
 document.getElementById(
 "preguntaRetroalimentacion"
-).value
-
-
-};
+).value;
 
 
 
+/* ==========================
+   OPCIÓN MÚLTIPLE
+========================== */
 
 
 if(tipo==="opcion_multiple"){
+
 
 
 pregunta.contenido =
@@ -1723,6 +1864,10 @@ document.getElementById(
 
 
 
+/* ==========================
+   CASO APLICACIÓN
+========================== */
+
 
 if(tipo==="caso_aplicacion"){
 
@@ -1742,10 +1887,14 @@ document.getElementById(
 ).value;
 
 
+
 }
 
 
 
+/* ==========================
+   CASO ANÁLISIS
+========================== */
 
 
 if(tipo==="caso_analisis"){
@@ -1766,10 +1915,14 @@ document.getElementById(
 ).value;
 
 
+
 }
 
 
 
+/* ==========================
+   ABIERTA
+========================== */
 
 
 if(tipo==="pregunta_abierta"){
@@ -1783,16 +1936,15 @@ document.getElementById(
 
 
 
-pregunta.criterio =
+pregunta.criterios =
 
 document.getElementById(
 "abiertaCriterio"
 ).value;
 
 
+
 }
-
-
 
 
 
@@ -1815,9 +1967,8 @@ alert(
 renderApp();
 
 
+
 }
-
-
 
 
 
