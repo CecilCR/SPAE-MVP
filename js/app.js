@@ -3670,3 +3670,667 @@ window.addEventListener(
 iniciarSistemaSPAE
 
 );
+/* =====================================================
+   SPAE MVP
+
+   MÓDULO 9
+   VISTAS ESTUDIANTE / DOCENTE
+   CLAVE DE RESPUESTAS
+===================================================== */
+
+
+/* =====================================================
+   NAVEGACIÓN DEL MÓDULO
+===================================================== */
+
+
+function renderClave(){
+
+
+return `
+
+
+<section class="card">
+
+
+<h2>
+7. Revisión del instrumento
+</h2>
+
+
+
+<button onclick="mostrarVistaEstudiante()">
+
+Vista estudiante
+
+</button>
+
+
+
+<button onclick="mostrarVistaDocente()">
+
+Vista docente
+
+</button>
+
+
+
+<div id="vistaClave">
+
+</div>
+
+
+
+</section>
+
+
+`;
+
+}
+
+
+
+/* =====================================================
+   VISTA ESTUDIANTE
+===================================================== */
+
+
+function mostrarVistaEstudiante(){
+
+
+
+const contenedor =
+
+document.getElementById(
+"vistaClave"
+);
+
+
+
+if(!contenedor){
+
+return;
+
+}
+
+
+
+contenedor.innerHTML = `
+
+
+<div class="exam-preview">
+
+
+<h1>
+
+${SPAE.curso.nombre}
+
+</h1>
+
+
+
+<h2>
+
+${SPAE.evaluacion.nombre}
+
+</h2>
+
+
+
+<p>
+
+Tiempo:
+
+${SPAE.evaluacion.tiempo}
+
+minutos
+
+</p>
+
+
+
+<hr>
+
+
+
+${renderPreguntasEstudiante()}
+
+
+
+</div>
+
+
+`;
+
+
+
+}
+
+
+
+/* =====================================================
+   PREGUNTAS ESTUDIANTE
+===================================================== */
+
+
+function renderPreguntasEstudiante(){
+
+
+return SPAE.preguntas.map(
+
+(p,index)=>{
+
+
+let contenido = "";
+
+
+
+if(
+p.tipo==="opcion_multiple"
+){
+
+
+contenido = `
+
+
+<p>
+
+<strong>
+${index+1}.
+</strong>
+
+${p.contenido}
+
+</p>
+
+
+<ol type="A">
+
+
+${p.alternativas.map(
+
+a=>`
+
+<li>
+
+${a}
+
+</li>
+
+`
+
+).join("")}
+
+
+
+</ol>
+
+
+`;
+
+
+
+}
+
+
+
+if(
+p.tipo==="caso_aplicacion"
+){
+
+
+contenido = `
+
+
+<h3>
+Caso ${index+1}
+</h3>
+
+
+<p>
+
+${p.situacion}
+
+</p>
+
+
+
+<p>
+
+${p.pregunta}
+
+</p>
+
+
+`;
+
+
+
+}
+
+
+
+
+if(
+p.tipo==="caso_analisis"
+){
+
+
+contenido = `
+
+
+<h3>
+Caso de análisis ${index+1}
+</h3>
+
+
+<p>
+
+${p.situacion}
+
+</p>
+
+
+
+<p>
+
+${p.preguntas}
+
+</p>
+
+
+`;
+
+
+
+}
+
+
+
+
+
+if(
+p.tipo==="pregunta_abierta"
+){
+
+
+contenido = `
+
+
+<p>
+
+<strong>
+
+${index+1}.
+
+</strong>
+
+
+${p.contenido}
+
+</p>
+
+
+
+<p>
+
+Respuesta:
+
+</p>
+
+
+
+<br><br>
+
+
+
+<hr>
+
+
+
+`;
+
+
+
+}
+
+
+
+return `
+
+
+<div class="question">
+
+
+${contenido}
+
+
+</div>
+
+
+`;
+
+
+}
+
+).join("");
+
+
+
+}
+
+
+
+/* =====================================================
+   VISTA DOCENTE
+===================================================== */
+
+
+function mostrarVistaDocente(){
+
+
+
+const contenedor =
+
+document.getElementById(
+"vistaClave"
+);
+
+
+
+if(!contenedor){
+
+return;
+
+}
+
+
+
+contenedor.innerHTML = `
+
+
+<div class="teacher-view">
+
+
+<h1>
+
+Clave docente
+
+</h1>
+
+
+
+${renderClaveDocente()}
+
+
+
+</div>
+
+
+`;
+
+
+
+}
+
+
+
+
+/* =====================================================
+   CLAVE DOCENTE
+===================================================== */
+
+
+function renderClaveDocente(){
+
+
+
+return SPAE.preguntas.map(
+
+(p,index)=>{
+
+
+return `
+
+
+<div class="question teacher-question">
+
+
+<h3>
+
+Pregunta ${index+1}
+
+</h3>
+
+
+
+<p>
+
+<strong>
+Tipo:
+</strong>
+
+${p.tipo}
+
+</p>
+
+
+
+${mostrarContenidoDocente(p)}
+
+
+
+</div>
+
+
+`;
+
+
+
+}
+
+).join("");
+
+
+
+}
+
+
+
+/* =====================================================
+   CONTENIDO DOCENTE
+===================================================== */
+
+
+function mostrarContenidoDocente(p){
+
+
+
+let html = "";
+
+
+
+
+if(
+p.tipo==="opcion_multiple"
+){
+
+
+
+html += `
+
+
+<p>
+
+<strong>
+Respuesta correcta:
+</strong>
+
+${p.respuestaCorrecta || "-"}
+
+</p>
+
+
+<p>
+
+<strong>
+Justificación:
+</strong>
+
+</p>
+
+
+
+<textarea
+
+placeholder="Ingrese justificación pedagógica">
+
+${p.justificacion || ""}
+
+</textarea>
+
+
+`;
+
+
+
+}
+
+
+
+
+
+if(
+p.tipo==="caso_aplicacion"
+
+||
+
+p.tipo==="caso_analisis"
+
+){
+
+
+
+html += `
+
+
+<p>
+
+<strong>
+Respuesta esperada:
+</strong>
+
+</p>
+
+
+
+<textarea
+
+placeholder="Describa criterios esperados">
+
+${p.respuestaEsperada || ""}
+
+</textarea>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+if(
+p.tipo==="pregunta_abierta"
+){
+
+
+
+html += `
+
+
+<p>
+
+<strong>
+Criterios de evaluación:
+</strong>
+
+</p>
+
+
+
+<textarea
+
+placeholder="Defina criterios de valoración">
+
+${p.criterios || ""}
+
+</textarea>
+
+
+
+`;
+
+
+
+}
+
+
+
+return html;
+
+
+
+}
+
+
+
+/* =====================================================
+   GUARDAR INFORMACIÓN DOCENTE
+===================================================== */
+
+
+function guardarClaveDocente(){
+
+
+
+SPAE.preguntas.forEach(
+
+(p,index)=>{
+
+
+
+const justificacion =
+
+document.querySelector(
+
+`#justificacion_${index}`
+
+);
+
+
+
+if(justificacion){
+
+
+p.justificacion =
+
+justificacion.value;
+
+
+}
+
+
+
+});
+
+
+
+saveProject();
+
+
+}
