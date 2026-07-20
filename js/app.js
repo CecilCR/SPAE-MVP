@@ -3233,7 +3233,9 @@ console.error(
 errores
 
 );
-
+alert(
+errores.join("\n")
+);
 
 
 alert(
