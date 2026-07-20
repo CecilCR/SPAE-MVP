@@ -1,4 +1,4 @@
-/* =====================================================
+F/* =====================================================
    SPAE MVP
 
    MÓDULO 0 v2
@@ -417,106 +417,65 @@ console.log(
 /* =====================================================
    SPAE MVP
 
-   MÓDULO 1
-   MOTOR DE APLICACIÓN
+   MÓDULO 1 v2
+
+   CONTROL PRINCIPAL
+   NAVEGACIÓN
+   ROUTER
+
 ===================================================== */
+
 
 
 /* =====================================================
-   NAVEGACIÓN PRINCIPAL
+   INICIO DE SPAE
 ===================================================== */
 
 
-function cambiarVista(vista){
+function iniciarSPAE(){
 
 
-    SPAE.vistaActual = vista;
+try{
+
+
+    inicializarSPAE();
 
 
     renderApp();
 
 
 }
+catch(error){
 
 
+    console.error(
 
-/* =====================================================
-   MENÚ PRINCIPAL
-===================================================== */
+        "Error iniciando SPAE",
 
+        error
 
-function renderMenu(){
-
-
-return `
-
-<nav class="spae-menu">
+    );
 
 
-<button 
-onclick="cambiarVista('curso')">
+    alert(
 
-1. Curso
+        "SPAE no pudo iniciar correctamente."
 
-</button>
-
+    );
 
 
-<button 
-onclick="cambiarVista('evaluacion')">
+}
 
-2. Evaluación
-
-</button>
-
-
-
-<button 
-onclick="cambiarVista('preguntas')">
-
-3. Preguntas
-
-</button>
-
-
-
-<button 
-onclick="cambiarVista('blueprint')">
-
-4. Blueprint
-
-</button>
-
-
-
-<button 
-onclick="cambiarVista('preview')">
-
-5. Vista previa
-
-</button>
-
-
-
-<button 
-onclick="cambiarVista('exportacion')">
-
-6. Exportar
-
-</button>
-
-
-</nav>
-
-
-`;
 
 }
 
 
 
+
+
+
 /* =====================================================
-   MOTOR PRINCIPAL DE RENDERIZADO
+   RENDER PRINCIPAL
 ===================================================== */
 
 
@@ -526,7 +485,13 @@ function renderApp(){
 
 const app =
 
-document.getElementById("app");
+document.getElementById(
+
+"content"
+
+);
+
+
 
 
 
@@ -535,7 +500,7 @@ if(!app){
 
 console.error(
 
-"SPAE: No existe contenedor #app"
+"Contenedor principal #content no encontrado"
 
 );
 
@@ -548,133 +513,116 @@ return;
 
 
 
-let contenido = "";
-
-
-
-
-switch(SPAE.vistaActual){
-
-
-
-case "curso":
-
-
-contenido = renderCurso();
-
-
-break;
-
-
-
-case "evaluacion":
-
-
-contenido = renderEvaluacion();
-
-
-break;
-
-
-
-case "preguntas":
-
-
-contenido = renderPreguntas();
-
-
-break;
-
-
-
-case "blueprint":
-
-
-contenido = renderBlueprint();
-
-
-break;
-
-
-
-case "preview":
-
-
-contenido = renderPreview();
-
-
-break;
-
-
-
-case "exportacion":
-
-
-contenido = renderExportacion();
-
-
-break;
-
-
-
-default:
-
-
-contenido = `
-
-<section class="card">
-
-<h2>SPAE MVP</h2>
-
-<p>
-Seleccione un módulo.
-</p>
-
-</section>
-
-`;
-
-
-
-}
-
-
 
 
 app.innerHTML = `
 
 
-<header class="spae-header">
+
+<div class="spae-layout">
 
 
-<h1>
+
+<aside class="menu">
+
+
+
+<h3>
+
 SPAE MVP
-</h1>
 
-
-<p>
-Sistema Profesional de Autoría de Evaluaciones
-</p>
-
-
-</header>
+</h3>
 
 
 
-${renderMenu()}
+
+
+<button onclick="abrirModulo('curso')">
+
+1. Curso
+
+</button>
 
 
 
-<main class="spae-container">
 
 
-${contenido}
+<button onclick="abrirModulo('evaluacion')">
+
+2. Evaluación
+
+</button>
+
+
+
+
+
+<button onclick="abrirModulo('preguntas')">
+
+3. Preguntas
+
+</button>
+
+
+
+
+
+<button onclick="abrirModulo('blueprint')">
+
+4. Blueprint
+
+</button>
+
+
+
+
+
+<button onclick="abrirModulo('vistaPrevia')">
+
+5. Vista previa
+
+</button>
+
+
+
+
+
+<button onclick="abrirModulo('exportar')">
+
+6. Exportar
+
+</button>
+
+
+
+</aside>
+
+
+
+
+
+<main id="workspace">
+
+
+
+<h2>
+
+Seleccione un módulo.
+
+</h2>
+
 
 
 </main>
 
 
 
+
+
+</div>
+
+
+
 `;
 
 
@@ -684,23 +632,159 @@ ${contenido}
 
 
 
+
+
+
+
+
 /* =====================================================
-   MENSAJE DE INICIO
+   ABRIR MÓDULOS
 ===================================================== */
 
 
-function iniciarSPAE(){
+function abrirModulo(nombre){
 
 
-console.log(
 
-"SPAE MVP cargado correctamente"
+const workspace =
+
+document.getElementById(
+
+"workspace"
 
 );
 
 
 
-renderApp();
+
+
+if(!workspace){
+
+
+return;
+
+
+}
+
+
+
+
+
+switch(nombre){
+
+
+
+case "curso":
+
+
+
+workspace.innerHTML =
+
+renderCurso();
+
+
+
+break;
+
+
+
+
+
+case "evaluacion":
+
+
+
+workspace.innerHTML =
+
+renderEvaluacion();
+
+
+
+break;
+
+
+
+
+
+case "preguntas":
+
+
+
+workspace.innerHTML =
+
+renderPreguntas();
+
+
+
+break;
+
+
+
+
+
+case "blueprint":
+
+
+
+workspace.innerHTML =
+
+renderBlueprint();
+
+
+
+break;
+
+
+
+
+
+case "vistaPrevia":
+
+
+
+workspace.innerHTML =
+
+renderVistaPrevia();
+
+
+
+break;
+
+
+
+
+
+case "exportar":
+
+
+
+workspace.innerHTML =
+
+renderExportar();
+
+
+
+break;
+
+
+
+
+
+default:
+
+
+
+workspace.innerHTML = `
+
+
+<h3>
+
+Módulo no encontrado
+
+</h3>
+
+
+`;
 
 
 
@@ -708,8 +792,68 @@ renderApp();
 
 
 
+}
+
+
+
+
+
+
+
 /* =====================================================
-   INICIALIZACIÓN DEL SISTEMA
+   EXPORTAR
+   PLACEHOLDER TEMPORAL
+
+   Será reemplazado por MÓDULO 7 v2
+
+===================================================== */
+
+
+function renderExportar(){
+
+
+
+return `
+
+
+
+<section class="card">
+
+
+<h2>
+
+6. Exportación
+
+</h2>
+
+
+
+<p>
+
+Módulo de exportación pendiente.
+
+</p>
+
+
+
+</section>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   EVENTO INICIAL
 ===================================================== */
 
 
@@ -717,7 +861,14 @@ document.addEventListener(
 
 "DOMContentLoaded",
 
-iniciarSPAE
+()=>{
+
+
+iniciarSPAE();
+
+
+
+}
 
 );
 /* =====================================================
