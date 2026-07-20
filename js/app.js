@@ -2708,7 +2708,7 @@ ${p.criterio || "-"}
 /* =====================================================
    SPAE MVP
 
-   MÓDULO 7
+   MÓDULO 7 v2
    EXPORTACIÓN
 ===================================================== */
 
@@ -2732,9 +2732,8 @@ return `
 </h2>
 
 
-
 <p>
-Seleccione el formato de salida del examen.
+Genere archivos para revisar, compartir o continuar editando.
 </p>
 
 
@@ -2744,6 +2743,7 @@ Seleccione el formato de salida del examen.
 Exportar HTML
 
 </button>
+
 
 
 <br><br>
@@ -2760,11 +2760,6 @@ Exportar proyecto JSON
 
 <br><br>
 
-
-
-<label>
-Importar proyecto JSON
-</label>
 
 
 <input
@@ -2785,21 +2780,7 @@ Importar JSON
 
 
 
-<hr>
-
-
-
-<h3>
-Exportación Word
-</h3>
-
-
-<p>
-
-El documento Word permitirá editar,
-revisar y distribuir el examen.
-
-</p>
+<br><br>
 
 
 
@@ -2820,6 +2801,7 @@ Generar documento Word
 
 
 
+
 /* =====================================================
    EXPORTAR HTML
 ===================================================== */
@@ -2828,15 +2810,19 @@ Generar documento Word
 function exportarHTML(){
 
 
-const contenido = `
 
+const contenido = `
 
 <!DOCTYPE html>
 
-<html>
+<html lang="es">
 
 
 <head>
+
+
+<meta charset="UTF-8">
+
 
 <title>
 
@@ -2845,30 +2831,15 @@ ${SPAE.evaluacion.nombre}
 </title>
 
 
-<meta charset="UTF-8">
-
-
 </head>
+
 
 
 <body>
 
 
-<h1>
 
-${SPAE.curso.nombre}
-
-</h1>
-
-
-<h2>
-
-${SPAE.evaluacion.nombre}
-
-</h2>
-
-
-${renderPreview()}
+${renderDocumentoWord()}
 
 
 
@@ -2876,7 +2847,6 @@ ${renderPreview()}
 
 
 </html>
-
 
 `;
 
@@ -2886,15 +2856,15 @@ descargarArchivo(
 
 contenido,
 
-"examen_spae.html",
+"evaluacion_spae.html",
 
-"text/html"
+"text/html;charset=utf-8"
 
 );
 
 
-
 }
+
 
 
 
@@ -2927,13 +2897,13 @@ contenido,
 
 "proyecto_spae.json",
 
-"application/json"
+"application/json;charset=utf-8"
 
 );
 
 
-
 }
+
 
 
 
@@ -2959,7 +2929,7 @@ if(!archivo){
 
 alert(
 
-"Seleccione un archivo JSON"
+"Seleccione un archivo JSON."
 
 );
 
@@ -2980,15 +2950,35 @@ new FileReader();
 lector.onload = function(e){
 
 
-
 try{
 
 
-SPAE = JSON.parse(
+const proyecto =
+
+JSON.parse(
 
 e.target.result
 
 );
+
+
+
+if(!proyecto.curso ||
+
+!proyecto.evaluacion ||
+
+!Array.isArray(proyecto.preguntas)
+
+){
+
+
+throw new Error();
+
+}
+
+
+
+SPAE = proyecto;
 
 
 
@@ -2998,14 +2988,13 @@ saveProject();
 
 alert(
 
-"Proyecto importado correctamente."
+"Proyecto SPAE importado correctamente."
 
 );
 
 
 
 renderApp();
-
 
 
 }
@@ -3015,7 +3004,7 @@ catch(error){
 
 alert(
 
-"El archivo no tiene formato SPAE válido."
+"El archivo no corresponde a un proyecto SPAE válido."
 
 );
 
@@ -3036,6 +3025,7 @@ lector.readAsText(archivo);
 
 
 
+
 /* =====================================================
    EXPORTAR WORD
 ===================================================== */
@@ -3048,15 +3038,30 @@ function exportarWord(){
 const contenido = `
 
 
-${SPAE.curso.nombre}
+<html>
 
 
-${SPAE.evaluacion.nombre}
+<head>
+
+
+<meta charset="UTF-8">
+
+
+</head>
 
 
 
-${renderPreview()}
+<body>
 
+
+${renderDocumentoWord()}
+
+
+
+</body>
+
+
+</html>
 
 
 `;
@@ -3067,14 +3072,376 @@ descargarArchivo(
 
 contenido,
 
-"examen_spae.doc",
+"evaluacion_spae.doc",
 
-"application/msword"
+"application/msword;charset=utf-8"
 
 );
 
 
+
 }
+
+
+
+
+/* =====================================================
+   DOCUMENTO WORD LIMPIO
+===================================================== */
+
+
+function renderDocumentoWord(){
+
+
+
+return `
+
+
+
+<h1>
+
+${SPAE.curso.nombre || ""}
+
+</h1>
+
+
+
+<h2>
+
+${SPAE.evaluacion.nombre || ""}
+
+</h2>
+
+
+
+<p>
+
+<strong>
+Programa:
+</strong>
+
+${SPAE.curso.programa || ""}
+
+</p>
+
+
+
+<p>
+
+<strong>
+Tiempo:
+</strong>
+
+${SPAE.evaluacion.tiempo || ""}
+
+minutos
+
+</p>
+
+
+
+<p>
+
+<strong>
+Ponderación:
+</strong>
+
+${SPAE.evaluacion.ponderacion || ""}
+
+%
+
+</p>
+
+
+
+<hr>
+
+
+
+<h2>
+
+Sección I
+
+<br>
+
+Selección múltiple
+
+</h2>
+
+
+
+${documentoMCQ()}
+
+
+
+
+<h2>
+
+Sección II
+
+<br>
+
+Casos profesionales
+
+</h2>
+
+
+
+${documentoCasos()}
+
+
+
+
+<h2>
+
+Sección III
+
+<br>
+
+Preguntas abiertas
+
+</h2>
+
+
+
+${documentoAbiertas()}
+
+
+
+`;
+
+}
+
+
+
+
+
+/* =====================================================
+   DOCUMENTO PREGUNTAS MCQ
+===================================================== */
+
+
+function documentoMCQ(){
+
+
+
+const lista =
+
+SPAE.preguntas.filter(
+
+p=>p.tipo==="opcion_multiple"
+
+);
+
+
+
+if(lista.length===0){
+
+
+return "<p>No existen preguntas.</p>";
+
+
+}
+
+
+
+return lista.map(
+
+(p,i)=>`
+
+
+<p>
+
+<strong>
+
+${i+1}.
+
+</strong>
+
+${p.contenido}
+
+</p>
+
+
+
+<ol type="A">
+
+
+${p.alternativas.map(
+
+a=>`
+
+<li>${a}</li>
+
+`
+
+).join("")}
+
+
+
+</ol>
+
+
+`
+
+).join("");
+
+
+
+}
+
+
+
+
+/* =====================================================
+   DOCUMENTO CASOS
+===================================================== */
+
+
+function documentoCasos(){
+
+
+
+const lista =
+
+SPAE.preguntas.filter(
+
+p=>
+
+p.tipo==="caso_aplicacion"
+
+||
+
+p.tipo==="caso_analisis"
+
+);
+
+
+
+if(lista.length===0){
+
+
+return "<p>No existen casos.</p>";
+
+}
+
+
+
+return lista.map(
+
+(p,i)=>`
+
+
+<h3>
+
+Caso ${i+1}
+
+</h3>
+
+
+
+<p>
+
+${p.situacion || ""}
+
+</p>
+
+
+
+<p>
+
+<strong>
+Pregunta:
+
+</strong>
+
+${p.pregunta || p.preguntas || ""}
+
+</p>
+
+
+`
+
+).join("");
+
+
+
+}
+
+
+
+/* =====================================================
+   DOCUMENTO ABIERTAS
+===================================================== */
+
+
+function documentoAbiertas(){
+
+
+
+const lista =
+
+SPAE.preguntas.filter(
+
+p=>p.tipo==="pregunta_abierta"
+
+);
+
+
+
+if(lista.length===0){
+
+
+return "<p>No existen preguntas abiertas.</p>";
+
+}
+
+
+
+return lista.map(
+
+(p,i)=>`
+
+
+<p>
+
+<strong>
+
+${i+1}.
+
+</strong>
+
+
+${p.contenido}
+
+</p>
+
+
+
+<p>
+
+Respuesta:
+
+<br><br>
+
+
+__________________________________
+
+<br><br>
+
+__________________________________
+
+</p>
+
+
+`
+
+).join("");
+
+
+
+}
+
 
 
 /* =====================================================
@@ -3094,7 +3461,9 @@ tipo
 
 
 
-const blob = new Blob(
+const blob =
+
+new Blob(
 
 [contenido],
 
@@ -3120,10 +3489,11 @@ document.createElement("a");
 
 
 
-enlace.href = url;
+enlace.href=url;
 
 
-enlace.download = nombre;
+
+enlace.download=nombre;
 
 
 
