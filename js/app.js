@@ -422,9 +422,6 @@ function saveEvaluacion() {
 
 function renderPreguntas() {
 
-  const competencias = SPAE.evaluacion.competencias || [];
-  const resultados = SPAE.evaluacion.resultados || [];
-
   return `
 
     <section class="card">
@@ -462,20 +459,17 @@ function renderPreguntas() {
       <br>
 
       <button onclick="guardarPregunta()">
-      Agregar pregunta
+        Agregar pregunta
       </button>
 
     </section>
+
 
     <section class="card">
 
       <h2>Preguntas registradas</h2>
 
-      <div id="listaPreguntas">
-
       ${renderListaPreguntas()}
-
-      </div>
 
     </section>
 
@@ -483,6 +477,367 @@ function renderPreguntas() {
 
 }
 
+
+/* =====================================================
+   FORMULARIO DINÁMICO
+===================================================== */
+
+function renderFormularioPregunta() {
+
+  const tipo =
+    document.getElementById("tipoPregunta").value;
+
+
+  const competencias =
+
+    SPAE.evaluacion.competencias
+      ? SPAE.evaluacion.competencias.split("\n")
+      : [];
+
+
+  const resultados =
+
+    SPAE.evaluacion.resultados
+      ? SPAE.evaluacion.resultados.split("\n")
+      : [];
+
+
+  const selectCompetencias = `
+
+      <label>Competencia asociada</label>
+
+      <select id="competenciaPregunta">
+
+      ${competencias.map(c => `
+      <option value="${c.trim()}">
+      ${c.trim()}
+      </option>
+      `).join("")}
+
+      </select>
+
+
+      <label>Resultado de aprendizaje</label>
+
+      <select id="resultadoPregunta">
+
+      ${resultados.map(r => `
+      <option value="${r.trim()}">
+      ${r.trim()}
+      </option>
+      `).join("")}
+
+      </select>
+
+
+      <label>Retroalimentación (opcional)</label>
+
+      <textarea
+      id="retroalimentacionPregunta">
+      </textarea>
+
+  `;
+
+
+
+/* =====================================================
+   OPCIÓN MÚLTIPLE
+===================================================== */
+
+  if (tipo === "opcion_multiple") {
+
+    document.getElementById("formPregunta").innerHTML = `
+
+      <label>Enunciado</label>
+
+      <textarea id="enunciado"></textarea>
+
+
+      <label>Alternativa A</label>
+      <input type="text" id="altA">
+
+
+      <label>Alternativa B</label>
+      <input type="text" id="altB">
+
+
+      <label>Alternativa C</label>
+      <input type="text" id="altC">
+
+
+      <label>Alternativa D</label>
+      <input type="text" id="altD">
+
+
+      <label>Respuesta correcta</label>
+
+      <select id="respuestaCorrecta">
+
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+
+      </select>
+
+      ${selectCompetencias}
+
+    `;
+
+  }
+
+
+/* =====================================================
+   CASO DE APLICACIÓN
+===================================================== */
+
+  if (tipo === "caso_aplicacion") {
+
+    document.getElementById("formPregunta").innerHTML = `
+
+      <label>Situación profesional</label>
+
+      <textarea id="situacion"></textarea>
+
+
+      <label>Pregunta</label>
+
+      <textarea id="pregunta"></textarea>
+
+
+      ${selectCompetencias}
+
+    `;
+
+  }
+
+
+/* =====================================================
+   CASO DE ANÁLISIS
+===================================================== */
+
+  if (tipo === "caso_analisis") {
+
+    document.getElementById("formPregunta").innerHTML = `
+
+      <label>Descripción del caso</label>
+
+      <textarea id="caso"></textarea>
+
+
+      <label>
+      Preguntas orientadoras
+      (una por línea)
+      </label>
+
+      <textarea
+      id="orientadoras">
+      </textarea>
+
+
+      ${selectCompetencias}
+
+    `;
+
+  }
+
+
+/* =====================================================
+   PREGUNTA ABIERTA
+===================================================== */
+
+  if (tipo === "pregunta_abierta") {
+
+    document.getElementById("formPregunta").innerHTML = `
+
+      <label>Pregunta</label>
+
+      <textarea
+      id="preguntaAbierta">
+      </textarea>
+
+
+      ${selectCompetencias}
+
+    `;
+
+  }
+
+}
+
+
+/* =====================================================
+   GUARDAR PREGUNTA
+===================================================== */
+
+function guardarPregunta() {
+
+  const tipo =
+    document.getElementById("tipoPregunta").value;
+
+
+  const pregunta = {
+
+    id: Date.now(),
+
+    tipo,
+
+    competencia:
+    document.getElementById(
+      "competenciaPregunta"
+    ).value,
+
+    resultado:
+    document.getElementById(
+      "resultadoPregunta"
+    ).value,
+
+    retroalimentacion:
+    document.getElementById(
+      "retroalimentacionPregunta"
+    ).value
+
+  };
+
+
+
+  if (tipo === "opcion_multiple") {
+
+    pregunta.enunciado =
+      document.getElementById("enunciado").value;
+
+    pregunta.alternativas = [
+
+      document.getElementById("altA").value,
+      document.getElementById("altB").value,
+      document.getElementById("altC").value,
+      document.getElementById("altD").value
+
+    ];
+
+    pregunta.correcta =
+      document.getElementById(
+      "respuestaCorrecta"
+      ).value;
+
+  }
+
+
+
+  if (tipo === "caso_aplicacion") {
+
+    pregunta.situacion =
+      document.getElementById("situacion").value;
+
+    pregunta.pregunta =
+      document.getElementById("pregunta").value;
+
+  }
+
+
+
+  if (tipo === "caso_analisis") {
+
+    pregunta.caso =
+      document.getElementById("caso").value;
+
+    pregunta.orientadoras =
+      document.getElementById(
+      "orientadoras"
+      ).value;
+
+  }
+
+
+
+  if (tipo === "pregunta_abierta") {
+
+    pregunta.pregunta =
+      document.getElementById(
+      "preguntaAbierta"
+      ).value;
+
+  }
+
+
+  SPAE.preguntas.push(pregunta);
+
+  saveProject();
+  renderApp();
+
+}
+
+
+/* =====================================================
+   LISTA DE PREGUNTAS
+===================================================== */
+
+function renderListaPreguntas() {
+
+  if (SPAE.preguntas.length === 0) {
+
+    return `
+    <p>
+    No existen preguntas registradas.
+    </p>
+    `;
+
+  }
+
+
+  return SPAE.preguntas.map((p,index) => `
+
+    <div class="card">
+
+      <h3>
+      Pregunta ${index + 1}
+      </h3>
+
+      <p>
+      <strong>Tipo:</strong>
+      ${p.tipo}
+      </p>
+
+      <p>
+      <strong>Competencia:</strong>
+      ${p.competencia}
+      </p>
+
+      <p>
+      <strong>Resultado:</strong>
+      ${p.resultado}
+      </p>
+
+
+      <button
+      onclick="eliminarPregunta(${p.id})">
+
+      Eliminar
+
+      </button>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+/* =====================================================
+   ELIMINAR PREGUNTA
+===================================================== */
+
+function eliminarPregunta(id) {
+
+  SPAE.preguntas =
+    SPAE.preguntas.filter(
+      pregunta => pregunta.id !== id
+    );
+
+  saveProject();
+  renderApp();
+
+}
 
 /* =====================================================
    FORMULARIOS
@@ -742,39 +1097,29 @@ function renderListaPreguntas() {
    ELIMINAR PREGUNTA
 ===================================================== */
 
-
-function eliminarPregunta(id){
+function eliminarPregunta(id) {
 
   SPAE.preguntas =
-    SPAE.preguntas.filter(p => p.id !== id);
+    SPAE.preguntas.filter(
+      pregunta => pregunta.id !== id
+    );
 
-  saveData();
-  render();
+  saveProject();
+  renderApp();
 
 }
-
-
-/* =====================================================
-   INICIALIZACIÓN
-===================================================== */
-
-
-setTimeout(() => {
-
-  if (document.getElementById("tipoPregunta")) {
+if (document.getElementById("tipoPregunta")) {
 
     renderFormularioPregunta();
 
     document
-      .getElementById("tipoPregunta")
-      .addEventListener(
-        "change",
-        renderFormularioPregunta
-      );
+        .getElementById("tipoPregunta")
+        .addEventListener(
+            "change",
+            renderFormularioPregunta
+        );
 
-  }
-
-},50);
+}
 
 /* =====================================================
    BLUEPRINT
