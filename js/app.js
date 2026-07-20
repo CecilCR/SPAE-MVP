@@ -125,6 +125,16 @@ function renderApp() {
     `;
 
 }
+if (document.getElementById("tipoPregunta")) {
+
+    renderFormularioPregunta();
+
+    document
+        .getElementById("tipoPregunta")
+        .addEventListener(
+            "change",
+            renderFormularioPregunta
+        );
 
 
 /* =====================================================
@@ -752,30 +762,6 @@ function eliminarPregunta(id){
   render();
 
 }
-
-
-/* =====================================================
-   INICIALIZACIÓN
-===================================================== */
-
-
-setTimeout(() => {
-
-  if (document.getElementById("tipoPregunta")) {
-
-    renderFormularioPregunta();
-
-    document
-      .getElementById("tipoPregunta")
-      .addEventListener(
-        "change",
-        renderFormularioPregunta
-      );
-
-  }
-
-},50);
-
 
 /* =====================================================
    BLUEPRINT
