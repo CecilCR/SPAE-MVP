@@ -4660,18 +4660,16 @@ ${texto}
 
    SPAE MVP
 
-   MÓDULO 7C v2
+   MÓDULO 7C v3
 
-   EXPORTACIÓN WORD
+   EXPORTACIÓN WORD PROFESIONAL
 
-   Corrección:
-   - UTF-8
-   - Sin BOM incorrecto
    - Vista estudiante
    - Vista docente
+   - UTF-8 corregido
+   - Clave docente completa
 
 ===================================================== */
-
 
 
 
@@ -4741,11 +4739,99 @@ Word - Vista docente
 
 
 /* =====================================================
-   DOCUMENTO ESTUDIANTE
+   DATOS GENERALES
+===================================================== */
+
+
+function obtenerDatosDocumento(){
+
+
+
+return {
+
+
+evaluacion:
+
+SPAE.evaluacion?.nombre
+
+||
+
+SPAE.evaluacion?.titulo
+
+||
+
+"Evaluación",
+
+
+
+
+
+programa:
+
+SPAE.curso?.programa
+
+||
+
+"",
+
+
+
+
+
+curso:
+
+SPAE.curso?.nombre
+
+||
+
+SPAE.curso?.curso
+
+||
+
+"",
+
+
+
+
+
+tiempo:
+
+SPAE.evaluacion?.tiempo
+
+||
+
+""
+
+
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   VISTA ESTUDIANTE
 ===================================================== */
 
 
 function construirDocumentoEstudiante(){
+
+
+
+const datos =
+
+obtenerDatosDocumento();
+
+
 
 
 
@@ -4754,13 +4840,26 @@ let texto = "";
 
 
 
+
 texto +=
 
-(SPAE.evaluacion.nombre || "Evaluación")
+"EXAMEN\n\n";
+
+
+
+
+
+texto +=
+
+"Evaluación: "
 
 +
 
-"\n\n";
+datos.evaluacion
+
++
+
+"\n";
 
 
 
@@ -4772,7 +4871,7 @@ texto +=
 
 +
 
-(SPAE.curso.programa || "")
+datos.programa
 
 +
 
@@ -4788,11 +4887,28 @@ texto +=
 
 +
 
-(SPAE.curso.nombre || "")
+datos.curso
 
 +
 
-"\n\n";
+"\n";
+
+
+
+
+
+texto +=
+
+"Tiempo: "
+
++
+
+datos.tiempo
+
++
+
+" minutos\n\n";
+
 
 
 
@@ -4810,8 +4926,6 @@ texto +=
 
 
 
-
-
 SPAE.preguntas.forEach(
 
 (p,index)=>{
@@ -4820,12 +4934,27 @@ SPAE.preguntas.forEach(
 
 texto +=
 
-(index + 1)
+"================================\n";
+
+
+
+texto +=
+
+"PREGUNTA "
 
 +
 
-". ";
+(index+1)
 
++
+
+"\n";
+
+
+
+texto +=
+
+"================================\n\n";
 
 
 
@@ -4861,17 +4990,11 @@ texto +=
 
 
 
-texto +=
-
-(p.pregunta || p.preguntas || "")
-
-+
-
-"\n\n";
-
-
-
 }
+
+
+
+
 
 else{
 
@@ -4894,10 +5017,55 @@ texto +=
 
 
 
+if(
+
+p.alternativas &&
+
+p.alternativas.length
+
+){
+
+
+
+p.alternativas.forEach(
+
+(a,i)=>{
+
+
 
 texto +=
 
-"Respuesta:\n\n";
+String.fromCharCode(65+i)
+
++
+
+". "
+
++
+
+a
+
++
+
+"\n";
+
+
+
+}
+
+
+
+);
+
+
+
+}
+
+
+
+texto +=
+
+"\nRespuesta:\n\n";
 
 
 
@@ -4919,6 +5087,8 @@ texto +=
 
 
 
+
+
 return texto;
 
 
@@ -4933,7 +5103,7 @@ return texto;
 
 
 /* =====================================================
-   DOCUMENTO DOCENTE
+   VISTA DOCENTE
 ===================================================== */
 
 
@@ -4941,10 +5111,24 @@ function construirDocumentoDocente(){
 
 
 
-let texto =
+const datos =
 
-construirDocumentoEstudiante();
+obtenerDatosDocumento();
 
+
+
+
+
+let texto = "";
+
+
+
+
+
+
+texto +=
+
+"CLAVE DOCENTE\n\n";
 
 
 
@@ -4952,15 +5136,51 @@ construirDocumentoEstudiante();
 
 texto +=
 
+"Evaluación: "
+
++
+
+datos.evaluacion
+
++
+
+"\n";
 
 
-"\n\n================================\n";
 
 
 
 texto +=
 
-"CLAVE DOCENTE\n";
+"Programa: "
+
++
+
+datos.programa
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Curso: "
+
++
+
+datos.curso
+
++
+
+"\n\n";
+
+
+
+
 
 
 
@@ -4975,23 +5195,150 @@ texto +=
 
 
 
+
 SPAE.preguntas.forEach(
 
 (p,index)=>{
 
 
 
+
+
 texto +=
 
-"Pregunta "
+"PREGUNTA "
 
 +
 
-(index + 1)
+(index+1)
 
 +
 
 "\n\n";
+
+
+
+
+
+
+
+if(
+
+p.tipo &&
+
+p.tipo.includes("caso")
+
+){
+
+
+
+texto +=
+
+"CASO DE APLICACIÓN\n\n";
+
+
+
+texto +=
+
+"SITUACIÓN:\n"
+
++
+
+(p.situacion || "")
+
++
+
+"\n\n";
+
+
+
+}
+
+else{
+
+
+
+texto +=
+
+"ENUNCIADO:\n"
+
++
+
+(p.contenido || "")
+
++
+
+"\n\n";
+
+
+
+}
+
+
+
+
+
+
+
+
+if(
+
+p.alternativas &&
+
+p.alternativas.length
+
+){
+
+
+
+texto +=
+
+"ALTERNATIVAS:\n\n";
+
+
+
+
+
+p.alternativas.forEach(
+
+(a,i)=>{
+
+
+
+texto +=
+
+String.fromCharCode(65+i)
+
++
+
+". "
+
++
+
+a
+
++
+
+"\n";
+
+
+
+}
+
+
+
+);
+
+
+
+texto +=
+
+"\n";
+
+
+
+}
+
 
 
 
@@ -5030,7 +5377,6 @@ texto +=
 
 
 
-
 texto +=
 
 "Respuesta correcta: "
@@ -5047,10 +5393,9 @@ texto +=
 
 
 
-
 texto +=
 
-"Justificación: "
+"Justificación:\n"
 
 +
 
@@ -5058,9 +5403,7 @@ texto +=
 
 +
 
-"\n";
-
-
+"\n\n";
 
 
 
@@ -5068,7 +5411,7 @@ texto +=
 
 texto +=
 
-"Respuesta esperada: "
+"Respuesta esperada:\n"
 
 +
 
@@ -5076,8 +5419,7 @@ texto +=
 
 +
 
-"\n";
-
+"\n\n";
 
 
 
@@ -5085,7 +5427,7 @@ texto +=
 
 texto +=
 
-"Criterios: "
+"Criterios:\n"
 
 +
 
@@ -5094,6 +5436,15 @@ texto +=
 +
 
 "\n\n";
+
+
+
+
+
+texto +=
+
+"--------------------------------\n\n";
+
 
 
 
@@ -5122,7 +5473,7 @@ return texto;
 
 
 /* =====================================================
-   EXPORTAR ESTUDIANTE
+   EXPORTACIÓN ESTUDIANTE
 ===================================================== */
 
 
@@ -5151,7 +5502,7 @@ construirDocumentoEstudiante(),
 
 
 /* =====================================================
-   EXPORTAR DOCENTE
+   EXPORTACIÓN DOCENTE
 ===================================================== */
 
 
@@ -5180,7 +5531,7 @@ construirDocumentoDocente(),
 
 
 /* =====================================================
-   GENERADOR WORD UTF-8
+   CREAR WORD UTF-8
 ===================================================== */
 
 
@@ -5189,8 +5540,6 @@ function generarArchivoWord(contenido,nombre){
 
 
 const html =
-
-
 
 `
 
@@ -5201,8 +5550,6 @@ const html =
 <head>
 
 <meta charset="UTF-8">
-
-<title>SPAE</title>
 
 </head>
 
@@ -5235,7 +5582,6 @@ contenido.replace(
 
 
 
-
 const blob =
 
 new Blob(
@@ -5257,15 +5603,9 @@ type:
 
 
 
-
 const url =
 
-URL.createObjectURL(
-
-blob
-
-);
-
+URL.createObjectURL(blob);
 
 
 
@@ -5274,13 +5614,7 @@ blob
 
 const enlace =
 
-document.createElement(
-
-"a"
-
-);
-
-
+document.createElement("a");
 
 
 
@@ -5297,15 +5631,7 @@ enlace.download=nombre;
 
 
 
-
-document.body.appendChild(
-
-enlace
-
-);
-
-
-
+document.body.appendChild(enlace);
 
 
 
@@ -5313,26 +5639,14 @@ enlace.click();
 
 
 
-
-
-
-
-document.body.removeChild(
-
-enlace
-
-);
+document.body.removeChild(enlace);
 
 
 
 
 
 
-URL.revokeObjectURL(
-
-url
-
-);
+URL.revokeObjectURL(url);
 
 
 
@@ -5341,7 +5655,7 @@ url
 
 mostrarMensajeWord(
 
-"Documento Word generado correctamente."
+"Documento generado correctamente."
 
 );
 
@@ -5376,14 +5690,11 @@ document.getElementById(
 
 
 
-
-
 if(zona){
 
 
 
 zona.innerHTML =
-
 
 `
 
@@ -5416,6 +5727,6 @@ ${texto}
 
 /* =====================================================
 
-   FIN MÓDULO 7C v2
+FIN MÓDULO 7C v3
 
 ===================================================== */
