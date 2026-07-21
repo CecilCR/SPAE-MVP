@@ -3812,3 +3812,337 @@ ${p.criterios || "Pendiente"}
 
 
 }
+/* =====================================================
+   SPAE MVP
+
+   MÓDULO 7A v2
+
+   EXPORTACIÓN JSON
+
+===================================================== */
+
+
+
+
+
+/* =====================================================
+   RENDER EXPORTACIÓN
+===================================================== */
+
+
+function renderExportar(){
+
+
+return `
+
+
+<section class="card">
+
+
+<h2>
+
+6. Exportación del proyecto
+
+</h2>
+
+
+
+<p>
+
+Descargue una copia completa del proyecto SPAE.
+
+</p>
+
+
+
+
+<button onclick="exportarJSON()">
+
+Exportar proyecto JSON
+
+</button>
+
+
+
+
+<div id="mensajeExportacion">
+
+</div>
+
+
+
+</section>
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXPORTAR JSON
+===================================================== */
+
+
+function exportarJSON(){
+
+
+
+try{
+
+
+
+const proyecto = {
+
+
+version:"SPAE MVP v2",
+
+
+fecha:
+
+new Date().toISOString(),
+
+
+
+curso:
+
+SPAE.curso || {},
+
+
+
+evaluacion:
+
+SPAE.evaluacion || {},
+
+
+
+preguntas:
+
+SPAE.preguntas || [],
+
+
+
+blueprint:
+
+SPAE.blueprint || {}
+
+
+
+};
+
+
+
+
+
+
+
+const contenido =
+
+JSON.stringify(
+
+proyecto,
+
+null,
+
+4
+
+);
+
+
+
+
+
+
+
+const archivo =
+
+new Blob(
+
+[contenido],
+
+{
+
+type:"application/json;charset=utf-8"
+
+}
+
+);
+
+
+
+
+
+
+
+const url =
+
+URL.createObjectURL(
+
+archivo
+
+);
+
+
+
+
+
+
+
+const enlace =
+
+document.createElement(
+
+"a"
+
+);
+
+
+
+
+
+enlace.href = url;
+
+
+
+enlace.download =
+
+"SPAE_proyecto.json";
+
+
+
+
+
+document.body.appendChild(
+
+enlace
+
+);
+
+
+
+enlace.click();
+
+
+
+
+
+document.body.removeChild(
+
+enlace
+
+);
+
+
+
+URL.revokeObjectURL(
+
+url
+
+);
+
+
+
+
+
+
+mostrarMensajeExportacion(
+
+"Proyecto exportado correctamente"
+
+);
+
+
+
+}
+
+catch(error){
+
+
+
+console.error(
+
+"Error exportando proyecto",
+
+error
+
+);
+
+
+
+mostrarMensajeExportacion(
+
+"Error al exportar proyecto"
+
+);
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MENSAJE
+===================================================== */
+
+
+function mostrarMensajeExportacion(texto){
+
+
+
+const zona =
+
+document.getElementById(
+
+"mensajeExportacion"
+
+);
+
+
+
+
+
+if(zona){
+
+
+
+zona.innerHTML = `
+
+
+<p>
+
+<strong>
+
+${texto}
+
+</strong>
+
+</p>
+
+
+`;
+
+
+
+}
+
+
+
+}
