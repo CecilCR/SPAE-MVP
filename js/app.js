@@ -438,7 +438,11 @@ function iniciarSPAE(){
 try{
 
 
-    inicializarSPAE();
+    if(typeof inicializarSPAE === "function"){
+
+        inicializarSPAE();
+
+    }
 
 
     renderApp();
