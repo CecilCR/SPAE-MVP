@@ -3813,11 +3813,18 @@ ${p.criterios || "Pendiente"}
 
 }
 /* =====================================================
+
    SPAE MVP
 
-   MÓDULO 7A v2
+   MÓDULO 7A v3
 
-   EXPORTACIÓN JSON
+   EXPORTACIÓN JSON PROFESIONAL
+
+   Mejoras:
+   - Actualización automática Blueprint
+   - Exportación completa del proyecto
+   - UTF-8 correcto
+   - Validación básica
 
 ===================================================== */
 
@@ -3825,8 +3832,9 @@ ${p.criterios || "Pendiente"}
 
 
 
+
 /* =====================================================
-   RENDER EXPORTACIÓN
+   VISTA EXPORTACIÓN
 ===================================================== */
 
 
@@ -3841,15 +3849,23 @@ return `
 
 <h2>
 
-6. Exportación del proyecto
+6. Gestión del proyecto
 
 </h2>
 
 
 
+<h3>
+
+Exportar proyecto
+
+</h3>
+
+
+
 <p>
 
-Descargue una copia completa del proyecto SPAE.
+Genere una copia completa del proyecto SPAE.
 
 </p>
 
@@ -3887,27 +3903,57 @@ Exportar proyecto JSON
 
 
 /* =====================================================
-   EXPORTAR JSON
+   EXPORTACIÓN JSON
 ===================================================== */
 
 
 function exportarJSON(){
 
 
-
 try{
+
+
+
+/*
+   Antes de exportar:
+
+   Actualizar información derivada
+   (Blueprint)
+*/
+
+
+if(
+
+typeof generarBlueprint === "function"
+
+){
+
+
+generarBlueprint();
+
+
+}
+
+
+
 
 
 
 const proyecto = {
 
 
-version:"SPAE MVP v2",
+version:
+
+"SPAE MVP v3",
+
+
 
 
 fecha:
 
 new Date().toISOString(),
+
+
 
 
 
@@ -3917,15 +3963,21 @@ SPAE.curso || {},
 
 
 
+
+
 evaluacion:
 
 SPAE.evaluacion || {},
 
 
 
+
+
 preguntas:
 
 SPAE.preguntas || [],
+
+
 
 
 
@@ -3936,6 +3988,8 @@ SPAE.blueprint || {}
 
 
 };
+
+
 
 
 
@@ -3961,6 +4015,8 @@ null,
 
 
 
+
+
 const archivo =
 
 new Blob(
@@ -3969,11 +4025,17 @@ new Blob(
 
 {
 
-type:"application/json;charset=utf-8"
+
+type:
+
+"application/json;charset=utf-8"
+
 
 }
 
 );
+
+
 
 
 
@@ -3988,6 +4050,8 @@ URL.createObjectURL(
 archivo
 
 );
+
+
 
 
 
@@ -4019,6 +4083,10 @@ enlace.download =
 
 
 
+
+
+
+
 document.body.appendChild(
 
 enlace
@@ -4027,7 +4095,13 @@ enlace
 
 
 
+
+
 enlace.click();
+
+
+
+
 
 
 
@@ -4038,6 +4112,8 @@ document.body.removeChild(
 enlace
 
 );
+
+
 
 
 
@@ -4052,11 +4128,15 @@ url
 
 
 
+
+
 mostrarMensajeExportacion(
 
-"Proyecto exportado correctamente"
+"Proyecto exportado correctamente."
 
 );
+
+
 
 
 
@@ -4068,7 +4148,7 @@ catch(error){
 
 console.error(
 
-"Error exportando proyecto",
+"Error exportando proyecto JSON:",
 
 error
 
@@ -4078,7 +4158,7 @@ error
 
 mostrarMensajeExportacion(
 
-"Error al exportar proyecto"
+"Error al exportar proyecto."
 
 );
 
@@ -4099,7 +4179,7 @@ mostrarMensajeExportacion(
 
 
 /* =====================================================
-   MENSAJE
+   MENSAJE EXPORTACIÓN
 ===================================================== */
 
 
@@ -4146,6 +4226,18 @@ ${texto}
 
 
 }
+
+
+
+
+
+
+
+
+/* =====================================================
+   FIN MÓDULO 7A v3
+
+===================================================== */
 /* =====================================================
    SPAE MVP
 
