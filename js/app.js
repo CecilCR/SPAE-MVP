@@ -489,11 +489,10 @@ function renderApp(){
 
 const app =
 
-document.getElementById(
+document.getElementById("app")
 
-"content"
-
-);
+||
+document.getElementById("content");
 
 
 
