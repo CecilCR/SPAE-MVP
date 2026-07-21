@@ -1200,27 +1200,36 @@ ${texto}
 
 }
 /* =====================================================
+
    SPAE MVP
 
-   MÓDULO 3 v2
+   MÓDULO 3B v2.1
 
-   GESTIÓN DE EVALUACIÓN
+   GESTIÓN DE PREGUNTAS
+
+   - Separación pedagógica de campos
+   - Control duplicados
+   - Compatible JSON v3
 
 ===================================================== */
+
+
 
 
 
 
 
 /* =====================================================
-   RENDER DEL MÓDULO EVALUACIÓN
+   RENDER PREGUNTAS
 ===================================================== */
 
 
-function renderEvaluacion(){
+function renderPreguntas(){
+
 
 
 return `
+
 
 
 <section class="card">
@@ -1228,81 +1237,55 @@ return `
 
 <h2>
 
-2. Configuración de evaluación
+3. Banco de preguntas
 
 </h2>
 
 
 
 
-<label>
+<h3>
 
-Nombre de la evaluación
+Nueva pregunta
 
-</label>
+</h3>
 
-
-<input
-
-id="evaluacionNombre"
-
-value="${SPAE.evaluacion.nombre || ""}"
-
-placeholder="Ejemplo: Examen Final Liderazgo"
-
-
-
->
 
 
 
 
 <label>
 
-Tipo de evaluación
+Tipo:
 
 </label>
 
 
 
-<select id="evaluacionTipo">
+<select id="tipoPregunta">
 
 
+<option value="opcion_multiple">
 
-<option value="sumativa"
-
-${SPAE.evaluacion.tipo==="sumativa"?"selected":""}
-
->
-
-Sumativa
+Opción múltiple
 
 </option>
 
 
 
-<option value="formativa"
+<option value="caso_aplicacion">
 
-${SPAE.evaluacion.tipo==="formativa"?"selected":""}
-
->
-
-Formativa
+Caso de aplicación
 
 </option>
 
 
 
-<option value="diagnostica"
+<option value="abierta">
 
-${SPAE.evaluacion.tipo==="diagnostica"?"selected":""}
-
->
-
-Diagnóstica
+Pregunta abierta
 
 </option>
-
 
 
 </select>
@@ -1311,60 +1294,14 @@ Diagnóstica
 
 
 
-<label>
-
-Tiempo disponible (minutos)
-
-</label>
-
-
-
-<input
-
-id="evaluacionTiempo"
-
-type="number"
-
-value="${SPAE.evaluacion.tiempo || ""}"
-
-placeholder="Ejemplo: 90"
-
-
-
->
+<br><br>
 
 
 
 
 <label>
 
-Ponderación (%)
-
-</label>
-
-
-
-<input
-
-id="evaluacionPonderacion"
-
-type="number"
-
-value="${SPAE.evaluacion.ponderacion || ""}"
-
-placeholder="Ejemplo: 30"
-
-
-
->
-
-
-
-
-
-<label>
-
-Competencias evaluadas
+Contenido / Enunciado
 
 </label>
 
@@ -1372,25 +1309,11 @@ Competencias evaluadas
 
 <textarea
 
-id="evaluacionCompetencias"
+id="contenidoPregunta"
 
-placeholder="Una competencia por línea"
+rows="5"
 
->${
-
-Array.isArray(SPAE.evaluacion.competencias)
-
-?
-
-SPAE.evaluacion.competencias.join("\n")
-
-:
-
-""
-
-}
-
-</textarea>
+></textarea>
 
 
 
@@ -1400,7 +1323,7 @@ SPAE.evaluacion.competencias.join("\n")
 
 <label>
 
-Resultados de aprendizaje
+Situación del caso
 
 </label>
 
@@ -1408,25 +1331,195 @@ Resultados de aprendizaje
 
 <textarea
 
-id="evaluacionResultados"
+id="situacionPregunta"
 
-placeholder="Un resultado por línea"
+rows="6"
 
->${
+></textarea>
 
-Array.isArray(SPAE.evaluacion.resultados)
 
-?
 
-SPAE.evaluacion.resultados.join("\n")
 
-:
 
-""
 
-}
 
-</textarea>
+<label>
+
+Pregunta específica
+
+</label>
+
+
+
+<textarea
+
+id="preguntaPregunta"
+
+rows="3"
+
+></textarea>
+
+
+
+
+
+
+
+<h3>
+
+Alternativas
+
+</h3>
+
+
+
+<input id="altA" placeholder="Alternativa A">
+
+
+<input id="altB" placeholder="Alternativa B">
+
+
+<input id="altC" placeholder="Alternativa C">
+
+
+<input id="altD" placeholder="Alternativa D">
+
+
+
+
+
+<label>
+
+Respuesta correcta
+
+</label>
+
+
+
+<input
+
+id="respuestaCorrecta"
+
+placeholder="Ejemplo: A"
+
+>
+
+
+
+
+
+
+
+<h3>
+
+Retroalimentación docente
+
+</h3>
+
+
+
+
+
+<label>
+
+Justificación
+
+</label>
+
+
+
+<textarea
+
+id="justificacionPregunta"
+
+rows="4"
+
+></textarea>
+
+
+
+
+
+
+
+
+<label>
+
+Respuesta esperada
+
+</label>
+
+
+
+<textarea
+
+id="respuestaEsperadaPregunta"
+
+rows="4"
+
+></textarea>
+
+
+
+
+
+
+
+<label>
+
+Criterios de evaluación
+
+</label>
+
+
+
+<textarea
+
+id="criteriosPregunta"
+
+rows="4"
+
+></textarea>
+
+
+
+
+
+
+
+<label>
+
+Competencia
+
+</label>
+
+
+
+<input
+
+id="competenciaPregunta"
+
+>
+
+
+
+
+
+
+
+<label>
+
+Resultado de aprendizaje
+
+</label>
+
+
+
+<input
+
+id="resultadoPregunta"
+
+>
 
 
 
@@ -1438,23 +1531,25 @@ SPAE.evaluacion.resultados.join("\n")
 
 
 
-<button onclick="guardarEvaluacion()">
 
-Guardar evaluación
+<button onclick="guardarPreguntaSPAE()">
+
+Guardar pregunta
 
 </button>
 
 
 
 
-<div id="mensajeEvaluacion">
+
+<div id="mensajePregunta">
 
 </div>
 
 
 
-</section>
 
+</section>
 
 
 `;
@@ -1468,22 +1563,35 @@ Guardar evaluación
 
 
 
+
 /* =====================================================
-   GUARDAR EVALUACIÓN
+   GUARDAR PREGUNTA
 ===================================================== */
 
 
-function guardarEvaluacion(){
+function guardarPreguntaSPAE(){
 
 
 
-const nombre =
+if(!SPAE.preguntas){
 
-document.getElementById(
 
-"evaluacionNombre"
 
-).value.trim();
+SPAE.preguntas=[];
+
+
+}
+
+
+
+
+
+const id =
+
+Date.now();
+
+
+
 
 
 
@@ -1493,7 +1601,7 @@ const tipo =
 
 document.getElementById(
 
-"evaluacionTipo"
+"tipoPregunta"
 
 ).value;
 
@@ -1501,63 +1609,219 @@ document.getElementById(
 
 
 
-const tiempo =
+
+
+
+
+const pregunta = {
+
+
+
+id:id,
+
+
+
+tipo:tipo,
+
+
+
+contenido:
 
 document.getElementById(
 
-"evaluacionTiempo"
+"contenidoPregunta"
 
-).value;
-
-
-
-
-
-const ponderacion =
-
-document.getElementById(
-
-"evaluacionPonderacion"
-
-).value;
+).value.trim(),
 
 
 
 
-
-const competenciasTexto =
+situacion:
 
 document.getElementById(
 
-"evaluacionCompetencias"
+"situacionPregunta"
 
-).value;
-
-
+).value.trim(),
 
 
 
-const resultadosTexto =
+
+
+pregunta:
 
 document.getElementById(
 
-"evaluacionResultados"
+"preguntaPregunta"
 
-).value;
-
-
+).value.trim(),
 
 
 
 
 
-if(!nombre){
+
+
+alternativas:[
+
+
+document.getElementById("altA").value.trim(),
+
+
+document.getElementById("altB").value.trim(),
+
+
+document.getElementById("altC").value.trim(),
+
+
+document.getElementById("altD").value.trim()
+
+
+],
 
 
 
-mostrarMensajeEvaluacion(
 
-"Debe ingresar el nombre de la evaluación"
+
+
+
+respuestaCorrecta:
+
+document.getElementById(
+
+"respuestaCorrecta"
+
+).value.trim().toUpperCase(),
+
+
+
+
+
+
+
+justificacion:
+
+document.getElementById(
+
+"justificacionPregunta"
+
+).value.trim(),
+
+
+
+
+
+
+
+respuestaEsperada:
+
+document.getElementById(
+
+"respuestaEsperadaPregunta"
+
+).value.trim(),
+
+
+
+
+
+
+
+criterios:
+
+document.getElementById(
+
+"criteriosPregunta"
+
+).value.trim(),
+
+
+
+
+
+
+
+competencia:
+
+document.getElementById(
+
+"competenciaPregunta"
+
+).value.trim(),
+
+
+
+
+
+
+
+resultado:
+
+document.getElementById(
+
+"resultadoPregunta"
+
+).value.trim(),
+
+
+
+
+
+
+
+fecha:
+
+new Date().toISOString()
+
+
+
+};
+
+
+
+
+
+
+
+
+/* =====================================================
+   CONTROL DUPLICADOS
+===================================================== */
+
+
+
+
+
+const duplicada =
+
+SPAE.preguntas.some(
+
+(p)=>
+
+
+p.contenido === pregunta.contenido
+
+&&
+
+p.tipo === pregunta.tipo
+
+
+
+);
+
+
+
+
+
+
+
+if(duplicada){
+
+
+
+mostrarMensajePregunta(
+
+"Esta pregunta ya existe."
 
 );
 
@@ -1565,61 +1829,20 @@ mostrarMensajeEvaluacion(
 
 return;
 
+
 }
 
 
 
 
 
-/* =========================
-   ACTUALIZAR MODELO SPAE
-========================= */
-
-
-
-SPAE.evaluacion.nombre = nombre;
-
-
-
-SPAE.evaluacion.tipo = tipo;
-
-
-
-SPAE.evaluacion.tiempo = tiempo;
-
-
-
-SPAE.evaluacion.ponderacion = ponderacion;
 
 
 
 
+SPAE.preguntas.push(
 
-SPAE.evaluacion.competencias =
-
-competenciasTexto
-
-.split("\n")
-
-.filter(
-
-x=>x.trim()!==""
-
-);
-
-
-
-
-
-SPAE.evaluacion.resultados =
-
-resultadosTexto
-
-.split("\n")
-
-.filter(
-
-x=>x.trim()!==""
+pregunta
 
 );
 
@@ -1629,21 +1852,26 @@ x=>x.trim()!==""
 
 
 
-saveProject();
+
+guardarSPAE();
 
 
 
 
 
-mostrarMensajeEvaluacion(
 
-"Evaluación guardada correctamente"
+
+
+mostrarMensajePregunta(
+
+"Pregunta guardada correctamente."
 
 );
 
 
 
 }
+
 
 
 
@@ -1657,7 +1885,7 @@ mostrarMensajeEvaluacion(
 ===================================================== */
 
 
-function mostrarMensajeEvaluacion(texto){
+function mostrarMensajePregunta(texto){
 
 
 
@@ -1665,7 +1893,7 @@ const zona =
 
 document.getElementById(
 
-"mensajeEvaluacion"
+"mensajePregunta"
 
 );
 
@@ -1677,9 +1905,9 @@ if(zona){
 
 
 
-zona.innerHTML = `
+zona.innerHTML=
 
-
+`
 
 <p>
 
@@ -1691,8 +1919,6 @@ ${texto}
 
 </p>
 
-
-
 `;
 
 
@@ -1702,6 +1928,98 @@ ${texto}
 
 
 }
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   GUARDAR ESTADO GENERAL
+===================================================== */
+
+
+function guardarSPAE(){
+
+
+
+localStorage.setItem(
+
+"SPAE",
+
+JSON.stringify(
+
+SPAE
+
+)
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   CARGAR ESTADO
+===================================================== */
+
+
+function cargarSPAE(){
+
+
+
+const datos =
+
+localStorage.getItem(
+
+"SPAE"
+
+);
+
+
+
+
+
+if(datos){
+
+
+
+SPAE =
+
+JSON.parse(datos);
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+
+FIN MÓDULO 3B v2.1
+
+===================================================== */
 /* =====================================================
    SPAE MVP
 
