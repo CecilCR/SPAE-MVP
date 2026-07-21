@@ -611,6 +611,8 @@ SPAE MVP
 
 <h2>
 
+SPAE iniciado correctamente.
+
 Seleccione un módulo.
 
 </h2>
