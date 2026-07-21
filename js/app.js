@@ -4660,12 +4660,15 @@ ${texto}
 
    SPAE MVP
 
-   MÓDULO 7C v1
+   MÓDULO 7C v2
 
    EXPORTACIÓN WORD
 
-   - Documento estudiante
-   - Documento docente
+   Corrección:
+   - UTF-8
+   - Sin BOM incorrecto
+   - Vista estudiante
+   - Vista docente
 
 ===================================================== */
 
@@ -4673,8 +4676,9 @@ ${texto}
 
 
 
+
 /* =====================================================
-   VISTA EXPORTACIÓN WORD
+   PANEL EXPORTACIÓN WORD
 ===================================================== */
 
 
@@ -4737,36 +4741,22 @@ Word - Vista docente
 
 
 /* =====================================================
-   GENERADOR TEXTO ESTUDIANTE
+   DOCUMENTO ESTUDIANTE
 ===================================================== */
 
 
 function construirDocumentoEstudiante(){
 
 
+
 let texto = "";
 
 
 
-texto += SPAE.evaluacion.nombre + "\n\n";
 
+texto +=
 
-texto += "Programa: "
-
-+
-
-SPAE.curso.programa
-
-+
-
-"\n";
-
-
-texto += "Curso: "
-
-+
-
-SPAE.curso.nombre
+(SPAE.evaluacion.nombre || "Evaluación")
 
 +
 
@@ -4776,7 +4766,47 @@ SPAE.curso.nombre
 
 
 
-texto += "INSTRUCCIONES\n\n";
+texto +=
+
+"Programa: "
+
++
+
+(SPAE.curso.programa || "")
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Curso: "
+
++
+
+(SPAE.curso.nombre || "")
+
++
+
+"\n\n";
+
+
+
+
+
+
+
+texto +=
+
+"INSTRUCCIONES\n\n";
+
+
+
+
 
 
 
@@ -4790,7 +4820,7 @@ SPAE.preguntas.forEach(
 
 texto +=
 
-(index+1)
+(index + 1)
 
 +
 
@@ -4798,11 +4828,19 @@ texto +=
 
 
 
+
+
+
+
+
 if(
+
+p.tipo &&
 
 p.tipo.includes("caso")
 
 ){
+
 
 
 texto +=
@@ -4810,18 +4848,22 @@ texto +=
 "CASO DE APLICACIÓN\n\n";
 
 
+
+
 texto +=
 
-p.situacion
+(p.situacion || "")
 
 +
 
 "\n\n";
 
 
+
+
 texto +=
 
-p.pregunta
+(p.pregunta || p.preguntas || "")
 
 +
 
@@ -4834,9 +4876,10 @@ p.pregunta
 else{
 
 
+
 texto +=
 
-p.contenido
+(p.contenido || "")
 
 +
 
@@ -4848,9 +4891,23 @@ p.contenido
 
 
 
+
+
+
+
 texto +=
 
-"Respuesta:\n\n\n";
+"Respuesta:\n\n";
+
+
+
+
+
+texto +=
+
+"____________________________________\n\n\n";
+
+
 
 
 
@@ -4876,7 +4933,7 @@ return texto;
 
 
 /* =====================================================
-   GENERADOR TEXTO DOCENTE
+   DOCUMENTO DOCENTE
 ===================================================== */
 
 
@@ -4892,9 +4949,13 @@ construirDocumentoEstudiante();
 
 
 
+
 texto +=
 
-"\n\n====================\n";
+
+
+"\n\n================================\n";
+
 
 
 texto +=
@@ -4902,9 +4963,12 @@ texto +=
 "CLAVE DOCENTE\n";
 
 
+
 texto +=
 
-"====================\n\n";
+"================================\n\n";
+
+
 
 
 
@@ -4916,17 +4980,19 @@ SPAE.preguntas.forEach(
 (p,index)=>{
 
 
+
 texto +=
 
 "Pregunta "
 
 +
 
-(index+1)
+(index + 1)
 
 +
 
-"\n";
+"\n\n";
+
 
 
 
@@ -4964,6 +5030,7 @@ texto +=
 
 
 
+
 texto +=
 
 "Respuesta correcta: "
@@ -4980,6 +5047,7 @@ texto +=
 
 
 
+
 texto +=
 
 "Justificación: "
@@ -4990,13 +5058,50 @@ texto +=
 
 +
 
+"\n";
+
+
+
+
+
+
+
+texto +=
+
+"Respuesta esperada: "
+
++
+
+(p.respuestaEsperada || "")
+
++
+
+"\n";
+
+
+
+
+
+
+texto +=
+
+"Criterios: "
+
++
+
+(p.criterios || "")
+
++
+
 "\n\n";
+
 
 
 
 }
 
 );
+
 
 
 
@@ -5017,7 +5122,7 @@ return texto;
 
 
 /* =====================================================
-   EXPORTAR WORD ESTUDIANTE
+   EXPORTAR ESTUDIANTE
 ===================================================== */
 
 
@@ -5034,6 +5139,7 @@ construirDocumentoEstudiante(),
 );
 
 
+
 }
 
 
@@ -5045,7 +5151,7 @@ construirDocumentoEstudiante(),
 
 
 /* =====================================================
-   EXPORTAR WORD DOCENTE
+   EXPORTAR DOCENTE
 ===================================================== */
 
 
@@ -5062,6 +5168,7 @@ construirDocumentoDocente(),
 );
 
 
+
 }
 
 
@@ -5073,7 +5180,7 @@ construirDocumentoDocente(),
 
 
 /* =====================================================
-   CREACIÓN ARCHIVO WORD
+   GENERADOR WORD UTF-8
 ===================================================== */
 
 
@@ -5081,21 +5188,65 @@ function generarArchivoWord(contenido,nombre){
 
 
 
-const blob = new Blob(
+const html =
 
-[
 
-"\ufeff",
 
-contenido
+`
 
-],
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>SPAE</title>
+
+</head>
+
+
+<body>
+
+
+${
+
+contenido.replace(
+
+/\n/g,
+
+"<br>"
+
+)
+
+}
+
+
+</body>
+
+
+</html>
+
+`;
+
+
+
+
+
+
+
+const blob =
+
+new Blob(
+
+[html],
 
 {
 
 type:
 
-"application/msword;charset=utf-8"
+"application/msword"
 
 }
 
@@ -5103,15 +5254,35 @@ type:
 
 
 
+
+
+
+
 const url =
 
-URL.createObjectURL(blob);
+URL.createObjectURL(
+
+blob
+
+);
+
+
+
+
 
 
 
 const enlace =
 
-document.createElement("a");
+document.createElement(
+
+"a"
+
+);
+
+
+
+
 
 
 
@@ -5123,7 +5294,18 @@ enlace.download=nombre;
 
 
 
-document.body.appendChild(enlace);
+
+
+
+
+document.body.appendChild(
+
+enlace
+
+);
+
+
+
 
 
 
@@ -5131,17 +5313,35 @@ enlace.click();
 
 
 
-document.body.removeChild(enlace);
 
 
 
-URL.revokeObjectURL(url);
+
+document.body.removeChild(
+
+enlace
+
+);
+
+
+
+
+
+
+URL.revokeObjectURL(
+
+url
+
+);
+
+
+
 
 
 
 mostrarMensajeWord(
 
-"Documento generado correctamente."
+"Documento Word generado correctamente."
 
 );
 
@@ -5176,21 +5376,37 @@ document.getElementById(
 
 
 
+
+
 if(zona){
 
 
-zona.innerHTML=
+
+zona.innerHTML =
+
 
 `
 
-<p><strong>${texto}</strong></p>
+<p>
+
+<strong>
+
+${texto}
+
+</strong>
+
+</p>
 
 `;
 
-}
 
 
 }
+
+
+
+}
+
 
 
 
@@ -5200,6 +5416,6 @@ zona.innerHTML=
 
 /* =====================================================
 
-FIN MÓDULO 7C v1
+   FIN MÓDULO 7C v2
 
 ===================================================== */
