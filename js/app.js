@@ -4825,3 +4825,550 @@ ${texto}
    FIN MÓDULO 7B v3
 
 ===================================================== */
+/* =====================================================
+
+   SPAE MVP
+
+   MÓDULO 7C v1
+
+   EXPORTACIÓN WORD
+
+   - Documento estudiante
+   - Documento docente
+
+===================================================== */
+
+
+
+
+
+/* =====================================================
+   VISTA EXPORTACIÓN WORD
+===================================================== */
+
+
+function renderExportarWord(){
+
+
+return `
+
+
+<section class="card">
+
+
+<h2>
+
+Exportación Word
+
+</h2>
+
+
+
+<button onclick="exportarWordEstudiante()">
+
+Word - Vista estudiante
+
+</button>
+
+
+
+<br><br>
+
+
+
+<button onclick="exportarWordDocente()">
+
+Word - Vista docente
+
+</button>
+
+
+
+<div id="mensajeWord">
+
+</div>
+
+
+
+</section>
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   GENERADOR TEXTO ESTUDIANTE
+===================================================== */
+
+
+function construirDocumentoEstudiante(){
+
+
+let texto = "";
+
+
+
+texto += SPAE.evaluacion.nombre + "\n\n";
+
+
+texto += "Programa: "
+
++
+
+SPAE.curso.programa
+
++
+
+"\n";
+
+
+texto += "Curso: "
+
++
+
+SPAE.curso.nombre
+
++
+
+"\n\n";
+
+
+
+
+
+texto += "INSTRUCCIONES\n\n";
+
+
+
+
+
+SPAE.preguntas.forEach(
+
+(p,index)=>{
+
+
+
+texto +=
+
+(index+1)
+
++
+
+". ";
+
+
+
+if(
+
+p.tipo.includes("caso")
+
+){
+
+
+texto +=
+
+"CASO DE APLICACIÓN\n\n";
+
+
+texto +=
+
+p.situacion
+
++
+
+"\n\n";
+
+
+texto +=
+
+p.pregunta
+
++
+
+"\n\n";
+
+
+
+}
+
+else{
+
+
+texto +=
+
+p.contenido
+
++
+
+"\n\n";
+
+
+
+}
+
+
+
+texto +=
+
+"Respuesta:\n\n\n";
+
+
+
+}
+
+);
+
+
+
+
+
+return texto;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   GENERADOR TEXTO DOCENTE
+===================================================== */
+
+
+function construirDocumentoDocente(){
+
+
+
+let texto =
+
+construirDocumentoEstudiante();
+
+
+
+
+
+texto +=
+
+"\n\n====================\n";
+
+
+texto +=
+
+"CLAVE DOCENTE\n";
+
+
+texto +=
+
+"====================\n\n";
+
+
+
+
+
+
+SPAE.preguntas.forEach(
+
+(p,index)=>{
+
+
+texto +=
+
+"Pregunta "
+
++
+
+(index+1)
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Competencia: "
+
++
+
+(p.competencia || "")
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Resultado: "
+
++
+
+(p.resultado || "")
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Respuesta correcta: "
+
++
+
+(p.respuestaCorrecta || "")
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Justificación: "
+
++
+
+(p.justificacion || "")
+
++
+
+"\n\n";
+
+
+
+}
+
+);
+
+
+
+
+
+
+return texto;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXPORTAR WORD ESTUDIANTE
+===================================================== */
+
+
+function exportarWordEstudiante(){
+
+
+
+generarArchivoWord(
+
+construirDocumentoEstudiante(),
+
+"Examen_Estudiante.doc"
+
+);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXPORTAR WORD DOCENTE
+===================================================== */
+
+
+function exportarWordDocente(){
+
+
+
+generarArchivoWord(
+
+construirDocumentoDocente(),
+
+"Clave_Docente.doc"
+
+);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   CREACIÓN ARCHIVO WORD
+===================================================== */
+
+
+function generarArchivoWord(contenido,nombre){
+
+
+
+const blob = new Blob(
+
+[
+
+"\ufeff",
+
+contenido
+
+],
+
+{
+
+type:
+
+"application/msword;charset=utf-8"
+
+}
+
+);
+
+
+
+const url =
+
+URL.createObjectURL(blob);
+
+
+
+const enlace =
+
+document.createElement("a");
+
+
+
+enlace.href=url;
+
+
+
+enlace.download=nombre;
+
+
+
+document.body.appendChild(enlace);
+
+
+
+enlace.click();
+
+
+
+document.body.removeChild(enlace);
+
+
+
+URL.revokeObjectURL(url);
+
+
+
+mostrarMensajeWord(
+
+"Documento generado correctamente."
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MENSAJE
+===================================================== */
+
+
+function mostrarMensajeWord(texto){
+
+
+
+const zona =
+
+document.getElementById(
+
+"mensajeWord"
+
+);
+
+
+
+if(zona){
+
+
+zona.innerHTML=
+
+`
+
+<p><strong>${texto}</strong></p>
+
+`;
+
+}
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+
+FIN MÓDULO 7C v1
+
+===================================================== */
