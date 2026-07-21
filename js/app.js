@@ -4660,14 +4660,9 @@ ${texto}
 
    SPAE MVP
 
-   MÓDULO 7C v3
+   MÓDULO 7C v4
 
    EXPORTACIÓN WORD PROFESIONAL
-
-   - Vista estudiante
-   - Vista docente
-   - UTF-8 corregido
-   - Clave docente completa
 
 ===================================================== */
 
@@ -4676,7 +4671,7 @@ ${texto}
 
 
 /* =====================================================
-   PANEL EXPORTACIÓN WORD
+   PANEL WORD
 ===================================================== */
 
 
@@ -4722,7 +4717,6 @@ Word - Vista docente
 </div>
 
 
-
 </section>
 
 
@@ -4752,6 +4746,8 @@ return {
 
 evaluacion:
 
+(
+
 SPAE.evaluacion?.nombre
 
 ||
@@ -4760,25 +4756,31 @@ SPAE.evaluacion?.titulo
 
 ||
 
-"Evaluación",
+""
 
+).toUpperCase(),
 
 
 
 
 programa:
 
+(
+
 SPAE.curso?.programa
 
 ||
 
-"",
+""
 
+).toUpperCase(),
 
 
 
 
 curso:
+
+(
 
 SPAE.curso?.nombre
 
@@ -4788,24 +4790,67 @@ SPAE.curso?.curso
 
 ||
 
-"",
+""
 
+).toUpperCase(),
 
 
 
 
 tiempo:
 
-SPAE.evaluacion?.tiempo
-
-||
-
-""
-
+SPAE.evaluacion?.tiempo || ""
 
 
 
 };
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   TIPO DE PREGUNTA
+===================================================== */
+
+
+function esOpcionMultiple(p){
+
+
+return (
+
+p.tipo === "opcion_multiple"
+
+);
+
+
+
+}
+
+
+
+
+
+function esCaso(p){
+
+
+return (
+
+p.tipo === "caso_aplicacion"
+
+||
+
+p.tipo === "caso_analisis"
+
+);
+
 
 
 }
@@ -4926,6 +4971,7 @@ texto +=
 
 
 
+
 SPAE.preguntas.forEach(
 
 (p,index)=>{
@@ -4962,24 +5008,17 @@ texto +=
 
 
 
-if(
 
-p.tipo &&
 
-p.tipo.includes("caso")
-
-){
+if(esCaso(p)){
 
 
 
 texto +=
 
-"CASO DE APLICACIÓN\n\n";
+"SITUACIÓN:\n\n"
 
-
-
-
-texto +=
++
 
 (p.situacion || "")
 
@@ -4989,8 +5028,22 @@ texto +=
 
 
 
+texto +=
+
+"PREGUNTA:\n\n"
+
++
+
+(p.pregunta || p.preguntas || "")
+
++
+
+"\n\n";
+
+
 
 }
+
 
 
 
@@ -5017,11 +5070,14 @@ texto +=
 
 
 
-if(
 
-p.alternativas &&
 
-p.alternativas.length
+
+if(esOpcionMultiple(p)
+
+&&
+
+Array.isArray(p.alternativas)
 
 ){
 
@@ -5053,13 +5109,17 @@ a
 
 }
 
-
-
 );
 
 
 
 }
+
+
+
+
+
+
 
 
 
@@ -5069,13 +5129,9 @@ texto +=
 
 
 
-
-
 texto +=
 
 "____________________________________\n\n\n";
-
-
 
 
 
@@ -5120,7 +5176,6 @@ obtenerDatosDocumento();
 
 
 let texto = "";
-
 
 
 
@@ -5184,16 +5239,6 @@ datos.curso
 
 
 
-texto +=
-
-"================================\n\n";
-
-
-
-
-
-
-
 
 
 SPAE.preguntas.forEach(
@@ -5201,6 +5246,10 @@ SPAE.preguntas.forEach(
 (p,index)=>{
 
 
+
+texto +=
+
+"================================\n";
 
 
 
@@ -5214,33 +5263,29 @@ texto +=
 
 +
 
-"\n\n";
-
-
-
-
-
-
-
-if(
-
-p.tipo &&
-
-p.tipo.includes("caso")
-
-){
+"\n";
 
 
 
 texto +=
 
-"CASO DE APLICACIÓN\n\n";
+"================================\n\n";
+
+
+
+
+
+
+
+
+
+if(esCaso(p)){
 
 
 
 texto +=
 
-"SITUACIÓN:\n"
+"SITUACIÓN:\n\n"
 
 +
 
@@ -5252,7 +5297,27 @@ texto +=
 
 
 
+texto +=
+
+"PREGUNTA:\n\n"
+
++
+
+(p.pregunta || p.preguntas || "")
+
++
+
+"\n\n";
+
+
+
 }
+
+
+
+
+
+
 
 else{
 
@@ -5260,7 +5325,7 @@ else{
 
 texto +=
 
-"ENUNCIADO:\n"
+"ENUNCIADO:\n\n"
 
 +
 
@@ -5281,11 +5346,12 @@ texto +=
 
 
 
-if(
 
-p.alternativas &&
+if(esOpcionMultiple(p)
 
-p.alternativas.length
+&&
+
+Array.isArray(p.alternativas)
 
 ){
 
@@ -5294,6 +5360,7 @@ p.alternativas.length
 texto +=
 
 "ALTERNATIVAS:\n\n";
+
 
 
 
@@ -5325,9 +5392,10 @@ a
 
 }
 
-
-
 );
+
+
+
 
 
 
@@ -5345,9 +5413,10 @@ texto +=
 
 
 
+
 texto +=
 
-"Competencia: "
+"COMPETENCIA: "
 
 +
 
@@ -5361,9 +5430,10 @@ texto +=
 
 
 
+
 texto +=
 
-"Resultado: "
+"RESULTADO: "
 
 +
 
@@ -5377,9 +5447,12 @@ texto +=
 
 
 
+
+
+
 texto +=
 
-"Respuesta correcta: "
+"RESPUESTA CORRECTA:\n"
 
 +
 
@@ -5387,7 +5460,10 @@ texto +=
 
 +
 
-"\n";
+"\n\n";
+
+
+
 
 
 
@@ -5395,7 +5471,7 @@ texto +=
 
 texto +=
 
-"Justificación:\n"
+"JUSTIFICACIÓN:\n"
 
 +
 
@@ -5409,9 +5485,12 @@ texto +=
 
 
 
+
+
+
 texto +=
 
-"Respuesta esperada:\n"
+"RESPUESTA ESPERADA:\n"
 
 +
 
@@ -5425,9 +5504,12 @@ texto +=
 
 
 
+
+
+
 texto +=
 
-"Criterios:\n"
+"CRITERIOS:\n"
 
 +
 
@@ -5436,14 +5518,6 @@ texto +=
 +
 
 "\n\n";
-
-
-
-
-
-texto +=
-
-"--------------------------------\n\n";
 
 
 
@@ -5473,7 +5547,7 @@ return texto;
 
 
 /* =====================================================
-   EXPORTACIÓN ESTUDIANTE
+   EXPORTAR ESTUDIANTE
 ===================================================== */
 
 
@@ -5502,7 +5576,7 @@ construirDocumentoEstudiante(),
 
 
 /* =====================================================
-   EXPORTACIÓN DOCENTE
+   EXPORTAR DOCENTE
 ===================================================== */
 
 
@@ -5582,6 +5656,7 @@ contenido.replace(
 
 
 
+
 const blob =
 
 new Blob(
@@ -5620,6 +5695,7 @@ document.createElement("a");
 
 
 
+
 enlace.href=url;
 
 
@@ -5635,7 +5711,13 @@ document.body.appendChild(enlace);
 
 
 
+
+
+
 enlace.click();
+
+
+
 
 
 
@@ -5690,6 +5772,8 @@ document.getElementById(
 
 
 
+
+
 if(zona){
 
 
@@ -5727,6 +5811,6 @@ ${texto}
 
 /* =====================================================
 
-FIN MÓDULO 7C v3
+FIN MÓDULO 7C v4
 
 ===================================================== */
