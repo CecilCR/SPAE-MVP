@@ -4146,3 +4146,406 @@ ${texto}
 
 
 }
+/* =====================================================
+   SPAE MVP
+
+   MÓDULO 7B v2
+
+   IMPORTACIÓN JSON
+
+===================================================== */
+
+
+
+
+
+/* =====================================================
+   AÑADIR CONTROLES DE IMPORTACIÓN
+===================================================== */
+
+
+function renderImportar(){
+
+
+return `
+
+
+<section class="card">
+
+
+<h2>
+
+Importar proyecto SPAE
+
+</h2>
+
+
+
+<p>
+
+Seleccione un archivo SPAE_proyecto.json
+
+</p>
+
+
+
+<input
+
+type="file"
+
+id="archivoJSON"
+
+accept=".json"
+
+>
+
+
+
+<br><br>
+
+
+
+<button onclick="importarJSON()">
+
+Importar proyecto
+
+</button>
+
+
+
+<div id="mensajeImportacion">
+
+</div>
+
+
+
+</section>
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   IMPORTAR JSON
+===================================================== */
+
+
+function importarJSON(){
+
+
+
+const archivo =
+
+document.getElementById(
+
+"archivoJSON"
+
+);
+
+
+
+
+
+if(
+
+!archivo ||
+
+!archivo.files.length
+
+){
+
+
+
+mostrarMensajeImportacion(
+
+"Seleccione un archivo JSON."
+
+);
+
+
+
+return;
+
+
+}
+
+
+
+
+
+const lector =
+
+new FileReader();
+
+
+
+
+
+
+lector.onload = function(e){
+
+
+
+try{
+
+
+
+const datos =
+
+JSON.parse(
+
+e.target.result
+
+);
+
+
+
+
+
+
+validarProyectoImportado(datos);
+
+
+
+
+
+
+
+SPAE.curso =
+
+datos.curso || {};
+
+
+
+SPAE.evaluacion =
+
+datos.evaluacion || {};
+
+
+
+SPAE.preguntas =
+
+datos.preguntas || [];
+
+
+
+SPAE.blueprint =
+
+datos.blueprint || {};
+
+
+
+
+
+
+
+saveProject();
+
+
+
+
+
+
+
+mostrarMensajeImportacion(
+
+"Proyecto importado correctamente."
+
+);
+
+
+
+
+
+
+renderApp();
+
+
+
+}
+
+
+
+catch(error){
+
+
+
+console.error(
+
+"Error importando JSON",
+
+error
+
+);
+
+
+
+mostrarMensajeImportacion(
+
+"Archivo JSON inválido."
+
+);
+
+
+
+}
+
+
+
+};
+
+
+
+
+
+
+lector.readAsText(
+
+archivo.files[0],
+
+"UTF-8"
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   VALIDACIÓN DEL PROYECTO
+===================================================== */
+
+
+function validarProyectoImportado(datos){
+
+
+
+if(
+
+typeof datos !== "object"
+
+){
+
+
+throw new Error(
+
+"Formato incorrecto"
+
+);
+
+
+}
+
+
+
+
+
+if(
+
+!datos.version
+
+){
+
+
+console.warn(
+
+"Archivo sin versión SPAE"
+
+);
+
+
+}
+
+
+
+
+
+if(
+
+!Array.isArray(datos.preguntas)
+
+){
+
+
+datos.preguntas=[];
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MENSAJE
+===================================================== */
+
+
+function mostrarMensajeImportacion(texto){
+
+
+
+const zona =
+
+document.getElementById(
+
+"mensajeImportacion"
+
+);
+
+
+
+
+
+if(zona){
+
+
+
+zona.innerHTML = `
+
+
+<p>
+
+<strong>
+
+${texto}
+
+</strong>
+
+</p>
+
+
+`;
+
+
+
+}
+
+
+
+}
