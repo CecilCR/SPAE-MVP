@@ -3907,276 +3907,107 @@ Exportar proyecto JSON
 ===================================================== */
 
 
-function exportarJSON(){
+function renderExportar(){
 
 
-try{
+return `
+
+
+<section class="card">
+
+
+<h2>
+
+6. Gestión del proyecto
+
+</h2>
 
 
 
-/*
-   Antes de exportar:
+<h3>
 
-   Actualizar información derivada
-   (Blueprint)
-*/
+Exportar proyecto JSON
 
-
-if(
-
-typeof generarBlueprint === "function"
-
-){
+</h3>
 
 
-generarBlueprint();
 
+<p>
+
+Genere una copia completa del proyecto SPAE.
+
+</p>
+
+
+
+
+<button onclick="exportarJSON()">
+
+Exportar proyecto JSON
+
+</button>
+
+
+
+
+<div id="mensajeExportacion">
+
+</div>
+
+
+
+<hr>
+
+
+
+<h3>
+
+Exportación Word
+
+</h3>
+
+
+
+<p>
+
+Genere documentos para estudiante y docente.
+
+</p>
+
+
+
+<button onclick="exportarWordEstudiante()">
+
+Word - Vista estudiante
+
+</button>
+
+
+
+<br><br>
+
+
+
+<button onclick="exportarWordDocente()">
+
+Word - Vista docente
+
+</button>
+
+
+
+<div id="mensajeWord">
+
+</div>
+
+
+
+</section>
+
+
+`;
 
 }
-
-
-
-
-
-
-const proyecto = {
-
-
-version:
-
-"SPAE MVP v3",
-
-
-
-
-fecha:
-
-new Date().toISOString(),
-
-
-
-
-
-curso:
-
-SPAE.curso || {},
-
-
-
-
-
-evaluacion:
-
-SPAE.evaluacion || {},
-
-
-
-
-
-preguntas:
-
-SPAE.preguntas || [],
-
-
-
-
-
-blueprint:
-
-SPAE.blueprint || {}
-
-
-
-};
-
-
-
-
-
-
-
-
-
-const contenido =
-
-JSON.stringify(
-
-proyecto,
-
-null,
-
-4
-
-);
-
-
-
-
-
-
-
-
-
-const archivo =
-
-new Blob(
-
-[contenido],
-
-{
-
-
-type:
-
-"application/json;charset=utf-8"
-
-
-}
-
-);
-
-
-
-
-
-
-
-
-
-const url =
-
-URL.createObjectURL(
-
-archivo
-
-);
-
-
-
-
-
-
-
-
-
-const enlace =
-
-document.createElement(
-
-"a"
-
-);
-
-
-
-
-
-enlace.href = url;
-
-
-
-enlace.download =
-
-"SPAE_proyecto.json";
-
-
-
-
-
-
-
-
-
-document.body.appendChild(
-
-enlace
-
-);
-
-
-
-
-
-enlace.click();
-
-
-
-
-
-
-
-
-
-document.body.removeChild(
-
-enlace
-
-);
-
-
-
-
-
-URL.revokeObjectURL(
-
-url
-
-);
-
-
-
-
-
-
-
-
-mostrarMensajeExportacion(
-
-"Proyecto exportado correctamente."
-
-);
-
-
-
-
-
-}
-
-catch(error){
-
-
-
-console.error(
-
-"Error exportando proyecto JSON:",
-
-error
-
-);
-
-
-
-mostrarMensajeExportacion(
-
-"Error al exportar proyecto."
-
-);
-
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
 
 /* =====================================================
    MENSAJE EXPORTACIÓN
