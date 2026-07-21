@@ -4239,11 +4239,19 @@ ${texto}
 
 ===================================================== */
 /* =====================================================
+
    SPAE MVP
 
-   MÓDULO 7B v2
+   MÓDULO 7B v3
 
-   IMPORTACIÓN JSON
+   IMPORTACIÓN JSON PROFESIONAL
+
+   Mejoras:
+   - Validación de archivo
+   - Restauración completa del proyecto
+   - Reconstrucción automática Blueprint
+   - Persistencia inmediata
+   - Actualización interfaz
 
 ===================================================== */
 
@@ -4251,8 +4259,9 @@ ${texto}
 
 
 
+
 /* =====================================================
-   AÑADIR CONTROLES DE IMPORTACIÓN
+   VISTA IMPORTACIÓN
 ===================================================== */
 
 
@@ -4327,7 +4336,7 @@ Importar proyecto
 
 
 /* =====================================================
-   IMPORTAR JSON
+   IMPORTAR PROYECTO JSON
 ===================================================== */
 
 
@@ -4335,7 +4344,11 @@ function importarJSON(){
 
 
 
-const archivo =
+try{
+
+
+
+const selector =
 
 document.getElementById(
 
@@ -4349,9 +4362,9 @@ document.getElementById(
 
 if(
 
-!archivo ||
+!selector ||
 
-!archivo.files.length
+selector.files.length === 0
 
 ){
 
@@ -4374,6 +4387,16 @@ return;
 
 
 
+
+const archivo =
+
+selector.files[0];
+
+
+
+
+
+
 const lector =
 
 new FileReader();
@@ -4383,7 +4406,10 @@ new FileReader();
 
 
 
-lector.onload = function(e){
+
+
+
+lector.onload = function(event){
 
 
 
@@ -4391,11 +4417,11 @@ try{
 
 
 
-const datos =
+const proyecto =
 
 JSON.parse(
 
-e.target.result
+event.target.result
 
 );
 
@@ -4404,9 +4430,20 @@ e.target.result
 
 
 
-validarProyectoImportado(datos);
+validarProyectoJSON(
+
+proyecto
+
+);
 
 
+
+
+
+
+/*
+   Restaurar información
+*/
 
 
 
@@ -4414,33 +4451,96 @@ validarProyectoImportado(datos);
 
 SPAE.curso =
 
-datos.curso || {};
+proyecto.curso || {};
+
+
 
 
 
 SPAE.evaluacion =
 
-datos.evaluacion || {};
+proyecto.evaluacion || {};
+
+
 
 
 
 SPAE.preguntas =
 
-datos.preguntas || [];
+proyecto.preguntas || [];
+
+
 
 
 
 SPAE.blueprint =
 
-datos.blueprint || {};
+proyecto.blueprint || {};
 
 
 
 
+
+
+
+
+
+/*
+   Reconstrucción automática
+
+   evita inconsistencias
+
+*/
+
+
+
+
+
+if(
+
+typeof generarBlueprint === "function"
+
+){
+
+
+
+generarBlueprint();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/*
+   Guardar proyecto
+
+*/
+
+
+
+
+
+if(
+
+typeof saveProject === "function"
+
+){
 
 
 
 saveProject();
+
+
+
+}
+
 
 
 
@@ -4459,7 +4559,28 @@ mostrarMensajeImportacion(
 
 
 
+/*
+   Actualizar interfaz
+
+*/
+
+
+
+
+
+if(
+
+typeof renderApp === "function"
+
+){
+
+
+
 renderApp();
+
+
+
+}
 
 
 
@@ -4473,7 +4594,7 @@ catch(error){
 
 console.error(
 
-"Error importando JSON",
+"Error leyendo JSON",
 
 error
 
@@ -4483,7 +4604,7 @@ error
 
 mostrarMensajeImportacion(
 
-"Archivo JSON inválido."
+"El archivo no tiene formato SPAE válido."
 
 );
 
@@ -4500,9 +4621,11 @@ mostrarMensajeImportacion(
 
 
 
+
+
 lector.readAsText(
 
-archivo.files[0],
+archivo,
 
 "UTF-8"
 
@@ -4510,6 +4633,36 @@ archivo.files[0],
 
 
 
+
+
+}
+
+catch(error){
+
+
+
+console.error(
+
+"Error importando proyecto",
+
+error
+
+);
+
+
+
+mostrarMensajeImportacion(
+
+"Error durante la importación."
+
+);
+
+
+
+}
+
+
+
 }
 
 
@@ -4521,26 +4674,30 @@ archivo.files[0],
 
 
 /* =====================================================
-   VALIDACIÓN DEL PROYECTO
+   VALIDACIÓN PROYECTO
 ===================================================== */
 
 
-function validarProyectoImportado(datos){
+function validarProyectoJSON(proyecto){
 
 
 
 if(
 
-typeof datos !== "object"
+!proyecto ||
+
+typeof proyecto !== "object"
 
 ){
+
 
 
 throw new Error(
 
-"Formato incorrecto"
+"Proyecto inválido"
 
 );
+
 
 
 }
@@ -4549,21 +4706,25 @@ throw new Error(
 
 
 
+
 if(
 
-!datos.version
+!proyecto.version
 
 ){
+
 
 
 console.warn(
 
-"Archivo sin versión SPAE"
+"Proyecto sin versión SPAE"
 
 );
 
 
+
 }
+
 
 
 
@@ -4571,15 +4732,25 @@ console.warn(
 
 if(
 
-!Array.isArray(datos.preguntas)
+!Array.isArray(
+
+proyecto.preguntas
+
+)
 
 ){
 
 
-datos.preguntas=[];
+
+proyecto.preguntas = [];
+
 
 
 }
+
+
+
+
 
 
 
@@ -4594,7 +4765,7 @@ datos.preguntas=[];
 
 
 /* =====================================================
-   MENSAJE
+   MENSAJE IMPORTACIÓN
 ===================================================== */
 
 
@@ -4641,3 +4812,16 @@ ${texto}
 
 
 }
+
+
+
+
+
+
+
+
+/* =====================================================
+
+   FIN MÓDULO 7B v3
+
+===================================================== */
