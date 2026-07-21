@@ -877,22 +877,18 @@ iniciarSPAE();
 
 );
 /* =====================================================
+
    SPAE MVP
 
-   MÓDULO 2 v2
+   MÓDULO 2
 
-   GESTIÓN DEL CURSO
+   GESTIÓN DE EVALUACIÓN
 
 ===================================================== */
 
 
 
-/* =====================================================
-   RENDER DEL MÓDULO CURSO
-===================================================== */
-
-
-function renderCurso(){
+function renderEvaluacion(){
 
 
 return `
@@ -903,96 +899,31 @@ return `
 
 <h2>
 
-1. Información del curso
+2. Evaluación
 
 </h2>
 
 
 
-
 <label>
 
-Nombre del curso
+Nombre evaluación
 
 </label>
 
 
-<input
-
-id="cursoNombre"
-
-value="${SPAE.curso.nombre || ""}"
-
-placeholder="Ejemplo: Liderazgo"
-
-
-
->
-
-
-
-<label>
-
-Programa académico
-
-</label>
-
 
 <input
 
-id="cursoPrograma"
+id="nombreEvaluacion"
 
-value="${SPAE.curso.programa || ""}"
+value="${
 
-placeholder="Ejemplo: Administración"
+SPAE.evaluacion?.nombre || ""
 
-
-
->
-
-
-
-
-<label>
-
-Nivel / ciclo
-
-</label>
-
-
-<input
-
-id="cursoNivel"
-
-value="${SPAE.curso.nivel || ""}"
-
-placeholder="Ejemplo: Media carrera"
-
-
+}"
 
 >
-
-
-
-<label>
-
-Periodo académico
-
-</label>
-
-
-<input
-
-id="cursoPeriodo"
-
-value="${SPAE.curso.periodo || ""}"
-
-placeholder="Ejemplo: 2026-I"
-
-
-
->
-
 
 
 
@@ -1000,15 +931,107 @@ placeholder="Ejemplo: 2026-I"
 
 
 
-<button onclick="guardarCurso()">
+<label>
 
-Guardar curso
+Tipo
+
+</label>
+
+
+
+<select id="tipoEvaluacion">
+
+
+<option value="formativa">
+
+Formativa
+
+</option>
+
+
+<option value="sumativa">
+
+Sumativa
+
+</option>
+
+
+</select>
+
+
+
+<br><br>
+
+
+
+
+<label>
+
+Tiempo (minutos)
+
+</label>
+
+
+
+<input
+
+id="tiempoEvaluacion"
+
+type="number"
+
+value="${
+
+SPAE.evaluacion?.tiempo || ""
+
+}"
+
+>
+
+
+
+<br><br>
+
+
+
+<label>
+
+Ponderación (%)
+
+</label>
+
+
+
+<input
+
+id="ponderacionEvaluacion"
+
+type="number"
+
+value="${
+
+SPAE.evaluacion?.ponderacion || ""
+
+}"
+
+>
+
+
+
+<br><br>
+
+
+
+
+<button onclick="guardarEvaluacionSPAE()">
+
+Guardar evaluación
 
 </button>
 
 
 
-<div id="mensajeCurso">
+
+<div id="mensajeEvaluacion">
 
 </div>
 
@@ -1017,7 +1040,6 @@ Guardar curso
 </section>
 
 
-
 `;
 
 }
@@ -1028,120 +1050,14 @@ Guardar curso
 
 
 
-/* =====================================================
-   GUARDAR CURSO
-===================================================== */
+function guardarEvaluacionSPAE(){
 
 
-function guardarCurso(){
 
+if(!SPAE.evaluacion){
 
 
-const nombre =
-
-document.getElementById(
-
-"cursoNombre"
-
-).value.trim();
-
-
-
-
-
-const programa =
-
-document.getElementById(
-
-"cursoPrograma"
-
-).value.trim();
-
-
-
-
-
-const nivel =
-
-document.getElementById(
-
-"cursoNivel"
-
-).value.trim();
-
-
-
-
-
-const periodo =
-
-document.getElementById(
-
-"cursoPeriodo"
-
-).value.trim();
-
-
-
-
-
-
-
-if(!nombre){
-
-
-
-mostrarMensajeCurso(
-
-"Debe ingresar el nombre del curso"
-
-);
-
-
-
-return;
-
-}
-
-
-
-/* ==========================
-   ACTUALIZACIÓN DEL ESTADO
-========================== */
-
-
-SPAE.curso.nombre = nombre;
-
-
-
-SPAE.curso.programa = programa;
-
-
-
-SPAE.curso.nivel = nivel;
-
-
-
-SPAE.curso.periodo = periodo;
-
-
-
-
-
-saveProject();
-
-
-
-
-
-mostrarMensajeCurso(
-
-"Curso guardado correctamente"
-
-);
-
-
-
+SPAE.evaluacion={};
 
 
 }
@@ -1150,45 +1066,113 @@ mostrarMensajeCurso(
 
 
 
-
-
-
-/* =====================================================
-   MENSAJE
-===================================================== */
-
-
-function mostrarMensajeCurso(texto){
-
-
-
-const zona =
+SPAE.evaluacion.nombre =
 
 document.getElementById(
 
-"mensajeCurso"
+"nombreEvaluacion"
+
+).value.trim();
+
+
+
+
+
+
+
+SPAE.evaluacion.tipo =
+
+document.getElementById(
+
+"tipoEvaluacion"
+
+).value;
+
+
+
+
+
+
+
+SPAE.evaluacion.tiempo =
+
+Number(
+
+document.getElementById(
+
+"tiempoEvaluacion"
+
+).value
 
 );
 
 
 
-if(zona){
 
 
 
-zona.innerHTML = `
 
+SPAE.evaluacion.ponderacion =
+
+Number(
+
+document.getElementById(
+
+"ponderacionEvaluacion"
+
+).value
+
+);
+
+
+
+
+
+
+
+
+localStorage.setItem(
+
+"SPAE",
+
+JSON.stringify(SPAE)
+
+);
+
+
+
+
+
+
+
+const mensaje =
+
+document.getElementById(
+
+"mensajeEvaluacion"
+
+);
+
+
+
+
+
+if(mensaje){
+
+
+mensaje.innerHTML =
+
+`
 
 <p>
 
 <strong>
 
-${texto}
+Evaluación guardada correctamente.
 
 </strong>
 
 </p>
-
 
 `;
 
@@ -1198,7 +1182,20 @@ ${texto}
 
 
 
+
+
 }
+
+
+
+
+
+
+/* =====================================================
+
+FIN MÓDULO 2
+
+===================================================== */
 /* =====================================================
 
    SPAE MVP
