@@ -1631,3 +1631,443 @@ Curso guardado correctamente.
 
 
 }
+/* =====================================================
+
+SPAE MVP v3.1
+
+BLOQUE 4/9
+
+MÓDULO EVALUACIÓN
+
+===================================================== */
+
+
+
+
+
+/* =====================================================
+   RENDER MÓDULO EVALUACIÓN
+===================================================== */
+
+
+function renderEvaluacion(){
+
+
+
+return `
+
+
+
+<section class="card">
+
+
+
+<h2>
+
+2. Evaluación
+
+</h2>
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Nombre de la evaluación
+
+</label>
+
+
+
+<input
+
+id="nombreEvaluacion"
+
+type="text"
+
+value="${SPAE.evaluacion.nombre || ""}"
+
+placeholder="Ejemplo: Examen Sumativo Nuevos Entornos Organizacionales 2026"
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Tipo de evaluación
+
+</label>
+
+
+
+<select
+
+id="tipoEvaluacion"
+
+>
+
+
+
+<option value="formativa"
+
+${SPAE.evaluacion.tipo==="formativa" ? "selected" : ""}
+
+>
+
+Formativa
+
+</option>
+
+
+
+
+
+<option value="sumativa"
+
+${SPAE.evaluacion.tipo==="sumativa" ? "selected" : ""}
+
+>
+
+Sumativa
+
+</option>
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Tiempo estimado (minutos)
+
+</label>
+
+
+
+<input
+
+id="tiempoEvaluacion"
+
+type="number"
+
+value="${SPAE.evaluacion.tiempo || 0}"
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Ponderación (%)
+
+</label>
+
+
+
+<input
+
+id="ponderacionEvaluacion"
+
+type="number"
+
+value="${SPAE.evaluacion.ponderacion || 0}"
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<button
+
+class="primary-button"
+
+onclick="guardarEvaluacionSPAE()"
+
+>
+
+Guardar evaluación
+
+</button>
+
+
+
+
+
+
+
+<div
+
+id="mensajeEvaluacion"
+
+class="notice"
+
+>
+
+</div>
+
+
+
+
+
+
+
+</section>
+
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   GUARDAR EVALUACIÓN
+===================================================== */
+
+
+function guardarEvaluacionSPAE(){
+
+
+
+const nombre =
+
+document.getElementById(
+
+"nombreEvaluacion"
+
+);
+
+
+
+
+
+const tipo =
+
+document.getElementById(
+
+"tipoEvaluacion"
+
+);
+
+
+
+
+
+const tiempo =
+
+document.getElementById(
+
+"tiempoEvaluacion"
+
+);
+
+
+
+
+
+const ponderacion =
+
+document.getElementById(
+
+"ponderacionEvaluacion"
+
+);
+
+
+
+
+
+
+
+if(
+
+!nombre ||
+
+!tipo ||
+
+!tiempo ||
+
+!ponderacion
+
+){
+
+
+
+console.error(
+
+"Campos de evaluación no encontrados"
+
+);
+
+
+
+return;
+
+
+}
+
+
+
+
+
+
+
+SPAE.evaluacion.nombre =
+
+nombre.value.trim();
+
+
+
+
+
+
+
+SPAE.evaluacion.tipo =
+
+tipo.value;
+
+
+
+
+
+
+
+SPAE.evaluacion.tiempo =
+
+Number(
+
+tiempo.value
+
+);
+
+
+
+
+
+
+
+SPAE.evaluacion.ponderacion =
+
+Number(
+
+ponderacion.value
+
+);
+
+
+
+
+
+
+
+guardarSPAE();
+
+
+
+
+
+
+
+
+
+const mensaje =
+
+document.getElementById(
+
+"mensajeEvaluacion"
+
+);
+
+
+
+
+
+
+
+if(mensaje){
+
+
+
+mensaje.innerHTML = `
+
+
+
+<p>
+
+Evaluación guardada correctamente.
+
+</p>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+}
