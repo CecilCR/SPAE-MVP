@@ -1,17 +1,10 @@
 /* =====================================================
    SPAE MVP v3.3
 
-   MÓDULO BANCO DE PREGUNTAS
-   INTERFAZ DE USUARIO
+   QUESTION BANK UI MODULE
 
-   Archivo:
-   js/question-bank-ui.js
+   NO modifica módulos existentes
 
-===================================================== */
-
-
-/* =====================================================
-   RENDER MÓDULO BANCO DE PREGUNTAS
 ===================================================== */
 
 
@@ -25,543 +18,185 @@ return `
 
 
 <h2>
-
 7. Banco de preguntas
-
 </h2>
 
 
-
 <p>
-
 Repositorio externo de preguntas reutilizables.
-
 </p>
+
+
+<hr>
+
+
+<div class="form-group">
+
+<label>
+Buscar pregunta
+</label>
+
+<input 
+id="buscarBancoPregunta"
+placeholder="Buscar por contenido, competencia o nivel..."
+onkeyup="filtrarBancoPreguntas()"
+>
+
+</div>
+
+
+
+<div class="form-group">
+
+<label>
+Tipo de pregunta
+</label>
+
+
+<select 
+id="filtroTipoBanco"
+onchange="filtrarBancoPreguntas()"
+>
+
+<option value="">
+Todas
+</option>
+
+<option value="opcion_multiple">
+Opción múltiple
+</option>
+
+<option value="caso_analisis">
+Caso análisis
+</option>
+
+<option value="caso_aplicacion">
+Caso aplicación
+</option>
+
+<option value="abierta">
+Abierta
+</option>
+
+
+</select>
+
+</div>
+
+
+
+<button 
+class="primary-button"
+onclick="cargarBancoPreguntasJSON()"
+>
+
+Cargar banco JSON
+
+</button>
+
+
+
+<button 
+class="secondary-button"
+onclick="importarPreguntaBancoSPAE()"
+>
+
+Agregar seleccionadas
+
+</button>
 
 
 
 <hr>
 
 
-
-<button
-
-class="primary-button"
-
-onclick="inicializarBanco()"
-
->
-
-Cargar banco de preguntas
-
-</button>
-
-
-
-
-<br><br>
-
-
-
-
-
-<div id="mensajeBancoPreguntas">
-
-
-</div>
-
-
-
-
-
 <h3>
-
 Preguntas disponibles
-
 </h3>
-
-
 
 
 <div id="listaBancoPreguntas">
 
-
-<p>
-
-Presione "Cargar banco de preguntas".
-
-</p>
-
+${renderListaBancoPreguntas()}
 
 </div>
-
-
-
-
-<br>
-
-
-
-
-<button
-
-class="secondary-button"
-
-onclick="importarSeleccionadas()"
-
->
-
-Importar preguntas seleccionadas
-
-</button>
-
-
 
 
 
 </section>
 
 
-
 `;
 
-
-
 }
+function renderListaBancoPreguntas(){
 
 
+if(
+!Array.isArray(BANCO_PREGUNTAS) ||
+BANCO_PREGUNTAS.length===0
+){
 
 
+return `
 
-
-
-
-/* =====================================================
-   MOSTRAR MENSAJE BANCO
-===================================================== */
-
-
-function mostrarMensajeBanco(mensaje){
-
-
-const div =
-
-document.getElementById(
-
-"mensajeBancoPreguntas"
-
-);
-
-
-
-if(div){
-
-
-div.innerHTML =
-
-
-`
+<div class="notice">
 
 <p>
-
-${mensaje}
-
+Banco de preguntas vacío.
+Cargue banco-preguntas.json
 </p>
+
+</div>
 
 `;
 
-
 }
 
 
 
-}
-
-
-
-
-
-
-
-
-/* =====================================================
-   RECARGAR LISTADO BANCO
-===================================================== */
-
-
-function actualizarVistaBanco(){
-
-
-
-const lista =
-
-document.getElementById(
-
-"listaBancoPreguntas"
-
-);
-
-
-
-if(lista){
-
-
-lista.innerHTML =
-
-listarBancoPreguntas();
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
-/* =====================================================
-   SOBRESCRIBIR INICIALIZACIÓN
-   CON ACTUALIZACIÓN VISUAL
-
-===================================================== */
-
-
-async function cargarBancoUI(){
-
-
-try{
-
-
-await cargarBancoPreguntasJSON();
-
-
-
-actualizarVistaBanco();
-
-
-
-mostrarMensajeBanco(
-
-"Banco cargado correctamente."
-
-);
-
-
-
-}
-
-catch(error){
-
-
-
-console.error(
-
-error
-
-);
-
-
-
-mostrarMensajeBanco(
-
-"Error cargando banco de preguntas."
-
-);
-
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
-/* =====================================================
-   SELECCIONAR TODAS
-===================================================== */
-
-
-function seleccionarTodasBanco(){
-
-
-
-BANCO_PREGUNTAS.forEach(
+return BANCO_PREGUNTAS.map(
 
 (p,index)=>{
-
-
-const check =
-
-document.getElementById(
-
-`preguntaBanco_${index}`
-
-);
-
-
-
-if(check){
-
-check.checked = true;
-
-}
-
-
-}
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-/* =====================================================
-   DESELECCIONAR TODAS
-===================================================== */
-
-
-function deseleccionarTodasBanco(){
-
-
-
-BANCO_PREGUNTAS.forEach(
-
-(p,index)=>{
-
-
-const check =
-
-document.getElementById(
-
-`preguntaBanco_${index}`
-
-);
-
-
-
-if(check){
-
-check.checked = false;
-
-}
-
-
-}
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-/* =====================================================
-   ACTUALIZAR IMPORTACIÓN
-===================================================== */
-
-
-function importarDesdeBancoUI(){
-
-
-
-const indices =
-
-obtenerIndicesSeleccionadosBanco();
-
-
-
-if(indices.length===0){
-
-
-mostrarMensajeBanco(
-
-"No hay preguntas seleccionadas."
-
-);
-
-
-return;
-
-
-}
-
-
-
-
-importarPreguntasBanco(indices);
-
-
-
-
-mostrarMensajeBanco(
-
-`${indices.length} preguntas incorporadas al examen.`
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-/* =====================================================
-   ESTADÍSTICAS DEL BANCO
-===================================================== */
-
-
-function resumenBancoPreguntas(){
-
-
-
-if(!BANCO_PREGUNTAS ||
-
-BANCO_PREGUNTAS.length===0){
-
-
-return "";
-
-}
-
-
-
-let total =
-
-BANCO_PREGUNTAS.length;
-
-
-
-let mcq =
-
-BANCO_PREGUNTAS.filter(
-
-p=>p.tipo==="opcion_multiple"
-
-).length;
-
-
-
-
-let casos =
-
-BANCO_PREGUNTAS.filter(
-
-p=>
-
-p.tipo==="caso_analisis"
-
-||
-
-p.tipo==="caso_aplicacion"
-
-).length;
-
-
-
-
-let abiertas =
-
-BANCO_PREGUNTAS.filter(
-
-p=>
-
-p.tipo==="abierta"
-
-).length;
-
 
 
 return `
 
 
-<div class="summary">
+<div class="card">
 
 
-<h3>
+<input 
+type="checkbox"
+class="preguntaBancoCheck"
+value="${index}"
+>
 
-Resumen banco
 
-</h3>
+<strong>
+Pregunta ${index+1}
+</strong>
+
+
+<p>
+${p.contenido || p.pregunta || ""}
+</p>
 
 
 <p>
 
-Total preguntas:
+Nivel:
 
-<strong>
-
-${total}
-
-</strong>
+${p.nivelCognitivo || "-"}
 
 </p>
 
 
 <p>
 
-Opción múltiple:
+Tipo:
 
-<strong>
-
-${mcq}
-
-</strong>
-
-</p>
-
-
-<p>
-
-Casos:
-
-<strong>
-
-${casos}
-
-</strong>
-
-</p>
-
-
-<p>
-
-Abiertas:
-
-<strong>
-
-${abiertas}
-
-</strong>
+${p.tipo || "-"}
 
 </p>
 
@@ -573,46 +208,8 @@ ${abiertas}
 `;
 
 
-
 }
 
-
-
-
-
-
-
-
-/* =====================================================
-   EXTENSIÓN VISUAL DEL LISTADO
-===================================================== */
-
-
-function renderResumenBanco(){
-
-
-const contenedor =
-
-document.getElementById(
-
-"mensajeBancoPreguntas"
-
-);
-
-
-
-if(contenedor){
-
-
-
-contenedor.innerHTML =
-
-resumenBancoPreguntas();
-
-
-
-}
-
-
+).join("");
 
 }
