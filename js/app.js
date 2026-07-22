@@ -507,7 +507,6 @@ break;
 
 case "exportar":
 
-
 workspace.innerHTML =
 
 renderExportar();
@@ -516,6 +515,14 @@ renderExportar();
 break;
 
 
+
+
+case "bancoPreguntas":
+
+workspace.innerHTML =
+renderBancoPreguntas();
+
+break;
 
 
 
@@ -537,20 +544,6 @@ Módulo no encontrado
 
 
 }
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
 /* =====================================================
    MÓDULO 0
 
