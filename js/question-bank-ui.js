@@ -1,30 +1,25 @@
 /* =====================================================
-   SPAE MVP v3.3
 
-   QUESTION BANK UI MODULE
+SPAE MVP v3.3
 
-   Archivo:
-   js/question-bank-ui.js
+QUESTION BANK UI MODULE
 
-   Responsabilidad:
-   - Interfaz del banco de preguntas
-   - Búsqueda
-   - Filtros
-   - Visualización
-   - Importación al examen activo
+Interfaz Banco de Preguntas
 
-   NO modifica:
-   - app.js
-   - exam-module.js
-   - dashboard.js
-   - exporter.js
+NO MODIFICA:
+- app.js
+- exam-module.js
+- dashboard.js
+
+Depende de:
+- question-bank-module.js
 
 ===================================================== */
 
 
 
 /* =====================================================
-   RENDER PRINCIPAL BANCO DE PREGUNTAS
+   RENDER BANCO DE PREGUNTAS
 ===================================================== */
 
 
@@ -34,52 +29,48 @@ function renderBancoPreguntas(){
 return `
 
 
-<section class="card bank-container">
+<section class="card">
 
 
 <h2>
 
-7. Banco profesional de preguntas
+7. Banco de preguntas
 
 </h2>
 
 
+
 <p>
 
-Repositorio reutilizable de preguntas SPAE.
+Repositorio complementario de preguntas para importar al examen actual.
 
 </p>
 
 
 
-<div class="bank-toolbar">
+
+<div class="form-group">
 
 
-<input
+<label>
 
-id="buscarBanco"
+Tipo de pregunta
 
-placeholder="Buscar preguntas..."
-
-onkeyup="actualizarBusquedaBanco()"
-
->
+</label>
 
 
-<select
 
-id="filtroTipoBanco"
+<select id="filtroBancoPregunta"
+onchange="filtrarBancoPreguntasUI()">
 
-onchange="actualizarFiltroBanco()"
-
->
 
 
 <option value="todos">
 
-Todos los tipos
+Todas
 
 </option>
+
 
 
 <option value="opcion_multiple">
@@ -89,6 +80,7 @@ Opción múltiple
 </option>
 
 
+
 <option value="caso_analisis">
 
 Caso de análisis
@@ -96,11 +88,13 @@ Caso de análisis
 </option>
 
 
+
 <option value="caso_aplicacion">
 
 Caso de aplicación
 
 </option>
+
 
 
 <option value="abierta">
@@ -113,80 +107,41 @@ Pregunta abierta
 </select>
 
 
+</div>
 
-<select
 
-id="filtroNivelBanco"
 
-onchange="actualizarFiltroBanco()"
+
+
+<button
+
+class="primary-button"
+
+onclick="cargarBancoPreguntasUI()"
 
 >
 
+Cargar banco JSON
 
-<option value="todos">
-
-Todos los niveles
-
-</option>
-
-
-<option value="RECORDAR">
-
-Recordar
-
-</option>
-
-
-<option value="COMPRENDER">
-
-Comprender
-
-</option>
-
-
-<option value="APLICAR">
-
-Aplicar
-
-</option>
-
-
-<option value="ANALIZAR">
-
-Analizar
-
-</option>
-
-
-<option value="EVALUAR">
-
-Evaluar
-
-</option>
-
-
-<option value="CREAR">
-
-Crear
-
-</option>
-
-
-</select>
+</button>
 
 
 
-</div>
 
 
+<button
 
-<br>
+class="secondary-button"
+
+onclick="importarSeleccionadasBanco()"
+
+>
+
+Importar seleccionadas
+
+</button>
 
 
-<div id="contadorBanco">
-
-
-</div>
 
 
 
@@ -194,17 +149,43 @@ Crear
 
 
 
+
+<h3>
+
+Preguntas disponibles
+
+</h3>
+
+
+
+
 <div id="listaBancoPreguntas">
 
 
-${renderListaBancoPreguntas()}
+<p>
+
+Banco no cargado.
+
+</p>
 
 
 </div>
 
 
 
+
+
+<div id="mensajeBancoPreguntas">
+
+
+</div>
+
+
+
+
+
 </section>
+
 
 
 `;
@@ -216,122 +197,154 @@ ${renderListaBancoPreguntas()}
 
 
 /* =====================================================
-   LISTAR PREGUNTAS DEL BANCO
+   CARGAR BANCO DESDE MÓDULO PRINCIPAL
 ===================================================== */
 
 
-function renderListaBancoPreguntas(){
-
+function cargarBancoPreguntasUI(){
 
 
 if(
-
-typeof SPAE_BANK === "undefined"
-
+typeof cargarBancoPreguntasJSON !== "function"
 ){
 
 
-return `
+mostrarMensajeBanco(
 
-<p>
+"No está disponible el módulo de carga del banco."
 
-Banco no disponible.
+);
 
-</p>
 
-`;
+return;
 
 }
 
 
 
-if(
-
-!SPAE_BANK.preguntas ||
-
-SPAE_BANK.preguntas.length===0
-
-){
+cargarBancoPreguntasJSON();
 
 
-return `
+actualizarVistaBancoPreguntas();
 
-<p>
 
-No existen preguntas en el banco.
-
-</p>
-
-`;
 
 }
 
 
 
-return SPAE_BANK.preguntas.map(
+
+
+
+/* =====================================================
+   ACTUALIZAR LISTADO VISUAL
+===================================================== */
+
+
+function actualizarVistaBancoPreguntas(){
+
+
+const contenedor =
+
+document.getElementById(
+
+"listaBancoPreguntas"
+
+);
+
+
+
+
+if(!contenedor){
+
+return;
+
+}
+
+
+
+
+if(
+
+typeof BANCO_PREGUNTAS === "undefined"
+
+||
+
+BANCO_PREGUNTAS.length===0
+
+){
+
+
+contenedor.innerHTML =
+
+`
+
+<p>
+
+No existen preguntas disponibles en el banco.
+
+</p>
+
+`;
+
+
+
+return;
+
+
+}
+
+
+
+
+
+
+
+contenedor.innerHTML =
+
+BANCO_PREGUNTAS
+
+.map(
 
 (p,index)=>{
 
 
+
 return `
 
 
 
-<div class="bank-card">
+<div class="card">
 
 
 
-<h4>
+<input
+
+type="checkbox"
+
+class="checkBancoPregunta"
+
+value="${index}"
+
+>
+
+
+
+<strong>
 
 Pregunta ${index+1}
 
-</h4>
+</strong>
 
 
 
 <p>
-
-<strong>
 
 Tipo:
 
-</strong>
-
-${
-
-nombreTipoPregunta(
-
-p.tipo
-
-)
-
-}
+${nombreTipoPregunta(p.tipo)}
 
 </p>
-
-
-
-
-<p>
-
-<strong>
-
-Nivel:
-
-</strong>
-
-${
-
-mostrarNivelBloom(
-
-p.nivelCognitivo
-
-)
-
-}
-
-</p>
-
 
 
 
@@ -341,36 +354,15 @@ ${
 
 p.contenido ||
 
-p.pregunta ||
-
 p.contexto ||
 
-""
+"Sin contenido"
 
 }
 
 </p>
 
 
-
-<div class="bank-actions">
-
-
-<button
-
-class="primary-button"
-
-onclick="usarPreguntaBanco('${p.id}')"
-
->
-
-Agregar al examen
-
-</button>
-
-
-
-</div>
 
 
 
@@ -384,7 +376,9 @@ Agregar al examen
 
 }
 
-).join("");
+)
+
+.join("");
 
 
 
@@ -399,162 +393,23 @@ Agregar al examen
 
 
 /* =====================================================
-   ACTUALIZAR BÚSQUEDA
+   FILTRO VISUAL
 ===================================================== */
 
 
-function actualizarBusquedaBanco(){
+function filtrarBancoPreguntasUI(){
 
 
 
-const texto =
+const filtro =
 
 document.getElementById(
 
-"buscarBanco"
+"filtroBancoPregunta"
 
 ).value;
 
 
-
-
-
-let preguntas =
-
-buscarPreguntasBanco(
-
-texto
-
-);
-
-
-
-
-
-mostrarResultadosBanco(
-
-preguntas
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   FILTROS BANCO
-===================================================== */
-
-
-function actualizarFiltroBanco(){
-
-
-
-const tipo =
-
-document.getElementById(
-
-"filtroTipoBanco"
-
-).value;
-
-
-
-const nivel =
-
-document.getElementById(
-
-"filtroNivelBanco"
-
-).value;
-
-
-
-
-
-
-let preguntas =
-
-SPAE_BANK.preguntas;
-
-
-
-
-
-
-if(tipo !== "todos"){
-
-
-preguntas = preguntas.filter(
-
-p =>
-
-p.tipo===tipo
-
-);
-
-
-}
-
-
-
-
-
-if(nivel !== "todos"){
-
-
-preguntas = preguntas.filter(
-
-p =>
-
-p.nivelCognitivo===nivel
-
-);
-
-
-}
-
-
-
-
-
-
-mostrarResultadosBanco(
-
-preguntas
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   MOSTRAR RESULTADOS
-===================================================== */
-
-
-function mostrarResultadosBanco(
-
-preguntas
-
-){
 
 
 
@@ -580,28 +435,44 @@ return;
 
 
 
+
 if(
 
-preguntas.length===0
+typeof BANCO_PREGUNTAS==="undefined"
 
 ){
 
-
-contenedor.innerHTML =
-
-`
-
-<p>
-
-No se encontraron preguntas.
-
-</p>
-
-`;
-
-
-
 return;
+
+}
+
+
+
+
+
+let preguntas =
+
+BANCO_PREGUNTAS;
+
+
+
+
+
+
+if(filtro!=="todos"){
+
+
+
+preguntas =
+
+BANCO_PREGUNTAS.filter(
+
+p=>
+
+p.tipo===filtro
+
+);
+
 
 
 }
@@ -610,39 +481,54 @@ return;
 
 
 
+
 contenedor.innerHTML =
 
-preguntas.map(
+preguntas
+
+.map(
 
 (p,index)=>{
+
 
 
 return `
 
 
 
-<div class="bank-card">
+<div class="card">
 
 
-<h4>
+
+<input
+
+type="checkbox"
+
+class="checkBancoPregunta"
+
+data-id="${p.id || index}"
+
+>
+
+
+
+<strong>
 
 Pregunta ${index+1}
 
-</h4>
+</strong>
+
 
 
 
 <p>
 
-<strong>
-
 Tipo:
-
-</strong>
 
 ${nombreTipoPregunta(p.tipo)}
 
 </p>
+
 
 
 
@@ -654,7 +540,7 @@ p.contenido ||
 
 p.contexto ||
 
-p.pregunta
+"Sin contenido"
 
 }
 
@@ -662,21 +548,9 @@ p.pregunta
 
 
 
-<button
-
-class="primary-button"
-
-onclick="usarPreguntaBanco('${p.id}')"
-
->
-
-Agregar al examen
-
-</button>
-
-
 
 </div>
+
 
 
 `;
@@ -685,17 +559,9 @@ Agregar al examen
 
 }
 
-).join("");
+)
 
-
-
-
-
-actualizarContadorBanco(
-
-preguntas.length
-
-);
+.join("");
 
 
 
@@ -710,19 +576,46 @@ preguntas.length
 
 
 /* =====================================================
-   IMPORTAR AL EXAMEN ACTUAL
+   IMPORTAR PREGUNTAS SELECCIONADAS
 ===================================================== */
 
 
-function usarPreguntaBanco(id){
+function importarSeleccionadasBanco(){
 
 
 
-const resultado =
+if(
 
-agregarPreguntaBancoAExamen(
+typeof BANCO_PREGUNTAS==="undefined"
 
-id
+){
+
+
+mostrarMensajeBanco(
+
+"Cargue primero el banco de preguntas."
+
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+const seleccionadas =
+
+Array.from(
+
+document.querySelectorAll(
+
+".checkBancoPregunta:checked"
+
+)
 
 );
 
@@ -730,21 +623,88 @@ id
 
 
 
-if(resultado){
+
+if(
+
+seleccionadas.length===0
+
+){
+
+
+mostrarMensajeBanco(
+
+"No seleccionó preguntas."
+
+);
+
+
+return;
+
+
+}
 
 
 
-alert(
 
-"Pregunta agregada al examen correctamente."
+
+seleccionadas.forEach(
+
+(check)=>{
+
+
+
+let indice =
+
+check.value ||
+
+check.dataset.id;
+
+
+
+
+
+
+let pregunta =
+
+BANCO_PREGUNTAS[indice];
+
+
+
+
+
+if(pregunta){
+
+
+
+SPAE.preguntas.push(
+
+JSON.parse(
+
+JSON.stringify(pregunta)
+
+)
 
 );
 
 
 
+}
 
 
-if(typeof actualizarBlueprint==="function"){
+
+});
+
+
+
+
+
+
+
+if(
+
+typeof actualizarBlueprint==="function"
+
+){
 
 
 actualizarBlueprint();
@@ -754,6 +714,82 @@ actualizarBlueprint();
 
 
 
+
+
+
+
+if(
+
+typeof guardarSPAE==="function"
+
+){
+
+
+guardarSPAE();
+
+
+}
+
+
+
+
+
+mostrarMensajeBanco(
+
+"Preguntas importadas correctamente."
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MENSAJES
+===================================================== */
+
+
+function mostrarMensajeBanco(texto){
+
+
+
+const div =
+
+document.getElementById(
+
+"mensajeBancoPreguntas"
+
+);
+
+
+
+
+
+if(div){
+
+
+div.innerHTML =
+
+
+`
+
+<p>
+
+${texto}
+
+</p>
+
+`;
+
+
 }
 
 
@@ -769,118 +805,32 @@ actualizarBlueprint();
 
 
 /* =====================================================
-   CONTADOR
+   COMPATIBILIDAD INICIAL
 ===================================================== */
 
 
-function actualizarContadorBanco(
+document.addEventListener(
 
-cantidad
+"DOMContentLoaded",
+
+()=>{
+
+
+if(
+
+typeof BANCO_PREGUNTAS==="undefined"
 
 ){
 
 
 
-const contador =
+window.BANCO_PREGUNTAS=[];
 
-document.getElementById(
 
-"contadorBanco"
+}
+
+
+
+}
 
 );
-
-
-
-
-
-if(!contador){
-
-return;
-
-}
-
-
-
-contador.innerHTML = `
-
-
-Total preguntas disponibles:
-
-<strong>
-
-${cantidad}
-
-</strong>
-
-
-`;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   INICIALIZACIÓN UI
-===================================================== */
-
-
-function iniciarQuestionBankUI(){
-
-
-
-console.log(
-
-"Question Bank UI iniciado"
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   API PÚBLICA
-===================================================== */
-
-
-window.SPAEQuestionBankUI = {
-
-
-renderBancoPreguntas,
-
-
-renderListaBancoPreguntas,
-
-
-actualizarBusquedaBanco,
-
-
-actualizarFiltroBanco,
-
-
-usarPreguntaBanco,
-
-
-actualizarContadorBanco,
-
-
-iniciarQuestionBankUI
-
-
-};
