@@ -1062,19 +1062,15 @@ iniciarSPAE();
 );
 /* =====================================================
 
-   SPAE MVP v3.1
+SPAE MVP v3.1
 
-   BLOQUE 2/3
+BLOQUE 2/3
 
-   MÓDULO 3B v3.2.2
+MÓDULO 3B v3.2.3
 
-   BANCO DE PREGUNTAS
+BANCO DE PREGUNTAS
 
-   ESTRUCTURA PEDAGÓGICA
-
-   - Contexto separado
-   - Pregunta separada
-   - Compatibilidad docente/estudiante
+ESTRUCTURA FINAL
 
 ===================================================== */
 
@@ -1102,6 +1098,7 @@ return `
 Tipo de pregunta
 
 </label>
+
 
 
 <select id="tipoPregunta"
@@ -1137,16 +1134,19 @@ Pregunta abierta
 </option>
 
 
-
 </select>
+
 
 
 
 <div id="editorPregunta">
 
+
 ${renderEditorPorTipo("opcion_multiple")}
 
+
 </div>
+
 
 
 <hr>
@@ -1170,17 +1170,9 @@ ${listarPreguntasSPAE()}
 </section>
 
 
-
 `;
 
-
-
 }
-
-
-
-
-
 
 
 
@@ -1216,19 +1208,14 @@ renderEditorPorTipo(tipo);
 
 
 
-
 function renderEditorPorTipo(tipo){
-
 
 
 let html="";
 
 
 
-
-
 if(tipo==="opcion_multiple"){
-
 
 
 html += `
@@ -1260,21 +1247,19 @@ Alternativas
 
 <br><br>
 
-
 <input id="altB" placeholder="Alternativa B">
 
 <br><br>
-
 
 <input id="altC" placeholder="Alternativa C">
 
 <br><br>
 
-
 <input id="altD" placeholder="Alternativa D">
 
 
 <br><br>
+
 
 
 <label>
@@ -1302,33 +1287,13 @@ Respuesta correcta
 
 `;
 
-
-
 }
 
 
-
-
-
-
-if(
-
-tipo==="caso_analisis"
-
-||
-
-tipo==="caso_aplicacion"
-
-||
-
-tipo==="abierta"
-
-){
-
+else{
 
 
 html += `
-
 
 
 <label>
@@ -1344,9 +1309,10 @@ id="contextoPregunta"
 
 rows="8"
 
-placeholder="Describa la situación organizacional o información base">
+placeholder="Situación organizacional o información base">
 
 </textarea>
+
 
 
 
@@ -1359,6 +1325,7 @@ placeholder="Describa la situación organizacional o información base">
 Pregunta / Instrucción
 
 </label>
+
 
 
 <textarea
@@ -1375,11 +1342,7 @@ placeholder="Indique qué debe analizar, resolver o desarrollar el estudiante">
 
 `;
 
-
-
 }
-
-
 
 
 
@@ -1388,6 +1351,7 @@ html += `
 
 
 <br><br>
+
 
 
 <label>
@@ -1408,6 +1372,7 @@ placeholder="Ejemplo: ANÁLISIS">
 <br><br>
 
 
+
 <label>
 
 Resultado
@@ -1426,6 +1391,7 @@ placeholder="Ejemplo: APLICACIÓN">
 <br><br>
 
 
+
 <label>
 
 Respuesta esperada
@@ -1437,13 +1403,12 @@ Respuesta esperada
 
 id="respuestaEsperada"
 
-rows="4">
-
-</textarea>
+rows="4"></textarea>
 
 
 
 <br><br>
+
 
 
 <label>
@@ -1457,13 +1422,12 @@ Criterios
 
 id="criteriosPregunta"
 
-rows="4">
-
-</textarea>
+rows="4"></textarea>
 
 
 
 <br><br>
+
 
 
 <label>
@@ -1477,13 +1441,12 @@ Retroalimentación
 
 id="retroalimentacionPregunta"
 
-rows="4">
-
-</textarea>
+rows="4"></textarea>
 
 
 
 <br><br>
+
 
 
 <button onclick="guardarPreguntaSPAE()">
@@ -1493,7 +1456,10 @@ Guardar pregunta
 </button>
 
 
-<div id="mensajePregunta"></div>
+
+<div id="mensajePregunta">
+
+</div>
 
 
 
@@ -1529,9 +1495,7 @@ document.getElementById(
 
 
 
-
 let pregunta={
-
 
 
 id:
@@ -1539,53 +1503,40 @@ id:
 Date.now().toString(),
 
 
-
 tipo:tipo,
-
 
 
 contenido:"",
 
 
-
 contexto:"",
-
 
 
 pregunta:"",
 
 
-
 alternativas:[],
-
 
 
 respuestaCorrecta:"",
 
 
-
 competencia:"",
-
 
 
 resultado:"",
 
 
-
 respuestaEsperada:"",
-
 
 
 criterios:"",
 
 
-
 retroalimentacion:""
 
 
-
 };
-
 
 
 
@@ -1618,11 +1569,10 @@ document.getElementById("altC").value.trim(),
 document.getElementById("altD").value.trim()
 
 
-
 ];
 
 
-pregunta.respuestaCorrecta=
+pregunta.respuestaCorrecta =
 
 document.getElementById(
 
@@ -1636,27 +1586,10 @@ document.getElementById(
 
 
 
+else{
 
 
-
-
-if(
-
-tipo==="caso_analisis"
-
-||
-
-tipo==="caso_aplicacion"
-
-||
-
-tipo==="abierta"
-
-){
-
-
-
-pregunta.contexto=
+pregunta.contexto =
 
 document.getElementById(
 
@@ -1666,7 +1599,8 @@ document.getElementById(
 
 
 
-pregunta.pregunta=
+
+pregunta.pregunta =
 
 document.getElementById(
 
@@ -1684,27 +1618,31 @@ document.getElementById(
 
 
 
-pregunta.competencia=
+pregunta.competencia =
 
 document.getElementById(
 
 "competenciaPregunta"
 
-).value.trim();
+).value.trim().toUpperCase();
 
 
 
-pregunta.resultado=
+
+
+pregunta.resultado =
 
 document.getElementById(
 
 "resultadoPregunta"
 
-).value.trim();
+).value.trim().toUpperCase();
 
 
 
-pregunta.respuestaEsperada=
+
+
+pregunta.respuestaEsperada =
 
 document.getElementById(
 
@@ -1714,7 +1652,9 @@ document.getElementById(
 
 
 
-pregunta.criterios=
+
+
+pregunta.criterios =
 
 document.getElementById(
 
@@ -1724,13 +1664,16 @@ document.getElementById(
 
 
 
-pregunta.retroalimentacion=
+
+
+pregunta.retroalimentacion =
 
 document.getElementById(
 
 "retroalimentacionPregunta"
 
 ).value.trim();
+
 
 
 
@@ -1753,6 +1696,8 @@ guardarSPAE();
 
 
 
+
+
 document.getElementById(
 
 "mensajePregunta"
@@ -1768,6 +1713,8 @@ Pregunta guardada correctamente.
 </p>
 
 `;
+
+
 
 
 
@@ -1791,8 +1738,8 @@ listarPreguntasSPAE();
 
 
 
-function nombreTipoPregunta(tipo){
 
+function nombreTipoPregunta(tipo){
 
 
 const nombres={
@@ -1837,16 +1784,17 @@ if(SPAE.preguntas.length===0){
 
 return `
 
+
 <p>
 
 No existen preguntas registradas.
 
 </p>
 
+
 `;
 
 }
-
 
 
 return SPAE.preguntas.map(
@@ -1854,23 +1802,21 @@ return SPAE.preguntas.map(
 (p,index)=>{
 
 
-
-let cuerpo="";
-
+let detalle="";
 
 
 
 if(p.tipo==="opcion_multiple"){
 
 
-
-cuerpo=`
+detalle=`
 
 <strong>Contenido:</strong>
 
 <br>
 
 ${p.contenido}
+
 
 
 <br><br>
@@ -1887,31 +1833,27 @@ ${p.respuestaCorrecta}
 
 }
 
-
-
 else{
 
 
-cuerpo=`
+detalle=`
 
 <strong>Contexto:</strong>
 
 <br>
 
-${p.contexto}
+${p.contexto || "-"}
 
 
 
 <br><br>
 
 
-
 <strong>Pregunta / Instrucción:</strong>
 
 <br>
 
-${p.pregunta}
-
+${p.pregunta || "-"}
 
 
 `;
@@ -1919,6 +1861,8 @@ ${p.pregunta}
 
 
 }
+
+
 
 
 
@@ -1935,6 +1879,7 @@ Pregunta ${index+1}
 </h4>
 
 
+
 <p>
 
 <strong>Tipo:</strong>
@@ -1944,6 +1889,7 @@ ${nombreTipoPregunta(p.tipo)}
 </p>
 
 
+
 <p>
 
 <strong>Competencia:</strong>
@@ -1951,6 +1897,7 @@ ${nombreTipoPregunta(p.tipo)}
 ${p.competencia || "-"}
 
 </p>
+
 
 
 <p>
@@ -1964,7 +1911,7 @@ ${p.resultado || "-"}
 
 <p>
 
-${cuerpo}
+${detalle}
 
 </p>
 
@@ -2039,7 +1986,6 @@ p=>p.tipo==="abierta"
 
 
 };
-
 
 
 }
