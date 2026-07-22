@@ -1064,23 +1064,20 @@ iniciarSPAE();
 
    SPAE MVP v3.1
 
-   BLOQUE 2/3 MODIFICADO
+   BLOQUE 2/3
 
-   MÓDULO 3B v3.2.1
+   MÓDULO 3B v3.2.2
 
-   BANCO DE PREGUNTAS DINÁMICO
-
-
-===================================================== */
-
-
-
-
-
-/* =====================================================
-   MÓDULO 3
    BANCO DE PREGUNTAS
+
+   ESTRUCTURA PEDAGÓGICA
+
+   - Contexto separado
+   - Pregunta separada
+   - Compatibilidad docente/estudiante
+
 ===================================================== */
+
 
 
 function renderPreguntas(){
@@ -1119,7 +1116,6 @@ Opción múltiple
 </option>
 
 
-
 <option value="caso_analisis">
 
 Caso de análisis
@@ -1127,13 +1123,11 @@ Caso de análisis
 </option>
 
 
-
 <option value="caso_aplicacion">
 
 Caso de aplicación
 
 </option>
-
 
 
 <option value="abierta">
@@ -1148,20 +1142,14 @@ Pregunta abierta
 
 
 
-
 <div id="editorPregunta">
 
-
 ${renderEditorPorTipo("opcion_multiple")}
-
 
 </div>
 
 
-
-
 <hr>
-
 
 
 <h3>
@@ -1171,18 +1159,16 @@ Preguntas registradas
 </h3>
 
 
-
 <div id="listaPreguntas">
 
-
 ${listarPreguntasSPAE()}
-
 
 </div>
 
 
 
 </section>
+
 
 
 `;
@@ -1198,14 +1184,7 @@ ${listarPreguntasSPAE()}
 
 
 
-
-/* =====================================================
-   EDITOR DINÁMICO
-===================================================== */
-
-
 function cambiarTipoPregunta(){
-
 
 
 const tipo =
@@ -1251,15 +1230,15 @@ let html="";
 if(tipo==="opcion_multiple"){
 
 
+
 html += `
 
 
 <label>
 
-Contenido
+Contenido / Enunciado
 
 </label>
-
 
 
 <textarea
@@ -1277,34 +1256,25 @@ Alternativas
 </h3>
 
 
-
-<input id="altA"
-placeholder="Alternativa A">
-
+<input id="altA" placeholder="Alternativa A">
 
 <br><br>
 
 
-<input id="altB"
-placeholder="Alternativa B">
-
+<input id="altB" placeholder="Alternativa B">
 
 <br><br>
 
 
-<input id="altC"
-placeholder="Alternativa C">
-
+<input id="altC" placeholder="Alternativa C">
 
 <br><br>
 
 
-<input id="altD"
-placeholder="Alternativa D">
+<input id="altD" placeholder="Alternativa D">
 
 
 <br><br>
-
 
 
 <label>
@@ -1341,7 +1311,6 @@ Respuesta correcta
 
 
 
-
 if(
 
 tipo==="caso_analisis"
@@ -1350,10 +1319,16 @@ tipo==="caso_analisis"
 
 tipo==="caso_aplicacion"
 
+||
+
+tipo==="abierta"
+
 ){
 
 
+
 html += `
+
 
 
 <label>
@@ -1367,7 +1342,11 @@ Contexto
 
 id="contextoPregunta"
 
-rows="7"></textarea>
+rows="8"
+
+placeholder="Describa la situación organizacional o información base">
+
+</textarea>
 
 
 
@@ -1377,7 +1356,7 @@ rows="7"></textarea>
 
 <label>
 
-Pregunta
+Pregunta / Instrucción
 
 </label>
 
@@ -1386,7 +1365,11 @@ Pregunta
 
 id="preguntaTexto"
 
-rows="4"></textarea>
+rows="5"
+
+placeholder="Indique qué debe analizar, resolver o desarrollar el estudiante">
+
+</textarea>
 
 
 
@@ -1400,46 +1383,11 @@ rows="4"></textarea>
 
 
 
-
-
-if(tipo==="abierta"){
-
-
-html += `
-
-
-<label>
-
-Pregunta
-
-</label>
-
-
-<textarea
-
-id="preguntaTexto"
-
-rows="4"></textarea>
-
-
-
-`;
-
-
-
-}
-
-
-
-
-
-
 html += `
 
 
 
 <br><br>
-
 
 
 <label>
@@ -1460,7 +1408,6 @@ placeholder="Ejemplo: ANÁLISIS">
 <br><br>
 
 
-
 <label>
 
 Resultado
@@ -1479,7 +1426,6 @@ placeholder="Ejemplo: APLICACIÓN">
 <br><br>
 
 
-
 <label>
 
 Respuesta esperada
@@ -1491,13 +1437,13 @@ Respuesta esperada
 
 id="respuestaEsperada"
 
-rows="4"></textarea>
+rows="4">
 
+</textarea>
 
 
 
 <br><br>
-
 
 
 <label>
@@ -1511,13 +1457,13 @@ Criterios
 
 id="criteriosPregunta"
 
-rows="4"></textarea>
+rows="4">
 
+</textarea>
 
 
 
 <br><br>
-
 
 
 <label>
@@ -1531,13 +1477,13 @@ Retroalimentación
 
 id="retroalimentacionPregunta"
 
-rows="4"></textarea>
+rows="4">
 
+</textarea>
 
 
 
 <br><br>
-
 
 
 <button onclick="guardarPreguntaSPAE()">
@@ -1547,10 +1493,7 @@ Guardar pregunta
 </button>
 
 
-
-<div id="mensajePregunta">
-
-</div>
+<div id="mensajePregunta"></div>
 
 
 
@@ -1561,7 +1504,6 @@ Guardar pregunta
 return html;
 
 
-
 }
 
 
@@ -1570,11 +1512,6 @@ return html;
 
 
 
-
-
-/* =====================================================
-   GUARDAR PREGUNTA
-===================================================== */
 
 
 function guardarPreguntaSPAE(){
@@ -1593,7 +1530,8 @@ document.getElementById(
 
 
 
-let pregunta = {
+let pregunta={
+
 
 
 id:
@@ -1601,37 +1539,49 @@ id:
 Date.now().toString(),
 
 
+
 tipo:tipo,
+
 
 
 contenido:"",
 
 
+
 contexto:"",
+
 
 
 pregunta:"",
 
 
+
 alternativas:[],
+
 
 
 respuestaCorrecta:"",
 
 
+
 competencia:"",
+
 
 
 resultado:"",
 
 
+
 respuestaEsperada:"",
+
 
 
 criterios:"",
 
 
+
 retroalimentacion:""
+
 
 
 };
@@ -1668,11 +1618,11 @@ document.getElementById("altC").value.trim(),
 document.getElementById("altD").value.trim()
 
 
+
 ];
 
 
-
-pregunta.respuestaCorrecta =
+pregunta.respuestaCorrecta=
 
 document.getElementById(
 
@@ -1690,7 +1640,6 @@ document.getElementById(
 
 
 
-
 if(
 
 tipo==="caso_analisis"
@@ -1699,11 +1648,15 @@ tipo==="caso_analisis"
 
 tipo==="caso_aplicacion"
 
+||
+
+tipo==="abierta"
+
 ){
 
 
 
-pregunta.contexto =
+pregunta.contexto=
 
 document.getElementById(
 
@@ -1713,7 +1666,7 @@ document.getElementById(
 
 
 
-pregunta.pregunta =
+pregunta.pregunta=
 
 document.getElementById(
 
@@ -1731,29 +1684,7 @@ document.getElementById(
 
 
 
-if(tipo==="abierta"){
-
-
-
-pregunta.pregunta =
-
-document.getElementById(
-
-"preguntaTexto"
-
-).value.trim();
-
-
-
-}
-
-
-
-
-
-
-
-pregunta.competencia =
+pregunta.competencia=
 
 document.getElementById(
 
@@ -1763,8 +1694,7 @@ document.getElementById(
 
 
 
-
-pregunta.resultado =
+pregunta.resultado=
 
 document.getElementById(
 
@@ -1774,8 +1704,7 @@ document.getElementById(
 
 
 
-
-pregunta.respuestaEsperada =
+pregunta.respuestaEsperada=
 
 document.getElementById(
 
@@ -1785,8 +1714,7 @@ document.getElementById(
 
 
 
-
-pregunta.criterios =
+pregunta.criterios=
 
 document.getElementById(
 
@@ -1796,16 +1724,13 @@ document.getElementById(
 
 
 
-
-pregunta.retroalimentacion =
+pregunta.retroalimentacion=
 
 document.getElementById(
 
 "retroalimentacionPregunta"
 
 ).value.trim();
-
-
 
 
 
@@ -1828,8 +1753,6 @@ guardarSPAE();
 
 
 
-
-
 document.getElementById(
 
 "mensajePregunta"
@@ -1845,8 +1768,6 @@ Pregunta guardada correctamente.
 </p>
 
 `;
-
-
 
 
 
@@ -1870,44 +1791,30 @@ listarPreguntasSPAE();
 
 
 
-/* =====================================================
-   NOMBRE VISIBLE DEL TIPO
-===================================================== */
-
-
 function nombreTipoPregunta(tipo){
 
 
 
-const tipos={
+const nombres={
 
 
-opcion_multiple:
-
-"Opción múltiple",
+opcion_multiple:"Opción múltiple",
 
 
-caso_analisis:
-
-"Caso de análisis",
+caso_analisis:"Caso de análisis",
 
 
-caso_aplicacion:
-
-"Caso de aplicación",
+caso_aplicacion:"Caso de aplicación",
 
 
-abierta:
-
-"Pregunta abierta"
-
+abierta:"Pregunta abierta"
 
 
 };
 
 
 
-return tipos[tipo] || tipo;
+return nombres[tipo] || tipo;
 
 
 
@@ -1921,20 +1828,11 @@ return tipos[tipo] || tipo;
 
 
 
-/* =====================================================
-   LISTADO MEJORADO
-===================================================== */
-
-
 function listarPreguntasSPAE(){
 
 
 
-if(
-
-SPAE.preguntas.length===0
-
-){
+if(SPAE.preguntas.length===0){
 
 
 return `
@@ -1947,10 +1845,7 @@ No existen preguntas registradas.
 
 `;
 
-
-
 }
-
 
 
 
@@ -1959,8 +1854,75 @@ return SPAE.preguntas.map(
 (p,index)=>{
 
 
-return `
 
+let cuerpo="";
+
+
+
+
+if(p.tipo==="opcion_multiple"){
+
+
+
+cuerpo=`
+
+<strong>Contenido:</strong>
+
+<br>
+
+${p.contenido}
+
+
+<br><br>
+
+
+<strong>Respuesta correcta:</strong>
+
+${p.respuestaCorrecta}
+
+
+`;
+
+
+
+}
+
+
+
+else{
+
+
+cuerpo=`
+
+<strong>Contexto:</strong>
+
+<br>
+
+${p.contexto}
+
+
+
+<br><br>
+
+
+
+<strong>Pregunta / Instrucción:</strong>
+
+<br>
+
+${p.pregunta}
+
+
+
+`;
+
+
+
+}
+
+
+
+return `
 
 
 <div class="card">
@@ -1973,7 +1935,6 @@ Pregunta ${index+1}
 </h4>
 
 
-
 <p>
 
 <strong>Tipo:</strong>
@@ -1981,7 +1942,6 @@ Pregunta ${index+1}
 ${nombreTipoPregunta(p.tipo)}
 
 </p>
-
 
 
 <p>
@@ -1993,7 +1953,6 @@ ${p.competencia || "-"}
 </p>
 
 
-
 <p>
 
 <strong>Resultado:</strong>
@@ -2003,51 +1962,11 @@ ${p.resultado || "-"}
 </p>
 
 
-
 <p>
 
-<strong>Contenido:</strong>
-
-${
-
-p.contenido ||
-
-p.contexto ||
-
-p.pregunta ||
-
-"-"
-
-}
+${cuerpo}
 
 </p>
-
-
-
-
-${
-
-p.tipo==="opcion_multiple"
-
-?
-
-`
-
-<p>
-
-<strong>Respuesta correcta:</strong>
-
-${p.respuestaCorrecta}
-
-</p>
-
-`
-
-:
-
-""
-
-}
 
 
 
@@ -2075,16 +1994,11 @@ ${p.respuestaCorrecta}
 
 
 
-/* =====================================================
-   BLUEPRINT AUTOMÁTICO
-===================================================== */
-
-
 function actualizarBlueprint(){
 
 
 
-SPAE.blueprint = {
+SPAE.blueprint={
 
 
 
