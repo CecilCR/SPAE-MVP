@@ -2387,14 +2387,21 @@ Actualizar Blueprint
 
 }
 /* =====================================================
-   SPAE MVP v3.4
 
-   BLOQUE 6/8
+SPAE MVP
 
-   MÓDULO 3
-   BANCO DE PREGUNTAS
+BLOQUE 6/8
+
+MÓDULO 5
+
+VISTA PREVIA
+
+ESTUDIANTE / DOCENTE
 
 ===================================================== */
+
+
+
 
 
 /* =====================================================
@@ -2402,102 +2409,74 @@ Actualizar Blueprint
 ===================================================== */
 
 
-function renderPreguntas(){
+function renderVistaPrevia(){
 
 
 return `
+
 
 <section class="card">
 
 
 <h2>
-3. Preguntas
+
+5. Vista previa
+
 </h2>
 
 
-<label>
-Tipo de pregunta
-</label>
+
+<p>
+
+Seleccione la versión que desea visualizar.
+
+</p>
 
 
-<select id="tipoPregunta"
-onchange="cambiarTipoPregunta()">
+
+<button
+
+class="primary-button"
+
+onclick="mostrarVistaEstudiante()"
+
+>
+
+Vista estudiante
+
+</button>
 
 
-<option value="opcion_multiple">
-Opción múltiple
-</option>
 
+<button
 
-<option value="caso_aplicacion">
-Caso de aplicación
-</option>
+class="secondary-button"
 
+onclick="mostrarVistaDocente()"
 
-<option value="abierta">
-Pregunta abierta
-</option>
+>
 
+Vista docente
 
-</select>
+</button>
 
-
-<div id="editorPregunta">
-
-${renderEditorPregunta("opcion_multiple")}
-
-</div>
 
 
 <hr>
 
 
-<h3>
-Preguntas registradas
-</h3>
 
+<div id="vistaPreviaContenido">
 
-<div id="listaPreguntas">
-
-${listarPreguntasSPAE()}
 
 </div>
+
 
 
 </section>
 
+
 `;
-
-}
-
-
-
-
-
-
-/* =====================================================
-   CAMBIO DE TIPO
-===================================================== */
-
-
-function cambiarTipoPregunta(){
-
-
-const tipo =
-
-document.getElementById(
-"tipoPregunta"
-).value;
-
-
-
-document.getElementById(
-"editorPregunta"
-).innerHTML =
-
-renderEditorPregunta(tipo);
-
-
 
 }
 
@@ -2508,457 +2487,28 @@ renderEditorPregunta(tipo);
 
 
 /* =====================================================
-   EDITOR
+   VISTA ESTUDIANTE
 ===================================================== */
 
 
-function renderEditorPregunta(tipo){
+function mostrarVistaEstudiante(){
 
 
-let html="";
 
-
-if(tipo==="opcion_multiple"){
-
-
-html += `
-
-
-<label>
-Enunciado
-</label>
-
-
-<textarea
-id="contenidoPregunta"
-rows="5">
-</textarea>
-
-
-
-<h3>
-Alternativas
-</h3>
-
-
-<label>
-Alternativa A
-</label>
-
-<input id="altA">
-
-
-
-<label>
-Alternativa B
-</label>
-
-<input id="altB">
-
-
-
-<label>
-Alternativa C
-</label>
-
-<input id="altC">
-
-
-
-<label>
-Alternativa D
-</label>
-
-<input id="altD">
-
-
-
-<label>
-Respuesta correcta
-</label>
-
-
-<select id="respuestaCorrecta">
-
-<option>A</option>
-<option>B</option>
-<option>C</option>
-<option>D</option>
-
-</select>
-
-
-`;
-
-
-
-}else{
-
-
-html += `
-
-
-<label>
-Contexto
-</label>
-
-
-<textarea
-id="contextoPregunta"
-rows="6">
-</textarea>
-
-
-
-<label>
-Pregunta / instrucción
-</label>
-
-
-<textarea
-id="preguntaTexto"
-rows="5">
-</textarea>
-
-
-`;
-
-}
-
-
-
-html += `
-
-
-<label>
-Nivel cognitivo Bloom
-</label>
-
-
-<select id="nivelPregunta">
-
-
-<option>
-RECORDAR
-</option>
-
-<option>
-COMPRENDER
-</option>
-
-<option>
-APLICAR
-</option>
-
-<option>
-ANALIZAR
-</option>
-
-<option>
-EVALUAR
-</option>
-
-<option>
-CREAR
-</option>
-
-
-</select>
-
-
-
-
-<label>
-Resultado de aprendizaje
-</label>
-
-
-<textarea
-id="resultadoPregunta">
-</textarea>
-
-
-
-
-<label>
-Respuesta esperada
-</label>
-
-
-<textarea
-id="respuestaEsperada">
-</textarea>
-
-
-
-
-<label>
-Criterios de evaluación
-</label>
-
-
-<textarea
-id="criteriosPregunta">
-</textarea>
-
-
-
-
-<label>
-Retroalimentación
-</label>
-
-
-<textarea
-id="retroalimentacionPregunta">
-</textarea>
-
-
-
-
-<br>
-
-
-<button
-onclick="guardarPreguntaSPAE()">
-
-Guardar pregunta
-
-</button>
-
-
-<div id="mensajePregunta">
-
-</div>
-
-
-`;
-
-
-
-return html;
-
-
-}
-
-
-
-
-
-
-
-
-/* =====================================================
-   GUARDAR PREGUNTA
-===================================================== */
-
-
-function guardarPreguntaSPAE(){
-
-
-let tipo =
+const contenedor =
 
 document.getElementById(
-"tipoPregunta"
-).value;
 
+"vistaPreviaContenido"
 
-
-let pregunta={
-
-
-id:
-Date.now(),
-
-
-tipo:tipo,
-
-
-contenido:"",
-
-
-alternativas:[],
-
-
-respuestaCorrecta:"",
-
-
-contexto:"",
-
-
-pregunta:"",
-
-
-nivelCognitivo:"",
-
-
-resultadoAprendizaje:"",
-
-
-respuestaEsperada:"",
-
-
-criterios:"",
-
-
-retroalimentacion:""
-
-
-};
-
-
-
-
-
-
-if(tipo==="opcion_multiple"){
-
-
-pregunta.contenido =
-
-document.getElementById(
-"contenidoPregunta"
-).value;
-
-
-pregunta.alternativas=[
-
-
-document.getElementById("altA").value,
-
-
-document.getElementById("altB").value,
-
-
-document.getElementById("altC").value,
-
-
-document.getElementById("altD").value
-
-
-];
-
-
-pregunta.respuestaCorrecta =
-
-document.getElementById(
-"respuestaCorrecta"
-).value;
-
-
-
-}
-
-
-else{
-
-
-pregunta.contexto =
-
-document.getElementById(
-"contextoPregunta"
-).value;
-
-
-pregunta.pregunta =
-
-document.getElementById(
-"preguntaTexto"
-).value;
-
-
-}
-
-
-
-pregunta.nivelCognitivo =
-
-document.getElementById(
-"nivelPregunta"
-).value;
-
-
-
-pregunta.resultadoAprendizaje =
-
-document.getElementById(
-"resultadoPregunta"
-).value;
-
-
-
-pregunta.respuestaEsperada =
-
-document.getElementById(
-"respuestaEsperada"
-).value;
-
-
-
-pregunta.criterios =
-
-document.getElementById(
-"criteriosPregunta"
-).value;
-
-
-
-pregunta.retroalimentacion =
-
-document.getElementById(
-"retroalimentacionPregunta"
-).value;
-
-
-
-
-
-
-if(!Array.isArray(SPAE.preguntas)){
-
-SPAE.preguntas=[];
-
-}
-
-
-
-SPAE.preguntas.push(
-pregunta
 );
 
 
 
-actualizarBlueprint();
 
+if(!contenedor){
 
-
-guardarSPAE();
-
-
-
-
-
-document.getElementById(
-"mensajePregunta"
-).innerHTML=
-
-`
-
-<p>
-Pregunta guardada correctamente.
-</p>
-
-`;
-
-
-
-document.getElementById(
-"listaPreguntas"
-).innerHTML=
-
-listarPreguntasSPAE();
-
-
+return;
 
 }
 
@@ -2966,265 +2516,110 @@ listarPreguntasSPAE();
 
 
 
+let html = `
 
 
 
-/* =====================================================
-   LISTADO
-===================================================== */
+<div class="summary">
 
 
-function listarPreguntasSPAE(){
+<h2>
 
+EXAMEN
 
-if(!SPAE.preguntas ||
+</h2>
 
-SPAE.preguntas.length===0){
-
-
-return `
-
-<p>
-No existen preguntas registradas.
-</p>
-
-`;
-
-}
-
-
-
-return SPAE.preguntas.map(
-
-(p,index)=>{
-
-
-return `
-
-
-<div class="card">
-
-
-<h4>
-Pregunta ${index+1}
-</h4>
 
 
 <p>
-Tipo:
-${p.tipo}
+
+<strong>
+
+Evaluación:
+
+</strong>
+
+${SPAE.evaluacion.nombre || "-"}
+
 </p>
 
 
+
 <p>
-Nivel:
-${p.nivelCognitivo}
+
+<strong>
+
+Curso:
+
+</strong>
+
+${SPAE.curso.nombre || "-"}
+
 </p>
 
 
+
 <p>
-${p.contenido || p.pregunta}
+
+<strong>
+
+Programa:
+
+</strong>
+
+${SPAE.curso.programa || "-"}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Tiempo:
+
+</strong>
+
+${SPAE.evaluacion.tiempo || 0}
+
+minutos
+
 </p>
 
 
 </div>
-
-
-`;
-
-}
-
-).join("");
-
-
-
-}
-
-
-
-
-
-
-
-/* =====================================================
-   BLUEPRINT
-===================================================== */
-
-
-function actualizarBlueprint(){
-
-
-
-if(!SPAE.blueprint){
-
-
-SPAE.blueprint={
-
-preguntasMCQ:0,
-
-casos:0,
-
-abiertas:0
-
-};
-
-
-}
-
-
-
-SPAE.blueprint.preguntasMCQ =
-
-SPAE.preguntas.filter(
-
-p=>p.tipo==="opcion_multiple"
-
-).length;
-
-
-
-SPAE.blueprint.casos =
-
-SPAE.preguntas.filter(
-
-p=>
-
-p.tipo==="caso_aplicacion"
-
-).length;
-
-
-
-SPAE.blueprint.abiertas =
-
-SPAE.preguntas.filter(
-
-p=>
-
-p.tipo==="abierta"
-
-).length;
-
-
-
-guardarSPAE();
-
-
-
-}
-/* =====================================================
-   SPAE MVP v4.0
-
-   BLOQUE 7/10
-
-   BANCO DE PREGUNTAS
-
-   - Listado
-   - Normalización
-   - Validación
-   - Blueprint automático
-
-===================================================== */
-
-
-/* =====================================================
-   LISTAR PREGUNTAS REGISTRADAS
-===================================================== */
-
-
-function listarPreguntasSPAE(){
-
-
-if(!SPAE.preguntas || SPAE.preguntas.length===0){
-
-
-return `
-
-<p>
-No existen preguntas registradas.
-</p>
-
-`;
-
-
-}
-
-
-
-return SPAE.preguntas.map(
-
-(p,index)=>{
-
-
-return `
-
-
-<div class="card">
-
-
-<h3>
-
-Pregunta ${index+1}
-
-</h3>
-
-
-
-<p>
-
-<strong>
-Tipo:
-</strong>
-
-${p.tipo}
-
-</p>
-
-
-
-<p>
-
-<strong>
-Nivel cognitivo:
-</strong>
-
-${p.nivelCognitivo}
-
-</p>
-
-
-
-<p>
-
-<strong>
-Resultado aprendizaje:
-</strong>
-
-${p.resultadoAprendizaje}
-
-</p>
 
 
 
 <hr>
 
 
+
+`;
+
+
+
+
+
+
+
+if(!Array.isArray(SPAE.preguntas)
+
+||
+
+SPAE.preguntas.length===0){
+
+
+
+html += `
+
+
 <p>
 
-${p.contenido || p.contexto}
+No existen preguntas registradas.
 
 </p>
-
-
-<button onclick="eliminarPreguntaSPAE(${index})">
-
-Eliminar
-
-</button>
-
-
-</div>
-
 
 
 `;
@@ -3233,311 +2628,7 @@ Eliminar
 
 }
 
-).join("");
-
-
-
-}
-
-
-
-
-
-
-
-/* =====================================================
-   ELIMINAR PREGUNTA
-===================================================== */
-
-
-function eliminarPreguntaSPAE(index){
-
-
-
-if(confirm(
-
-"¿Desea eliminar esta pregunta?"
-
-)){
-
-
-
-SPAE.preguntas.splice(
-
-index,
-
-1
-
-);
-
-
-
-actualizarBlueprint();
-
-
-guardarSPAE();
-
-
-
-abrirModulo(
-
-"preguntas"
-
-);
-
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
-/* =====================================================
-   ACTUALIZAR BLUEPRINT
-===================================================== */
-
-
-function actualizarBlueprint(){
-
-
-
-if(!SPAE.blueprint){
-
-
-SPAE.blueprint={
-
-
-preguntasMCQ:0,
-
-casos:0,
-
-abiertas:0
-
-
-};
-
-
-}
-
-
-
-
-
-const preguntas =
-
-SPAE.preguntas || [];
-
-
-
-
-
-SPAE.blueprint.preguntasMCQ =
-
-preguntas.filter(
-
-p=>
-
-p.tipo==="opcion_multiple"
-
-).length;
-
-
-
-
-
-
-
-SPAE.blueprint.casos =
-
-preguntas.filter(
-
-p=>
-
-p.tipo==="caso_analisis"
-
-||
-
-p.tipo==="caso_aplicacion"
-
-).length;
-
-
-
-
-
-
-
-SPAE.blueprint.abiertas =
-
-preguntas.filter(
-
-p=>
-
-p.tipo==="abierta"
-
-).length;
-
-
-
-
-
-guardarSPAE();
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   VALIDACIÓN DE PREGUNTAS
-===================================================== */
-
-
-function validarPreguntaSPAE(p){
-
-
-
-let errores=[];
-
-
-
-
-
-if(!p.tipo){
-
-
-errores.push(
-
-"Tipo de pregunta no definido"
-
-);
-
-
-}
-
-
-
-
-if(
-
-p.tipo==="opcion_multiple"
-
-){
-
-
-
-if(!p.contenido || p.contenido.trim()===""){
-
-
-errores.push(
-
-"Falta el enunciado"
-
-);
-
-
-}
-
-
-
-
-if(
-
-!p.alternativas ||
-
-p.alternativas.length!==4
-
-){
-
-
-errores.push(
-
-"Debe tener cuatro alternativas"
-
-);
-
-
-}
-
-
-
-}
-
-
-
-
-
-if(!p.nivelCognitivo){
-
-
-errores.push(
-
-"Falta nivel cognitivo"
-
-);
-
-
-}
-
-
-
-
-if(!p.resultadoAprendizaje){
-
-
-errores.push(
-
-"Falta resultado de aprendizaje"
-
-);
-
-
-}
-
-
-
-
-
-return errores;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   VALIDAR TODO EL BANCO
-===================================================== */
-
-
-function validarBancoPreguntas(){
-
-
-
-let errores=[];
-
+else{
 
 
 
@@ -3546,34 +2637,20 @@ SPAE.preguntas.forEach(
 (p,index)=>{
 
 
+html +=
 
-const resultado =
+renderPreguntaEstudiante(
 
-validarPreguntaSPAE(p);
+p,
 
+index+1
 
-
-
-
-if(resultado.length>0){
-
+);
 
 
-errores.push(
 
-"Pregunta "
+}
 
-+
-
-(index+1)
-
-+
-
-": "
-
-+
-
-resultado.join(", ")
 
 );
 
@@ -3583,24 +2660,132 @@ resultado.join(", ")
 
 
 
+
+
+
+contenedor.innerHTML = html;
+
+
+
 }
 
+
+
+
+
+
+
+
+
+/* =====================================================
+   VISTA DOCENTE
+===================================================== */
+
+
+function mostrarVistaDocente(){
+
+
+
+const contenedor =
+
+document.getElementById(
+
+"vistaPreviaContenido"
+
 );
 
 
 
 
 
+if(!contenedor){
 
-if(errores.length===0){
+return;
+
+}
 
 
 
-alert(
 
-"Banco de preguntas válido."
 
-);
+let html = `
+
+
+
+<div class="summary">
+
+
+<h2>
+
+CLAVE DOCENTE
+
+</h2>
+
+
+
+<p>
+
+<strong>
+
+Evaluación:
+
+</strong>
+
+${SPAE.evaluacion.nombre || "-"}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Curso:
+
+</strong>
+
+${SPAE.curso.nombre || "-"}
+
+</p>
+
+
+
+</div>
+
+
+
+<hr>
+
+
+
+`;
+
+
+
+
+
+
+
+if(!Array.isArray(SPAE.preguntas)
+
+||
+
+SPAE.preguntas.length===0){
+
+
+
+html += `
+
+
+<p>
+
+No existen preguntas registradas.
+
+</p>
+
+
+`;
 
 
 
@@ -3610,15 +2795,38 @@ else{
 
 
 
-alert(
+SPAE.preguntas.forEach(
 
-errores.join("\n")
+(p,index)=>{
+
+
+html +=
+
+renderPreguntaDocente(
+
+p,
+
+index+1
 
 );
 
 
 
 }
+
+
+);
+
+
+
+}
+
+
+
+
+
+
+contenedor.innerHTML = html;
 
 
 
@@ -3633,18 +2841,98 @@ errores.join("\n")
 
 
 /* =====================================================
-   NORMALIZAR DATOS
+   PREGUNTA ESTUDIANTE
 ===================================================== */
 
 
-function normalizarBancoSPAE(){
+function renderPreguntaEstudiante(
+
+p,
+
+numero
+
+){
 
 
 
-if(!Array.isArray(SPAE.preguntas)){
+let html = `
 
 
-SPAE.preguntas=[];
+
+<section class="card">
+
+
+<h3>
+
+Pregunta ${numero}
+
+</h3>
+
+
+
+`;
+
+
+
+
+
+
+
+if(
+
+p.tipo === "opcion_multiple"
+
+){
+
+
+
+html += `
+
+
+
+<p>
+
+${p.contenido || ""}
+
+</p>
+
+
+
+`;
+
+
+
+
+
+if(Array.isArray(p.alternativas)){
+
+
+
+p.alternativas.forEach(
+
+(a,index)=>{
+
+
+html += `
+
+
+<p>
+
+${String.fromCharCode(65+index)}.
+
+${a}
+
+</p>
+
+
+`;
+
+
+}
+
+
+);
+
 
 
 }
@@ -3653,120 +2941,100 @@ SPAE.preguntas=[];
 
 
 
-SPAE.preguntas =
-
-SPAE.preguntas.map(
-
-p=>{
+}
 
 
-return {
+
+else{
 
 
-id:
 
-p.id ||
-
-Date.now().toString(),
+html += `
 
 
-tipo:
 
-p.tipo ||
+<p>
 
-"opcion_multiple",
+<strong>
 
+Contexto:
 
-contenido:
+</strong>
 
-p.contenido ||
-
-"",
+</p>
 
 
-alternativas:
 
-p.alternativas ||
+<p>
 
-[],
+${p.contexto || ""}
 
-
-respuestaCorrecta:
-
-p.respuestaCorrecta ||
-
-"",
+</p>
 
 
-contexto:
 
-p.contexto ||
+<p>
 
-"",
+<strong>
 
+Pregunta:
 
-pregunta:
+</strong>
 
-p.pregunta ||
-
-"",
+</p>
 
 
-nivelCognitivo:
 
-p.nivelCognitivo ||
+<p>
 
-"APLICAR",
+${p.pregunta || ""}
 
-
-resultadoAprendizaje:
-
-p.resultadoAprendizaje ||
-
-"",
+</p>
 
 
-respuestaEsperada:
 
-p.respuestaEsperada ||
-
-"",
-
-
-criterios:
-
-p.criterios ||
-
-"",
-
-
-retroalimentacion:
-
-p.retroalimentacion ||
-
-""
-
-
-};
+`;
 
 
 
 }
 
-);
 
 
 
 
-guardarSPAE();
+
+html += `
 
 
 
-console.log(
+<p>
 
-"Banco normalizado"
+Respuesta:
 
-);
+</p>
+
+
+
+<br>
+
+
+
+________________________________
+
+
+</section>
+
+
+
+`;
+
+
+
+
+
+
+return html;
 
 
 
@@ -3781,8 +3049,332 @@ console.log(
 
 
 /* =====================================================
-   INICIALIZAR BANCO
+   PREGUNTA DOCENTE
 ===================================================== */
 
 
-normalizarBancoSPAE();
+function renderPreguntaDocente(
+
+p,
+
+numero
+
+){
+
+
+
+let html = `
+
+
+
+<section class="card">
+
+
+<h3>
+
+Pregunta ${numero}
+
+</h3>
+
+
+
+`;
+
+
+
+
+
+
+if(
+
+p.tipo==="opcion_multiple"
+
+){
+
+
+
+html += `
+
+
+
+<p>
+
+<strong>
+
+Enunciado:
+
+</strong>
+
+</p>
+
+
+
+<p>
+
+${p.contenido || ""}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Alternativas:
+
+</strong>
+
+</p>
+
+
+
+`;
+
+
+
+
+
+
+if(Array.isArray(p.alternativas)){
+
+
+
+p.alternativas.forEach(
+
+(a,index)=>{
+
+
+html += `
+
+
+<p>
+
+${String.fromCharCode(65+index)}.
+
+${a}
+
+</p>
+
+
+`;
+
+
+}
+
+
+
+);
+
+
+
+}
+
+
+
+
+
+html += `
+
+
+
+<p>
+
+<strong>
+
+Respuesta correcta:
+
+</strong>
+
+${p.respuestaCorrecta || "-"}
+
+</p>
+
+
+
+`;
+
+
+
+}
+
+else{
+
+
+
+html += `
+
+
+
+<p>
+
+<strong>
+
+Contexto:
+
+</strong>
+
+</p>
+
+
+
+<p>
+
+${p.contexto || ""}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Pregunta:
+
+</strong>
+
+</p>
+
+
+
+<p>
+
+${p.pregunta || ""}
+
+</p>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+html += `
+
+
+
+<p>
+
+<strong>
+
+Nivel cognitivo:
+
+</strong>
+
+${
+
+typeof mostrarNivelBloom === "function"
+
+?
+
+mostrarNivelBloom(p.nivelCognitivo)
+
+:
+
+p.nivelCognitivo || "-"
+
+}
+
+</p>
+
+
+
+
+<p>
+
+<strong>
+
+Resultado de aprendizaje:
+
+</strong>
+
+${
+
+typeof obtenerResultadoPregunta === "function"
+
+?
+
+obtenerResultadoPregunta(p)
+
+:
+
+p.resultadoAprendizaje || "-"
+
+}
+
+</p>
+
+
+
+
+<p>
+
+<strong>
+
+Respuesta esperada:
+
+</strong>
+
+${p.respuestaEsperada || "-"}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Criterios:
+
+</strong>
+
+${p.criterios || "-"}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Retroalimentación:
+
+</strong>
+
+${p.retroalimentacion || "-"}
+
+</p>
+
+
+
+<hr>
+
+
+
+</section>
+
+
+
+`;
+
+
+
+
+
+
+return html;
+
+
+
+}
