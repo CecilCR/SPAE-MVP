@@ -3963,13 +3963,10 @@ numero
 ){
 
 
-
 let html = `
 
 
-
 <section class="pregunta">
-
 
 
 <h3>
@@ -3979,26 +3976,20 @@ PREGUNTA ${numero}
 </h3>
 
 
-
-
-
 `;
 
 
 
 
 
-
-
-/*
- OPCIÓN MÚLTIPLE
-*/
-
+/* =====================================================
+   OPCIÓN MÚLTIPLE
+===================================================== */
 
 
 if(
 
-p.tipo==="opcion_multiple"
+p.tipo === "opcion_multiple"
 
 ){
 
@@ -4007,10 +3998,9 @@ p.tipo==="opcion_multiple"
 html += `
 
 
-
 <p>
 
-${p.contenido}
+${p.contenido || ""}
 
 </p>
 
@@ -4022,7 +4012,11 @@ ${p.contenido}
 
 
 
-if(p.alternativas){
+if(
+
+Array.isArray(p.alternativas)
+
+){
 
 
 
@@ -4030,8 +4024,7 @@ html += p.alternativas
 
 .map(
 
-`
-
+(a,i)=>`
 
 
 <p>
@@ -4041,6 +4034,7 @@ ${String.fromCharCode(65+i)}.
 ${a}
 
 </p>
+
 
 `
 
@@ -4061,11 +4055,9 @@ ${a}
 
 
 
-
-/*
- CASOS Y ABIERTAS
-*/
-
+/* =====================================================
+   CASO DE ANÁLISIS / ABIERTA
+===================================================== */
 
 
 else{
@@ -4076,18 +4068,33 @@ html += `
 
 
 
+<strong>
+
+Contexto:
+
+</strong>
+
+
 <p>
 
-${p.contexto}
+${p.contexto || ""}
 
 </p>
 
 
 
 
+
+<strong>
+
+Pregunta / Instrucción:
+
+</strong>
+
+
 <p>
 
-${p.pregunta}
+${p.pregunta || ""}
 
 </p>
 
@@ -4098,8 +4105,6 @@ ${p.pregunta}
 
 
 }
-
-
 
 
 
@@ -4115,7 +4120,11 @@ html += `
 
 Respuesta:
 
-________________________
+
+<br>
+
+
+__________________________________
 
 
 
@@ -4129,22 +4138,11 @@ ________________________
 
 
 
-
-
 return html;
 
 
 
 }
-
-
-
-
-
-
-
-
-
 /* =====================================================
    RENDER PREGUNTA DOCENTE
 ===================================================== */
