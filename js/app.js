@@ -3197,3 +3197,578 @@ SPAE.blueprint
 
 
 }
+/* =====================================================
+
+SPAE MVP v3.3
+
+BLOQUE 2D/3
+
+NORMALIZACIÓN
+MIGRACIÓN
+VALIDACIÓN PREGUNTAS
+
+===================================================== */
+
+
+
+
+
+
+/* =====================================================
+   NORMALIZAR NIVEL BLOOM
+===================================================== */
+
+
+function normalizarNivelBloom(valor){
+
+
+if(!valor){
+
+return "ANALIZAR";
+
+}
+
+
+
+valor = valor
+.toString()
+.toUpperCase()
+.trim();
+
+
+
+
+const mapa = {
+
+
+"RECORDAR":
+"RECORDAR",
+
+
+"COMPRENDER":
+"COMPRENDER",
+
+
+"APLICAR":
+"APLICAR",
+
+
+"APLICACIÓN":
+"APLICAR",
+
+
+"ANALISIS":
+"ANALIZAR",
+
+
+"ANÁLISIS":
+"ANALIZAR",
+
+
+"ANALIZAR":
+"ANALIZAR",
+
+
+"EVALUAR":
+"EVALUAR",
+
+
+"CREAR":
+"CREAR"
+
+
+};
+
+
+
+
+return mapa[valor] || "ANALIZAR";
+
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   TEXTO VISIBLE BLOOM
+===================================================== */
+
+
+function mostrarNivelBloom(valor){
+
+
+
+const mapa={
+
+
+"RECORDAR":
+"Recordar",
+
+
+"COMPRENDER":
+"Comprender",
+
+
+"APLICAR":
+"Aplicar",
+
+
+"ANALIZAR":
+"Analizar",
+
+
+"EVALUAR":
+"Evaluar",
+
+
+"CREAR":
+"Crear"
+
+
+};
+
+
+
+return mapa[valor] || valor;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MIGRAR PREGUNTA INDIVIDUAL
+===================================================== */
+
+
+function migrarPreguntaSPAE(p){
+
+
+
+return {
+
+
+
+id:
+
+p.id ||
+
+Date.now(),
+
+
+
+
+
+
+tipo:
+
+p.tipo ||
+
+"opcion_multiple",
+
+
+
+
+
+
+/* NUEVO MODELO */
+
+
+contenido:
+
+p.contenido ||
+
+p.Contenido ||
+
+"",
+
+
+
+
+
+alternativas:
+
+p.alternativas ||
+
+p.Alternativas ||
+
+[],
+
+
+
+
+
+
+respuestaCorrecta:
+
+p.respuestaCorrecta ||
+
+"",
+
+
+
+
+
+contexto:
+
+p.contexto ||
+
+p.situacion ||
+
+"",
+
+
+
+
+
+
+pregunta:
+
+p.pregunta ||
+
+"",
+
+
+
+
+
+nivelCognitivo:
+
+normalizarNivelBloom(
+
+p.nivelCognitivo ||
+
+p.competencia
+
+),
+
+
+
+
+
+resultadoAprendizaje:
+
+p.resultadoAprendizaje ||
+
+p.resultado ||
+
+"",
+
+
+
+
+
+respuestaEsperada:
+
+p.respuestaEsperada ||
+
+"",
+
+
+
+
+
+criterios:
+
+p.criterios ||
+
+"",
+
+
+
+
+
+retroalimentacion:
+
+p.retroalimentacion ||
+
+p.justificacion ||
+
+""
+
+
+
+};
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MIGRAR TODO EL BANCO
+===================================================== */
+
+
+function migrarBancoPreguntas(){
+
+
+
+if(!Array.isArray(SPAE.preguntas)){
+
+
+SPAE.preguntas=[];
+
+
+return;
+
+
+}
+
+
+
+
+
+SPAE.preguntas =
+
+
+SPAE.preguntas.map(
+
+p=>
+
+migrarPreguntaSPAE(p)
+
+);
+
+
+
+
+
+guardarSPAE();
+
+
+
+
+console.log(
+
+"Banco de preguntas migrado correctamente"
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   DATOS PARA LISTADO
+===================================================== */
+
+
+function obtenerNivelPregunta(p){
+
+
+
+return mostrarNivelBloom(
+
+p.nivelCognitivo ||
+
+p.competencia ||
+
+"ANALIZAR"
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+function obtenerResultadoPregunta(p){
+
+
+
+return (
+
+p.resultadoAprendizaje ||
+
+p.resultado ||
+
+"NO DEFINIDO"
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   VALIDACIÓN ANTES DE GUARDAR
+===================================================== */
+
+
+function validarPregunta(p){
+
+
+
+let errores=[];
+
+
+
+
+
+
+if(
+
+!p.contenido &&
+
+!p.contexto
+
+){
+
+
+errores.push(
+
+"Debe ingresar contenido o contexto."
+
+);
+
+
+}
+
+
+
+
+
+
+
+if(
+
+p.tipo==="opcion_multiple"
+
+&&
+
+p.alternativas.length<4
+
+){
+
+
+errores.push(
+
+"Debe completar las cuatro alternativas."
+
+);
+
+
+}
+
+
+
+
+
+
+
+if(
+
+!p.nivelCognitivo
+
+){
+
+
+errores.push(
+
+"Debe seleccionar nivel cognitivo Bloom."
+
+);
+
+
+}
+
+
+
+
+
+
+
+if(
+
+!p.resultadoAprendizaje
+
+){
+
+
+errores.push(
+
+"Debe ingresar resultado de aprendizaje."
+
+);
+
+
+}
+
+
+
+
+
+
+
+return errores;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   INICIALIZACIÓN AUTOMÁTICA
+===================================================== */
+
+
+function prepararBancoSPAE(){
+
+
+
+migrarBancoPreguntas();
+
+
+
+}
+
+
