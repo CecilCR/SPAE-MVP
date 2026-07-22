@@ -2073,101 +2073,305 @@ Evaluación guardada correctamente.
 }
 /* =====================================================
 
-SPAE MVP v3.1
+SPAE MVP
 
-BLOQUE 5/9
+BLOQUE 5/8
 
-MÓDULO 3
-PREGUNTAS
+MÓDULO 4
+
+BLUEPRINT DE EVALUACIÓN
 
 ===================================================== */
 
 
+/* =====================================================
+   ACTUALIZAR BLUEPRINT
+===================================================== */
+
+
+function actualizarBlueprint(){
+
+
+    if(!SPAE.blueprint){
+
+
+        SPAE.blueprint = {
+
+            preguntasMCQ:0,
+
+            casos:0,
+
+            abiertas:0
+
+        };
+
+
+    }
 
 
 
-function renderPreguntas(){
+    if(!Array.isArray(SPAE.preguntas)){
 
 
-return `
+        SPAE.preguntas = [];
+
+
+    }
+
+
+
+
+    SPAE.blueprint.preguntasMCQ =
+
+    SPAE.preguntas.filter(
+
+        p =>
+
+        p.tipo === "opcion_multiple"
+
+    ).length;
+
+
+
+
+
+    SPAE.blueprint.casos =
+
+    SPAE.preguntas.filter(
+
+        p =>
+
+        p.tipo === "caso_analisis"
+
+        ||
+
+        p.tipo === "caso_aplicacion"
+
+    ).length;
+
+
+
+
+
+
+
+    SPAE.blueprint.abiertas =
+
+    SPAE.preguntas.filter(
+
+        p =>
+
+        p.tipo === "abierta"
+
+        ||
+
+        p.tipo === "pregunta_abierta"
+
+    ).length;
+
+
+
+
+
+
+
+    guardarSPAE();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   RENDER BLUEPRINT
+===================================================== */
+
+
+function renderBlueprint(){
+
+
+
+    actualizarBlueprint();
+
+
+
+
+    const total =
+
+    SPAE.blueprint.preguntasMCQ
+
+    +
+
+    SPAE.blueprint.casos
+
+    +
+
+    SPAE.blueprint.abiertas;
+
+
+
+
+
+
+
+    return `
 
 
 
 <section class="card">
 
 
+
 <h2>
 
-3. Preguntas
+4. Blueprint de evaluación
 
 </h2>
 
 
 
 
+<p>
 
-<div class="form-group">
+Distribución automática de preguntas registradas.
 
-
-<label>
-
-Tipo de pregunta
-
-</label>
+</p>
 
 
 
 
-<select
+<hr>
 
-id="tipoPregunta"
 
-onchange="cambiarTipoPregunta()"
+
+
+
+<h3>
+
+Estructura actual
+
+</h3>
+
+
+
+
+
+
+<div class="summary">
+
+
+
+<p>
+
+<strong>
+
+Opción múltiple:
+
+</strong>
+
+
+${SPAE.blueprint.preguntasMCQ}
+
+</p>
+
+
+
+
+
+<p>
+
+<strong>
+
+Casos de análisis / aplicación:
+
+</strong>
+
+
+${SPAE.blueprint.casos}
+
+</p>
+
+
+
+
+
+<p>
+
+<strong>
+
+Preguntas abiertas:
+
+</strong>
+
+
+${SPAE.blueprint.abiertas}
+
+</p>
+
+
+
+
+
+
+<p>
+
+<strong>
+
+Total preguntas:
+
+</strong>
+
+
+${total}
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<br>
+
+
+
+
+<button
+
+onclick="actualizarBlueprint(); abrirModulo('blueprint')"
+
+class="primary-button"
 
 >
 
+Actualizar Blueprint
 
-
-<option value="opcion_multiple">
-
-Opción múltiple
-
-</option>
+</button>
 
 
 
-<option value="caso_aplicacion">
-
-Caso de aplicación
-
-</option>
 
 
 
-<option value="abierta">
 
-Pregunta abierta
-
-</option>
-
-
-
-</select>
+<div id="mensajeBlueprint">
 
 
 </div>
 
-
-
-
-
-<div id="editorPregunta">
-
-
-${renderEditorPregunta("opcion_multiple")}
-
-
-</div>
 
 
 
@@ -2176,493 +2380,9 @@ ${renderEditorPregunta("opcion_multiple")}
 </section>
 
 
-`;
-
-}
-
-
-
-
-
-
-
-
-/* =====================================================
- CAMBIO TIPO PREGUNTA
-===================================================== */
-
-
-function cambiarTipoPregunta(){
-
-
-
-const tipo =
-
-document.getElementById(
-
-"tipoPregunta"
-
-).value;
-
-
-
-
-
-document.getElementById(
-
-"editorPregunta"
-
-).innerHTML =
-
-renderEditorPregunta(tipo);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
- EDITOR DINÁMICO
-===================================================== */
-
-
-function renderEditorPregunta(tipo){
-
-
-
-let html="";
-
-
-
-
-
-
-
-if(tipo==="opcion_multiple"){
-
-
-
-html += `
-
-
-<div class="form-group">
-
-
-<label>
-
-Enunciado
-
-</label>
-
-
-
-<textarea
-
-id="contenidoPregunta"
-
-rows="5"
-
-></textarea>
-
-
-
-</div>
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Alternativa A
-
-</label>
-
-
-<input id="altA">
-
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Alternativa B
-
-</label>
-
-
-<input id="altB">
-
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Alternativa C
-
-</label>
-
-
-<input id="altC">
-
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Alternativa D
-
-</label>
-
-
-<input id="altD">
-
-
-</div>
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Respuesta correcta
-
-</label>
-
-
-
-<select id="respuestaCorrecta">
-
-
-<option>A</option>
-
-<option>B</option>
-
-<option>C</option>
-
-<option>D</option>
-
-
-</select>
-
-
-
-</div>
-
 
 `;
 
-
-
-}
-
-
-
-
-
-
-
-else{
-
-
-html += `
-
-
-<div class="form-group">
-
-
-<label>
-
-Contexto profesional
-
-</label>
-
-
-
-<textarea
-
-id="contextoPregunta"
-
-rows="6"
-
-></textarea>
-
-
-</div>
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Pregunta / instrucción
-
-</label>
-
-
-
-<textarea
-
-id="preguntaTexto"
-
-rows="5"
-
-></textarea>
-
-
-</div>
-
-
-`;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-html += `
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Nivel cognitivo Bloom
-
-</label>
-
-
-
-<select id="nivelBloom">
-
-
-<option>RECORDAR</option>
-
-<option>COMPRENDER</option>
-
-<option>APLICAR</option>
-
-<option>ANALIZAR</option>
-
-<option>EVALUAR</option>
-
-<option>CREAR</option>
-
-
-</select>
-
-
-
-</div>
-
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Resultado de aprendizaje
-
-</label>
-
-
-
-<textarea
-
-id="resultadoAprendizaje"
-
-rows="3"
-
-></textarea>
-
-
-
-</div>
-
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Respuesta esperada
-
-</label>
-
-
-
-<textarea
-
-id="respuestaEsperada"
-
-rows="4"
-
-></textarea>
-
-
-
-</div>
-
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Criterios de evaluación
-
-</label>
-
-
-
-<textarea
-
-id="criteriosPregunta"
-
-rows="4"
-
-></textarea>
-
-
-
-</div>
-
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Retroalimentación
-
-</label>
-
-
-
-<textarea
-
-id="retroalimentacionPregunta"
-
-rows="4"
-
-></textarea>
-
-
-
-</div>
-
-
-
-
-
-
-
-<button
-
-class="primary-button"
-
-onclick="guardarPreguntaSPAE()"
-
->
-
-Guardar pregunta
-
-</button>
-
-
-
-
-<div
-
-id="mensajePregunta"
-
-class="notice"
-
->
-
-
-</div>
-
-
-
-`;
-
-
-
-
-
-
-
-return html;
 
 
 }
