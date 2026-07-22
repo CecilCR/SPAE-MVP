@@ -1066,17 +1066,20 @@ SPAE MVP v3.1
 
 BLOQUE 2/3
 
-MÓDULO 3B v3.2.3
+MÓDULO 3B v3.2.4
 
 BANCO DE PREGUNTAS
 
-ESTRUCTURA FINAL
+ESTRUCTURA PEDAGÓGICA FINAL
 
 ===================================================== */
 
 
 
 function renderPreguntas(){
+
+
+normalizarPreguntasSPAE();
 
 
 return `
@@ -1086,17 +1089,13 @@ return `
 
 
 <h2>
-
 3. Banco de preguntas
-
 </h2>
 
 
 
 <label>
-
 Tipo de pregunta
-
 </label>
 
 
@@ -1107,30 +1106,22 @@ onchange="cambiarTipoPregunta()">
 
 
 <option value="opcion_multiple">
-
 Opción múltiple
-
 </option>
 
 
 <option value="caso_analisis">
-
 Caso de análisis
-
 </option>
 
 
 <option value="caso_aplicacion">
-
 Caso de aplicación
-
 </option>
 
 
 <option value="abierta">
-
 Pregunta abierta
-
 </option>
 
 
@@ -1138,12 +1129,9 @@ Pregunta abierta
 
 
 
-
 <div id="editorPregunta">
 
-
 ${renderEditorPorTipo("opcion_multiple")}
-
 
 </div>
 
@@ -1152,10 +1140,9 @@ ${renderEditorPorTipo("opcion_multiple")}
 <hr>
 
 
+
 <h3>
-
 Preguntas registradas
-
 </h3>
 
 
@@ -1176,31 +1163,26 @@ ${listarPreguntasSPAE()}
 
 
 
+
 function cambiarTipoPregunta(){
 
 
 const tipo =
 
 document.getElementById(
-
 "tipoPregunta"
-
 ).value;
 
 
 
 document.getElementById(
-
 "editorPregunta"
-
 ).innerHTML =
 
 renderEditorPorTipo(tipo);
 
 
-
 }
-
 
 
 
@@ -1222,38 +1204,36 @@ html += `
 
 
 <label>
-
 Contenido / Enunciado
-
 </label>
 
 
 <textarea
-
 id="contenidoPregunta"
-
-rows="5"></textarea>
+rows="6"></textarea>
 
 
 
 <h3>
-
 Alternativas
-
 </h3>
+
 
 
 <input id="altA" placeholder="Alternativa A">
 
 <br><br>
 
+
 <input id="altB" placeholder="Alternativa B">
 
 <br><br>
 
+
 <input id="altC" placeholder="Alternativa C">
 
 <br><br>
+
 
 <input id="altD" placeholder="Alternativa D">
 
@@ -1261,11 +1241,8 @@ Alternativas
 <br><br>
 
 
-
 <label>
-
 Respuesta correcta
-
 </label>
 
 
@@ -1273,11 +1250,8 @@ Respuesta correcta
 
 
 <option>A</option>
-
 <option>B</option>
-
 <option>C</option>
-
 <option>D</option>
 
 
@@ -1287,8 +1261,9 @@ Respuesta correcta
 
 `;
 
-}
 
+
+}
 
 else{
 
@@ -1297,10 +1272,9 @@ html += `
 
 
 <label>
-
 Contexto
-
 </label>
+
 
 
 <textarea
@@ -1309,10 +1283,9 @@ id="contextoPregunta"
 
 rows="8"
 
-placeholder="Situación organizacional o información base">
+placeholder="Situación profesional u organizacional">
 
 </textarea>
-
 
 
 
@@ -1321,9 +1294,7 @@ placeholder="Situación organizacional o información base">
 
 
 <label>
-
 Pregunta / Instrucción
-
 </label>
 
 
@@ -1334,7 +1305,7 @@ id="preguntaTexto"
 
 rows="5"
 
-placeholder="Indique qué debe analizar, resolver o desarrollar el estudiante">
+placeholder="Indique qué debe responder o desarrollar el estudiante">
 
 </textarea>
 
@@ -1342,7 +1313,10 @@ placeholder="Indique qué debe analizar, resolver o desarrollar el estudiante">
 
 `;
 
+
+
 }
+
 
 
 
@@ -1353,11 +1327,8 @@ html += `
 <br><br>
 
 
-
 <label>
-
 Competencia
-
 </label>
 
 
@@ -1372,11 +1343,8 @@ placeholder="Ejemplo: ANÁLISIS">
 <br><br>
 
 
-
 <label>
-
 Resultado
-
 </label>
 
 
@@ -1391,11 +1359,8 @@ placeholder="Ejemplo: APLICACIÓN">
 <br><br>
 
 
-
 <label>
-
 Respuesta esperada
-
 </label>
 
 
@@ -1410,11 +1375,8 @@ rows="4"></textarea>
 <br><br>
 
 
-
 <label>
-
 Criterios
-
 </label>
 
 
@@ -1429,11 +1391,8 @@ rows="4"></textarea>
 <br><br>
 
 
-
 <label>
-
 Retroalimentación
-
 </label>
 
 
@@ -1446,7 +1405,6 @@ rows="4"></textarea>
 
 
 <br><br>
-
 
 
 <button onclick="guardarPreguntaSPAE()">
@@ -1483,24 +1441,18 @@ return html;
 function guardarPreguntaSPAE(){
 
 
-
 const tipo =
 
 document.getElementById(
-
 "tipoPregunta"
-
 ).value;
-
 
 
 
 let pregunta={
 
 
-id:
-
-Date.now().toString(),
+id:Date.now().toString(),
 
 
 tipo:tipo,
@@ -1542,23 +1494,18 @@ retroalimentacion:""
 
 
 
-
 if(tipo==="opcion_multiple"){
-
 
 
 pregunta.contenido =
 
 document.getElementById(
-
 "contenidoPregunta"
-
 ).value.trim();
 
 
 
 pregunta.alternativas=[
-
 
 document.getElementById("altA").value.trim(),
 
@@ -1568,23 +1515,19 @@ document.getElementById("altC").value.trim(),
 
 document.getElementById("altD").value.trim()
 
-
 ];
+
 
 
 pregunta.respuestaCorrecta =
 
 document.getElementById(
-
 "respuestaCorrecta"
-
 ).value;
 
 
 
 }
-
-
 
 else{
 
@@ -1592,20 +1535,15 @@ else{
 pregunta.contexto =
 
 document.getElementById(
-
 "contextoPregunta"
-
 ).value.trim();
-
 
 
 
 pregunta.pregunta =
 
 document.getElementById(
-
 "preguntaTexto"
-
 ).value.trim();
 
 
@@ -1614,77 +1552,53 @@ document.getElementById(
 
 
 
-
-
-
-
 pregunta.competencia =
 
 document.getElementById(
-
 "competenciaPregunta"
-
-).value.trim().toUpperCase();
-
-
+).value
+.trim()
+.toUpperCase();
 
 
 
 pregunta.resultado =
 
 document.getElementById(
-
 "resultadoPregunta"
-
-).value.trim().toUpperCase();
-
-
+).value
+.trim()
+.toUpperCase();
 
 
 
 pregunta.respuestaEsperada =
 
 document.getElementById(
-
 "respuestaEsperada"
-
 ).value.trim();
-
-
 
 
 
 pregunta.criterios =
 
 document.getElementById(
-
 "criteriosPregunta"
-
 ).value.trim();
-
-
 
 
 
 pregunta.retroalimentacion =
 
 document.getElementById(
-
 "retroalimentacionPregunta"
-
 ).value.trim();
 
 
 
 
 
-
-
-SPAE.preguntas.push(
-
-pregunta
-
-);
+SPAE.preguntas.push(pregunta);
 
 
 
@@ -1696,33 +1610,9 @@ guardarSPAE();
 
 
 
-
-
 document.getElementById(
-
-"mensajePregunta"
-
-).innerHTML=
-
-`
-
-<p>
-
-Pregunta guardada correctamente.
-
-</p>
-
-`;
-
-
-
-
-
-document.getElementById(
-
 "listaPreguntas"
-
-).innerHTML=
+).innerHTML =
 
 listarPreguntasSPAE();
 
@@ -1734,6 +1624,62 @@ listarPreguntasSPAE();
 
 
 
+function normalizarPreguntasSPAE(){
+
+
+if(!SPAE.preguntas){
+
+SPAE.preguntas=[];
+
+return;
+
+}
+
+
+
+SPAE.preguntas =
+
+SPAE.preguntas.map(p=>{
+
+
+p.competencia =
+
+(p.competencia || "")
+.toUpperCase();
+
+
+
+p.resultado =
+
+(p.resultado || "")
+.toUpperCase();
+
+
+
+p.contexto =
+
+p.contexto || "";
+
+
+
+p.pregunta =
+
+p.pregunta || "";
+
+
+
+return p;
+
+
+});
+
+
+guardarSPAE();
+
+
+}
+
+
 
 
 
@@ -1742,17 +1688,14 @@ listarPreguntasSPAE();
 function nombreTipoPregunta(tipo){
 
 
-const nombres={
+const tipos={
 
 
 opcion_multiple:"Opción múltiple",
 
-
 caso_analisis:"Caso de análisis",
 
-
 caso_aplicacion:"Caso de aplicación",
-
 
 abierta:"Pregunta abierta"
 
@@ -1761,13 +1704,10 @@ abierta:"Pregunta abierta"
 
 
 
-return nombres[tipo] || tipo;
-
+return tipos[tipo] || tipo;
 
 
 }
-
-
 
 
 
@@ -1779,27 +1719,18 @@ function listarPreguntasSPAE(){
 
 
 
-if(SPAE.preguntas.length===0){
+if(!SPAE.preguntas.length){
 
 
-return `
+return "<p>No existen preguntas registradas.</p>";
 
 
-<p>
-
-No existen preguntas registradas.
-
-</p>
-
-
-`;
 
 }
 
 
-return SPAE.preguntas.map(
 
-(p,index)=>{
+return SPAE.preguntas.map((p,index)=>{
 
 
 let detalle="";
@@ -1811,12 +1742,12 @@ if(p.tipo==="opcion_multiple"){
 
 detalle=`
 
+
 <strong>Contenido:</strong>
 
 <br>
 
 ${p.contenido}
-
 
 
 <br><br>
@@ -1838,6 +1769,7 @@ else{
 
 detalle=`
 
+
 <strong>Contexto:</strong>
 
 <br>
@@ -1847,6 +1779,7 @@ ${p.contexto || "-"}
 
 
 <br><br>
+
 
 
 <strong>Pregunta / Instrucción:</strong>
@@ -1865,7 +1798,6 @@ ${p.pregunta || "-"}
 
 
 
-
 return `
 
 
@@ -1873,46 +1805,33 @@ return `
 
 
 <h4>
-
 Pregunta ${index+1}
-
 </h4>
 
 
-
 <p>
-
 <strong>Tipo:</strong>
-
 ${nombreTipoPregunta(p.tipo)}
-
 </p>
 
 
 
 <p>
-
 <strong>Competencia:</strong>
-
 ${p.competencia || "-"}
-
 </p>
 
 
 
 <p>
-
 <strong>Resultado:</strong>
-
 ${p.resultado || "-"}
-
 </p>
 
 
+
 <p>
-
 ${detalle}
-
 </p>
 
 
@@ -1920,20 +1839,14 @@ ${detalle}
 </div>
 
 
-
 `;
 
 
-
-}
-
-).join("");
+}).join("");
 
 
 
 }
-
-
 
 
 
@@ -1944,9 +1857,7 @@ ${detalle}
 function actualizarBlueprint(){
 
 
-
 SPAE.blueprint={
-
 
 
 preguntasMCQ:
@@ -1984,8 +1895,8 @@ p=>p.tipo==="abierta"
 ).length
 
 
-
 };
+
 
 
 }
