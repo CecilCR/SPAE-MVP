@@ -1042,4 +1042,21 @@ Evaluación guardada correctamente.
 
 
 }
+/* =====================================================
+   INICIO SPAE
+===================================================== */
 
+
+document.addEventListener(
+
+"DOMContentLoaded",
+
+()=>{
+
+
+iniciarSPAE();
+
+
+}
+
+);
