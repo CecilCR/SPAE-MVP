@@ -2552,7 +2552,7 @@ Resultado de aprendizaje:
 </strong>
 
 
-${p.resultadoAprendizaje}
+${obtenerResultadoPregunta(p)}
 
 </p>
 
