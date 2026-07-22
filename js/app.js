@@ -1060,5 +1060,2140 @@ iniciarSPAE();
 }
 
 );
+/* =====================================================
+
+SPAE MVP v3.3
+
+BLOQUE 2A/3
+
+MÓDULO 3
+
+BANCO DE PREGUNTAS
+
+RENDER + EDITORES
+
+===================================================== */
 
 
+
+
+
+function renderPreguntas(){
+
+
+return `
+
+
+
+<section class="card">
+
+
+
+<h2>
+
+3. Banco de preguntas
+
+</h2>
+
+
+
+
+<label>
+
+Tipo de pregunta
+
+</label>
+
+
+
+
+<select
+
+id="tipoPregunta"
+
+onchange="cambiarTipoPregunta()"
+
+>
+
+
+
+<option value="opcion_multiple">
+
+Opción múltiple
+
+</option>
+
+
+
+<option value="caso_analisis">
+
+Caso de análisis
+
+</option>
+
+
+
+<option value="caso_aplicacion">
+
+Caso de aplicación
+
+</option>
+
+
+
+<option value="abierta">
+
+Pregunta abierta
+
+</option>
+
+
+
+</select>
+
+
+
+
+
+<div id="editorPregunta">
+
+
+
+${renderEditorPorTipo("opcion_multiple")}
+
+
+
+</div>
+
+
+
+
+
+<hr>
+
+
+
+<h3>
+
+Preguntas registradas
+
+</h3>
+
+
+
+<div id="listaPreguntas">
+
+
+
+${listarPreguntasSPAE()}
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+
+CAMBIO DE TIPO DE PREGUNTA
+
+===================================================== */
+
+
+function cambiarTipoPregunta(){
+
+
+
+const tipo =
+
+document.getElementById(
+
+"tipoPregunta"
+
+).value;
+
+
+
+
+
+document.getElementById(
+
+"editorPregunta"
+
+).innerHTML =
+
+
+
+renderEditorPorTipo(tipo);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+
+EDITOR SEGÚN TIPO
+
+===================================================== */
+
+
+function renderEditorPorTipo(tipo){
+
+
+
+let formulario="";
+
+
+
+
+
+/* ===============================
+   OPCIÓN MÚLTIPLE
+================================ */
+
+
+if(tipo==="opcion_multiple"){
+
+
+
+formulario += `
+
+
+
+<label>
+
+Contenido / Enunciado
+
+</label>
+
+
+
+<textarea
+
+id="contenidoPregunta"
+
+rows="6"
+
+></textarea>
+
+
+
+
+
+<h3>
+
+Alternativas
+
+</h3>
+
+
+
+
+<label>
+
+Alternativa A
+
+</label>
+
+
+
+<input
+
+id="altA"
+
+>
+
+
+
+
+
+<label>
+
+Alternativa B
+
+</label>
+
+
+
+<input
+
+id="altB"
+
+>
+
+
+
+
+
+<label>
+
+Alternativa C
+
+</label>
+
+
+
+<input
+
+id="altC"
+
+>
+
+
+
+
+
+<label>
+
+Alternativa D
+
+</label>
+
+
+
+<input
+
+id="altD"
+
+>
+
+
+
+
+
+<label>
+
+Respuesta correcta
+
+</label>
+
+
+
+<select
+
+id="respuestaCorrecta"
+
+>
+
+
+<option>A</option>
+
+<option>B</option>
+
+<option>C</option>
+
+<option>D</option>
+
+
+</select>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+/* ===============================
+   CASOS Y ABIERTAS
+================================ */
+
+
+
+else{
+
+
+formulario += `
+
+
+
+<label>
+
+Contexto
+
+</label>
+
+
+
+
+<textarea
+
+id="contextoPregunta"
+
+rows="8"
+
+placeholder="Situación profesional u organizacional"
+
+></textarea>
+
+
+
+
+
+<br><br>
+
+
+
+
+
+<label>
+
+Pregunta / Instrucción
+
+</label>
+
+
+
+
+<textarea
+
+id="preguntaTexto"
+
+rows="6"
+
+placeholder="Pregunta que debe responder el estudiante o tarea que debe desarrollar"
+
+></textarea>
+
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+/* ===============================
+   CAMPOS COMUNES
+================================ */
+
+
+
+formulario += `
+
+
+
+<br><br>
+
+
+
+<label>
+
+Nivel cognitivo (Bloom)
+
+</label>
+
+
+
+<select
+
+id="competenciaPregunta"
+
+>
+
+
+
+<option value="RECORDAR">
+
+Recordar
+
+</option>
+
+
+
+<option value="COMPRENDER">
+
+Comprender
+
+</option>
+
+
+
+<option value="APLICAR">
+
+Aplicar
+
+</option>
+
+
+
+<option value="ANALIZAR">
+
+Analizar
+
+</option>
+
+
+
+<option value="EVALUAR">
+
+Evaluar
+
+</option>
+
+
+
+<option value="CREAR">
+
+Crear
+
+</option>
+
+
+
+</select>
+
+
+
+
+
+
+
+<br><br>
+
+
+
+
+
+<label>
+
+Resultado de aprendizaje
+
+</label>
+
+
+
+
+<textarea
+
+id="resultadoPregunta"
+
+rows="3"
+
+placeholder="Ejemplo: Analiza situaciones organizacionales identificando causas y alternativas de intervención."
+
+></textarea>
+
+
+
+
+
+
+
+<br><br>
+
+
+
+
+
+<label>
+
+Respuesta esperada
+
+</label>
+
+
+
+
+<textarea
+
+id="respuestaEsperada"
+
+rows="5"
+
+></textarea>
+
+
+
+
+
+
+
+<br><br>
+
+
+
+
+
+<label>
+
+Criterios de evaluación
+
+</label>
+
+
+
+
+<textarea
+
+id="criteriosPregunta"
+
+rows="5"
+
+></textarea>
+
+
+
+
+
+
+
+<br><br>
+
+
+
+
+
+<label>
+
+Retroalimentación
+
+</label>
+
+
+
+
+<textarea
+
+id="retroalimentacionPregunta"
+
+rows="5"
+
+></textarea>
+
+
+
+
+
+
+
+<br><br>
+
+
+
+
+
+<button
+
+onclick="guardarPreguntaSPAE()"
+
+>
+
+Guardar pregunta
+
+</button>
+
+
+
+
+
+<div id="mensajePregunta">
+
+</div>
+
+
+
+`;
+
+
+
+
+
+return formulario;
+
+
+
+}
+/* =====================================================
+
+SPAE MVP v3.3
+
+BLOQUE 2B/3
+
+GUARDADO
+NORMALIZACIÓN
+LISTADO
+
+===================================================== */
+
+
+
+
+
+
+
+/* =====================================================
+   GUARDAR PREGUNTA
+===================================================== */
+
+
+function guardarPreguntaSPAE(){
+
+
+
+const tipo =
+
+document.getElementById(
+
+"tipoPregunta"
+
+).value;
+
+
+
+
+
+let pregunta = {
+
+
+id:
+
+Date.now().toString(),
+
+
+
+tipo:
+
+
+
+tipo,
+
+
+
+contenido:"",
+
+
+
+alternativas:[],
+
+
+
+respuestaCorrecta:"",
+
+
+
+contexto:"",
+
+
+
+pregunta:"",
+
+
+
+nivelCognitivo:"",
+
+
+
+resultadoAprendizaje:"",
+
+
+
+respuestaEsperada:"",
+
+
+
+criterios:"",
+
+
+
+retroalimentacion:""
+
+
+
+};
+
+
+
+
+
+
+
+/* =====================================
+   OPCIÓN MÚLTIPLE
+===================================== */
+
+
+if(tipo==="opcion_multiple"){
+
+
+
+pregunta.contenido =
+
+document.getElementById(
+
+"contenidoPregunta"
+
+).value.trim();
+
+
+
+
+
+pregunta.alternativas = [
+
+
+document.getElementById("altA").value.trim(),
+
+
+document.getElementById("altB").value.trim(),
+
+
+document.getElementById("altC").value.trim(),
+
+
+document.getElementById("altD").value.trim()
+
+
+];
+
+
+
+
+
+pregunta.respuestaCorrecta =
+
+document.getElementById(
+
+"respuestaCorrecta"
+
+).value;
+
+
+
+}
+
+
+
+
+
+
+
+/* =====================================
+   CASOS Y ABIERTAS
+===================================== */
+
+
+else{
+
+
+
+pregunta.contexto =
+
+document.getElementById(
+
+"contextoPregunta"
+
+).value.trim();
+
+
+
+
+
+pregunta.pregunta =
+
+document.getElementById(
+
+"preguntaTexto"
+
+).value.trim();
+
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================
+   CAMPOS COMUNES
+===================================== */
+
+
+
+pregunta.nivelCognitivo =
+
+document.getElementById(
+
+"competenciaPregunta"
+
+).value;
+
+
+
+
+
+
+
+pregunta.resultadoAprendizaje =
+
+document.getElementById(
+
+"resultadoPregunta"
+
+).value.trim();
+
+
+
+
+
+
+
+pregunta.respuestaEsperada =
+
+document.getElementById(
+
+"respuestaEsperada"
+
+).value.trim();
+
+
+
+
+
+
+
+pregunta.criterios =
+
+document.getElementById(
+
+"criteriosPregunta"
+
+).value.trim();
+
+
+
+
+
+
+
+pregunta.retroalimentacion =
+
+document.getElementById(
+
+"retroalimentacionPregunta"
+
+).value.trim();
+
+
+
+
+
+
+
+
+
+SPAE.preguntas.push(
+
+pregunta
+
+);
+
+
+
+
+
+
+
+actualizarBlueprint();
+
+
+
+
+
+
+
+guardarSPAE();
+
+
+
+
+
+
+
+document.getElementById(
+
+"mensajePregunta"
+
+).innerHTML =
+
+
+`
+
+<p>
+
+Pregunta guardada correctamente.
+
+</p>
+
+`;
+
+
+
+
+
+
+
+document.getElementById(
+
+"listaPreguntas"
+
+).innerHTML =
+
+listarPreguntasSPAE();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   NORMALIZACIÓN DE DATOS
+===================================================== */
+
+
+function normalizarPreguntasSPAE(){
+
+
+
+if(!SPAE.preguntas){
+
+
+SPAE.preguntas=[];
+
+
+return;
+
+
+}
+
+
+
+
+
+
+
+SPAE.preguntas =
+
+SPAE.preguntas.map(p=>{
+
+
+
+
+
+/*
+ Compatibilidad versiones anteriores
+*/
+
+
+
+p.tipo =
+
+p.tipo ||
+
+"opcion_multiple";
+
+
+
+
+
+
+p.contexto =
+
+p.contexto ||
+
+"";
+
+
+
+
+
+
+p.pregunta =
+
+p.pregunta ||
+
+"";
+
+
+
+
+
+
+p.resultadoAprendizaje =
+
+p.resultadoAprendizaje ||
+
+p.resultado ||
+
+"";
+
+
+
+
+
+
+p.nivelCognitivo =
+
+p.nivelCognitivo ||
+
+p.competencia ||
+
+"";
+
+
+
+
+
+
+p.respuestaEsperada =
+
+p.respuestaEsperada ||
+
+"";
+
+
+
+
+
+
+p.criterios =
+
+p.criterios ||
+
+"";
+
+
+
+
+
+
+p.retroalimentacion =
+
+p.retroalimentacion ||
+
+"";
+
+
+
+
+
+
+p.alternativas =
+
+p.alternativas ||
+
+[];
+
+
+
+
+
+
+return p;
+
+
+
+});
+
+
+
+
+
+
+
+guardarSPAE();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   NOMBRE TIPO PREGUNTA
+===================================================== */
+
+
+function nombreTipoPregunta(tipo){
+
+
+
+const tipos={
+
+
+"opcion_multiple":
+
+"Opción múltiple",
+
+
+
+"caso_analisis":
+
+"Caso de análisis",
+
+
+
+"caso_aplicacion":
+
+"Caso de aplicación",
+
+
+
+"abierta":
+
+"Pregunta abierta"
+
+
+
+};
+
+
+
+
+
+return tipos[tipo] || tipo;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   LISTADO DE PREGUNTAS
+===================================================== */
+
+
+
+function listarPreguntasSPAE(){
+
+
+
+
+
+if(!SPAE.preguntas ||
+
+SPAE.preguntas.length===0){
+
+
+
+return `
+
+
+<p>
+
+No existen preguntas registradas.
+
+</p>
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+
+return SPAE.preguntas.map(
+
+(p,index)=>{
+
+
+
+
+
+let contenido="";
+
+
+
+
+
+
+if(
+
+p.tipo==="opcion_multiple"
+
+){
+
+
+
+contenido = `
+
+
+
+<strong>
+
+Contenido:
+
+</strong>
+
+
+<br>
+
+
+${p.contenido}
+
+
+
+<br><br>
+
+
+
+<strong>
+
+Respuesta correcta:
+
+</strong>
+
+
+${p.respuestaCorrecta}
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+else{
+
+
+
+contenido = `
+
+
+
+<strong>
+
+Contexto:
+
+</strong>
+
+
+<br>
+
+
+${p.contexto || "-"}
+
+
+
+
+
+<br><br>
+
+
+
+
+
+<strong>
+
+Pregunta / Instrucción:
+
+</strong>
+
+
+<br>
+
+
+${p.pregunta || "-"}
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+
+return `
+
+
+
+<div class="card">
+
+
+
+<h4>
+
+Pregunta ${index+1}
+
+</h4>
+
+
+
+
+
+<p>
+
+<strong>
+
+Tipo:
+
+</strong>
+
+
+${nombreTipoPregunta(p.tipo)}
+
+</p>
+
+
+
+
+
+
+<p>
+
+<strong>
+
+Nivel cognitivo:
+
+</strong>
+
+
+${p.nivelCognitivo}
+
+</p>
+
+
+
+
+
+
+<p>
+
+<strong>
+
+Resultado de aprendizaje:
+
+</strong>
+
+
+${p.resultadoAprendizaje}
+
+</p>
+
+
+
+
+
+<p>
+
+${contenido}
+
+</p>
+
+
+
+</div>
+
+
+
+`;
+
+
+
+}
+
+).join("");
+
+
+
+}
+/* =====================================================
+
+SPAE MVP v3.3
+
+BLOQUE 2C/3
+
+BLUEPRINT
+MIGRACIÓN
+COMPATIBILIDAD
+
+===================================================== */
+
+
+
+
+
+
+
+
+/* =====================================================
+   ACTUALIZAR BLUEPRINT
+===================================================== */
+
+
+function actualizarBlueprint(){
+
+
+
+if(!SPAE.blueprint){
+
+
+SPAE.blueprint = {
+
+
+preguntasMCQ:0,
+
+casos:0,
+
+abiertas:0
+
+
+};
+
+
+}
+
+
+
+
+
+
+SPAE.blueprint.preguntasMCQ =
+
+SPAE.preguntas.filter(
+
+p=>
+
+p.tipo==="opcion_multiple"
+
+).length;
+
+
+
+
+
+
+
+
+SPAE.blueprint.casos =
+
+SPAE.preguntas.filter(
+
+p=>
+
+p.tipo==="caso_analisis"
+
+||
+
+p.tipo==="caso_aplicacion"
+
+).length;
+
+
+
+
+
+
+
+
+SPAE.blueprint.abiertas =
+
+SPAE.preguntas.filter(
+
+p=>
+
+p.tipo==="abierta"
+
+).length;
+
+
+
+
+
+
+
+guardarSPAE();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MIGRACIÓN DE PROYECTOS ANTIGUOS
+===================================================== */
+
+
+
+function migrarPreguntasSPAE(){
+
+
+
+if(!SPAE.preguntas){
+
+
+
+SPAE.preguntas=[];
+
+
+
+return;
+
+
+
+}
+
+
+
+
+
+
+
+SPAE.preguntas =
+
+
+
+SPAE.preguntas.map(p=>{
+
+
+
+
+
+/*
+ ===============================
+ Tipo pregunta
+ ===============================
+*/
+
+
+
+p.tipo =
+
+p.tipo ||
+
+"opcion_multiple";
+
+
+
+
+
+
+/*
+ ===============================
+ Contexto
+ ===============================
+*/
+
+
+
+if(
+
+!p.contexto
+
+&&
+
+p.situacion
+
+){
+
+
+p.contexto =
+
+p.situacion;
+
+
+}
+
+
+
+
+
+
+p.contexto =
+
+p.contexto ||
+
+"";
+
+
+
+
+
+
+/*
+ ===============================
+ Pregunta
+ ===============================
+*/
+
+
+
+p.pregunta =
+
+p.pregunta ||
+
+"";
+
+
+
+
+
+
+
+/*
+ ===============================
+ Nivel cognitivo
+ ===============================
+*/
+
+
+
+if(
+
+!p.nivelCognitivo
+
+&&
+
+p.competencia
+
+){
+
+
+
+p.nivelCognitivo =
+
+normalizarBloom(
+
+p.competencia
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+p.nivelCognitivo =
+
+p.nivelCognitivo ||
+
+"ANALIZAR";
+
+
+
+
+
+
+
+
+/*
+ ===============================
+ Resultado aprendizaje
+ ===============================
+*/
+
+
+
+p.resultadoAprendizaje =
+
+p.resultadoAprendizaje ||
+
+p.resultado ||
+
+"";
+
+
+
+
+
+
+
+
+/*
+ ===============================
+ Retroalimentación
+ ===============================
+*/
+
+
+
+if(
+
+!p.retroalimentacion
+
+&&
+
+p.justificacion
+
+){
+
+
+
+p.retroalimentacion =
+
+p.justificacion;
+
+
+}
+
+
+
+
+
+
+p.retroalimentacion =
+
+p.retroalimentacion ||
+
+"";
+
+
+
+
+
+
+
+p.respuestaEsperada =
+
+p.respuestaEsperada ||
+
+"";
+
+
+
+
+
+
+p.criterios =
+
+p.criterios ||
+
+"";
+
+
+
+
+
+
+
+p.alternativas =
+
+p.alternativas ||
+
+[];
+
+
+
+
+
+
+
+return p;
+
+
+
+});
+
+
+
+
+
+
+
+
+actualizarBlueprint();
+
+
+
+guardarSPAE();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   NORMALIZAR BLOOM
+===================================================== */
+
+
+function normalizarBloom(valor){
+
+
+
+if(!valor){
+
+return "";
+
+}
+
+
+
+valor =
+
+valor.toString()
+
+.toUpperCase()
+
+.trim();
+
+
+
+
+
+
+
+const equivalencias={
+
+
+
+"RECORDAR":
+
+"RECORDAR",
+
+
+
+"COMPRENDER":
+
+"COMPRENDER",
+
+
+
+"APLICAR":
+
+"APLICAR",
+
+
+
+"APLICACIÓN":
+
+"APLICAR",
+
+
+
+"ANALISIS":
+
+"ANALIZAR",
+
+
+
+"ANÁLISIS":
+
+"ANALIZAR",
+
+
+
+"ANALIZAR":
+
+"ANALIZAR",
+
+
+
+"EVALUAR":
+
+"EVALUAR",
+
+
+
+"CREAR":
+
+"CREAR"
+
+
+
+};
+
+
+
+
+
+
+
+return equivalencias[valor]
+
+||
+
+
+valor;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   PREPARAR DATOS PARA EXPORTACIÓN JSON
+===================================================== */
+
+
+
+function prepararExportacionSPAE(){
+
+
+
+migrarPreguntasSPAE();
+
+
+
+
+
+
+return {
+
+
+version:
+
+SPAE.version,
+
+
+
+fecha:
+
+new Date().toISOString(),
+
+
+
+
+curso:
+
+SPAE.curso,
+
+
+
+evaluacion:
+
+SPAE.evaluacion,
+
+
+
+competencias:
+
+SPAE.competencias,
+
+
+
+resultados:
+
+SPAE.resultados,
+
+
+
+preguntas:
+
+SPAE.preguntas,
+
+
+
+blueprint:
+
+SPAE.blueprint
+
+
+
+};
+
+
+
+}
