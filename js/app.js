@@ -5117,72 +5117,35 @@ mostrarMensajeExportacion(
 function generarTextoDocente(){
 
 
-
 let texto = "";
 
 
-
-
-
-
 texto +=
-
 "CLAVE DOCENTE\n\n";
 
 
-
-
-
 texto +=
-
 "Evaluación: "
-
 +
-
 SPAE.evaluacion.nombre
-
 +
-
 "\n";
 
 
-
-
-
-
 texto +=
-
 "Programa: "
-
 +
-
 SPAE.curso.programa
-
 +
-
 "\n";
 
 
-
-
-
-
 texto +=
-
 "Curso: "
-
 +
-
 SPAE.curso.nombre
-
 +
-
 "\n\n";
-
-
-
-
-
 
 
 SPAE.preguntas.forEach(
@@ -5190,79 +5153,37 @@ SPAE.preguntas.forEach(
 (p,index)=>{
 
 
-
-
-
 texto +=
-
 "================================\n";
 
-
-
 texto +=
-
 "PREGUNTA "
-
 +
-
 (index+1)
-
 +
-
 "\n";
 
-
-
 texto +=
-
 "================================\n\n";
 
 
-
-
-
-
-
-
 if(
-
 p.tipo==="opcion_multiple"
-
 ){
 
 
-
-
-
 texto +=
-
 "ENUNCIADO:\n\n";
 
 
-
-
-
 texto +=
-
 p.contenido
-
 +
-
 "\n\n";
 
 
-
-
-
-
 texto +=
-
 "ALTERNATIVAS:\n\n";
-
-
-
-
-
 
 
 p.alternativas.forEach(
@@ -5270,209 +5191,107 @@ p.alternativas.forEach(
 (a,i)=>{
 
 
-
 texto +=
-
 String.fromCharCode(65+i)
-
 +
-
 ". "
-
 +
-
 a
-
 +
-
 "\n";
-
 
 
 });
 
 
-
-
-
-
-
 texto +=
-
 "\nRESPUESTA CORRECTA: "
-
 +
-
 p.respuestaCorrecta
-
 +
-
 "\n\n";
 
 
-
 }
-
-
-
-
-
-
 
 else{
 
 
-
-
-
 texto +=
-
 "CONTEXTO:\n\n";
 
 
-
 texto +=
-
 p.contexto
-
 +
-
 "\n\n";
 
 
-
-
-
-
 texto +=
-
 "PREGUNTA / INSTRUCCIÓN:\n\n";
 
 
-
 texto +=
-
 p.pregunta
-
 +
-
 "\n\n";
-
 
 
 }
 
 
-
-
-
-
-
 texto +=
-
 "Nivel cognitivo: "
-
 +
-
 mostrarNivelBloom(
-
 p.nivelCognitivo
-
 )
-
 +
-
 "\n";
 
 
-
-
-
-
-
 texto +=
-
 "Resultado de aprendizaje: "
-
 +
-
 obtenerResultadoPregunta(p)
-
 +
-
 "\n\n";
 
 
-
-
-
-
 texto +=
-
 "RESPUESTA ESPERADA:\n";
 
 
-
 texto +=
-
 (
-
 p.respuestaEsperada || "-"
-
 )
-
 +
-
 "\n\n";
 
 
-
-
-
-
-
 texto +=
-
 "CRITERIOS:\n";
 
 
-
 texto +=
-
 (
-
 p.criterios || "-"
-
 )
-
 +
-
 "\n\n";
 
 
-
-
-
-
-
 texto +=
-
 "RETROALIMENTACIÓN:\n";
 
 
-
 texto +=
-
 (
-
 p.retroalimentacion || "-"
-
 )
-
 +
-
 "\n\n";
-
 
 
 }
@@ -5480,17 +5299,10 @@ p.retroalimentacion || "-"
 );
 
 
-
-
-
-
-
 return texto;
 
 
-
 }
-
 
 
 
