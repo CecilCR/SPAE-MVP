@@ -1237,3 +1237,397 @@ Módulo pendiente de integración.
 
 
 }
+/* =====================================================
+
+SPAE MVP v3.1
+
+BLOQUE 3/9
+
+MÓDULO CURSO
+
+===================================================== */
+
+
+
+
+
+/* =====================================================
+   RENDER MÓDULO CURSO
+===================================================== */
+
+
+function renderCurso(){
+
+
+
+return `
+
+
+
+<section class="card">
+
+
+
+<h2>
+
+1. Curso
+
+</h2>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Nombre del curso
+
+</label>
+
+
+
+<input
+
+id="nombreCurso"
+
+type="text"
+
+value="${SPAE.curso.nombre || ""}"
+
+placeholder="Ejemplo: Gestión de las Relaciones en las Organizaciones"
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Programa académico
+
+</label>
+
+
+
+<input
+
+id="programaCurso"
+
+type="text"
+
+value="${SPAE.curso.programa || ""}"
+
+placeholder="Ejemplo: Administración de Empresas"
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Nivel
+
+</label>
+
+
+
+<input
+
+id="nivelCurso"
+
+type="text"
+
+value="${SPAE.curso.nivel || ""}"
+
+placeholder="Ejemplo: Media carrera / Ejecutivo"
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Periodo académico
+
+</label>
+
+
+
+<input
+
+id="periodoCurso"
+
+type="text"
+
+value="${SPAE.curso.periodo || ""}"
+
+placeholder="Ejemplo: 2026-I"
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+<button
+
+class="primary-button"
+
+onclick="guardarCursoSPAE()"
+
+>
+
+Guardar curso
+
+</button>
+
+
+
+
+
+
+
+<div id="mensajeCurso"
+
+class="notice"
+
+>
+
+</div>
+
+
+
+
+
+</section>
+
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   GUARDAR CURSO
+===================================================== */
+
+
+function guardarCursoSPAE(){
+
+
+
+const nombre =
+
+document.getElementById(
+
+"nombreCurso"
+
+);
+
+
+
+
+
+const programa =
+
+document.getElementById(
+
+"programaCurso"
+
+);
+
+
+
+
+
+const nivel =
+
+document.getElementById(
+
+"nivelCurso"
+
+);
+
+
+
+
+
+const periodo =
+
+document.getElementById(
+
+"periodoCurso"
+
+);
+
+
+
+
+
+
+
+if(!nombre ||
+
+!programa ||
+
+!nivel ||
+
+!periodo){
+
+
+
+console.error(
+
+"Campos de curso no encontrados"
+
+);
+
+
+
+return;
+
+
+}
+
+
+
+
+
+
+
+
+SPAE.curso.nombre =
+
+nombre.value.trim();
+
+
+
+
+
+
+
+SPAE.curso.programa =
+
+programa.value.trim();
+
+
+
+
+
+
+
+SPAE.curso.nivel =
+
+nivel.value.trim();
+
+
+
+
+
+
+
+SPAE.curso.periodo =
+
+periodo.value.trim();
+
+
+
+
+
+
+
+guardarSPAE();
+
+
+
+
+
+
+
+
+const mensaje =
+
+document.getElementById(
+
+"mensajeCurso"
+
+);
+
+
+
+
+
+
+if(mensaje){
+
+
+
+mensaje.innerHTML = `
+
+
+
+<p>
+
+Curso guardado correctamente.
+
+</p>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+}
