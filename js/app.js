@@ -4204,7 +4204,7 @@ html += p.alternativas
 
 .map(
 
-(a,i)=>`
+`
 
 
 
@@ -4404,7 +4404,7 @@ html += p.alternativas
 
 .map(
 
-(a,i)=>`
+`
 
 
 
