@@ -3770,5 +3770,1962 @@ migrarBancoPreguntas();
 
 
 }
+/* =====================================================
 
+SPAE MVP v3.3
+
+BLOQUE 3A/3
+
+VISTA PREVIA
+
+ESTUDIANTE / DOCENTE
+
+===================================================== */
+
+
+
+
+
+
+
+/* =====================================================
+   MÓDULO VISTA PREVIA
+===================================================== */
+
+
+function renderVistaPrevia(){
+
+
+return `
+
+
+<section class="card">
+
+
+<h2>
+
+5. Vista previa
+
+</h2>
+
+
+
+<p>
+
+Seleccione la versión que desea visualizar.
+
+</p>
+
+
+
+
+<button onclick="mostrarVistaEstudiante()">
+
+Vista estudiante
+
+</button>
+
+
+
+
+<button onclick="mostrarVistaDocente()">
+
+Vista docente
+
+</button>
+
+
+
+
+
+<div id="vistaPreviaContenido">
+
+
+</div>
+
+
+
+
+</section>
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   VISTA ESTUDIANTE
+===================================================== */
+
+
+function mostrarVistaEstudiante(){
+
+
+
+const contenedor =
+
+document.getElementById(
+
+"vistaPreviaContenido"
+
+);
+
+
+
+
+if(!contenedor){
+
+return;
+
+}
+
+
+
+
+
+
+
+contenedor.innerHTML = `
+
+
+
+<div class="examen">
+
+
+
+<h2>
+
+EXAMEN
+
+</h2>
+
+
+
+<p>
+
+Evaluación:
+
+${SPAE.evaluacion.nombre}
+
+</p>
+
+
+
+<p>
+
+Programa:
+
+${SPAE.curso.programa}
+
+</p>
+
+
+
+
+<p>
+
+Curso:
+
+${SPAE.curso.nombre}
+
+</p>
+
+
+
+
+<p>
+
+Tiempo:
+
+${SPAE.evaluacion.tiempo}
+
+minutos
+
+</p>
+
+
+
+
+<hr>
+
+
+
+${SPAE.preguntas
+
+.map(
+
+(p,index)=>
+
+renderPreguntaEstudiante(
+
+p,
+
+index+1
+
+)
+
+)
+
+.join("")}
+
+
+
+</div>
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   VISTA DOCENTE
+===================================================== */
+
+
+function mostrarVistaDocente(){
+
+
+
+const contenedor =
+
+document.getElementById(
+
+"vistaPreviaContenido"
+
+);
+
+
+
+
+
+if(!contenedor){
+
+return;
+
+}
+
+
+
+
+
+
+
+
+contenedor.innerHTML = `
+
+
+
+<div class="documento-docente">
+
+
+
+<h2>
+
+CLAVE DOCENTE
+
+</h2>
+
+
+
+
+<p>
+
+Evaluación:
+
+${SPAE.evaluacion.nombre}
+
+</p>
+
+
+
+
+<p>
+
+Programa:
+
+${SPAE.curso.programa}
+
+</p>
+
+
+
+
+<p>
+
+Curso:
+
+${SPAE.curso.nombre}
+
+</p>
+
+
+
+
+
+<hr>
+
+
+
+
+${SPAE.preguntas
+
+.map(
+
+(p,index)=>
+
+renderPreguntaDocente(
+
+p,
+
+index+1
+
+)
+
+)
+
+.join("")}
+
+
+
+</div>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   RENDER PREGUNTA ESTUDIANTE
+===================================================== */
+
+
+function renderPreguntaEstudiante(
+
+p,
+
+numero
+
+){
+
+
+
+let html = `
+
+
+
+<section class="pregunta">
+
+
+
+<h3>
+
+PREGUNTA ${numero}
+
+</h3>
+
+
+
+
+
+`;
+
+
+
+
+
+
+
+/*
+ OPCIÓN MÚLTIPLE
+*/
+
+
+
+if(
+
+p.tipo==="opcion_multiple"
+
+){
+
+
+
+html += `
+
+
+
+<p>
+
+${p.contenido}
+
+</p>
+
+
+
+`;
+
+
+
+
+
+if(p.alternativas){
+
+
+
+html += p.alternativas
+
+.map(
+
+(a,i)=>
+
+
+
+<p>
+
+${String.fromCharCode(65+i)}.
+
+${a}
+
+</p>
+
+
+
+)
+
+.join("");
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+/*
+ CASOS Y ABIERTAS
+*/
+
+
+
+else{
+
+
+
+html += `
+
+
+
+<p>
+
+${p.contexto}
+
+</p>
+
+
+
+
+<p>
+
+${p.pregunta}
+
+</p>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+html += `
+
+
+
+<br>
+
+
+
+Respuesta:
+
+________________________
+
+
+
+</section>
+
+
+
+`;
+
+
+
+
+
+
+
+return html;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   RENDER PREGUNTA DOCENTE
+===================================================== */
+
+
+function renderPreguntaDocente(
+
+p,
+
+numero
+
+){
+
+
+
+let html = `
+
+
+
+<section class="pregunta-docente">
+
+
+
+<h3>
+
+PREGUNTA ${numero}
+
+</h3>
+
+
+
+`;
+
+
+
+
+
+
+
+if(
+
+p.tipo==="opcion_multiple"
+
+){
+
+
+
+html += `
+
+
+
+<strong>
+
+ENUNCIADO:
+
+</strong>
+
+
+
+<p>
+
+${p.contenido}
+
+</p>
+
+
+
+<strong>
+
+ALTERNATIVAS:
+
+</strong>
+
+
+
+`;
+
+
+
+
+
+html += p.alternativas
+
+.map(
+
+(a,i)=>
+
+
+
+<p>
+
+${String.fromCharCode(65+i)}.
+
+${a}
+
+</p>
+
+
+
+)
+
+.join("");
+
+
+
+
+
+html += `
+
+
+
+<p>
+
+<strong>
+
+Respuesta correcta:
+
+</strong>
+
+
+${p.respuestaCorrecta}
+
+</p>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+else{
+
+
+
+html += `
+
+
+
+<strong>
+
+CONTEXTO:
+
+</strong>
+
+
+
+<p>
+
+${p.contexto}
+
+</p>
+
+
+
+
+
+<strong>
+
+PREGUNTA / INSTRUCCIÓN:
+
+</strong>
+
+
+
+<p>
+
+${p.pregunta}
+
+</p>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+html += `
+
+
+
+<p>
+
+<strong>
+
+Nivel cognitivo:
+
+</strong>
+
+
+${mostrarNivelBloom(
+
+p.nivelCognitivo
+
+)}
+
+
+
+</p>
+
+
+
+
+
+
+<p>
+
+<strong>
+
+Resultado de aprendizaje:
+
+</strong>
+
+
+${obtenerResultadoPregunta(p)}
+
+</p>
+
+
+
+
+
+<p>
+
+<strong>
+
+Respuesta esperada:
+
+</strong>
+
+
+${p.respuestaEsperada || "-"}
+
+</p>
+
+
+
+
+
+<p>
+
+<strong>
+
+Criterios:
+
+</strong>
+
+
+${p.criterios || "-"}
+
+</p>
+
+
+
+
+
+<p>
+
+<strong>
+
+Retroalimentación:
+
+</strong>
+
+
+${p.retroalimentacion || "-"}
+
+</p>
+
+
+
+
+<hr>
+
+
+
+</section>
+
+
+
+`;
+
+
+
+
+
+
+
+return html;
+
+
+
+}
+/* =====================================================
+
+SPAE MVP v3.3
+
+BLOQUE 3B/3
+
+EXPORTACIÓN PROFESIONAL
+
+JSON
+TXT ESTUDIANTE
+TXT DOCENTE
+
+===================================================== */
+
+
+
+
+
+
+
+/* =====================================================
+   MÓDULO EXPORTAR
+===================================================== */
+
+
+function renderExportar(){
+
+
+return `
+
+
+<section class="card">
+
+
+<h2>
+
+6. Exportar
+
+</h2>
+
+
+
+<p>
+
+Seleccione el formato de exportación.
+
+</p>
+
+
+
+
+<button onclick="exportarJSONSPAE()">
+
+Exportar proyecto JSON
+
+</button>
+
+
+
+<br><br>
+
+
+
+<button onclick="exportarEstudianteTXT()">
+
+Exportar examen estudiante
+
+</button>
+
+
+
+<br><br>
+
+
+
+<button onclick="exportarDocenteTXT()">
+
+Exportar clave docente
+
+</button>
+
+
+
+<div id="mensajeExportacion">
+
+
+</div>
+
+
+
+</section>
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   DESCARGA ARCHIVO UTF-8
+===================================================== */
+
+
+function descargarArchivo(
+
+contenido,
+
+nombre
+
+){
+
+
+
+const blob = new Blob(
+
+[
+
+"\ufeff" + contenido
+
+],
+
+{
+
+type:
+
+"text/plain;charset=utf-8"
+
+}
+
+);
+
+
+
+
+
+const enlace =
+
+document.createElement(
+
+"a"
+
+);
+
+
+
+
+
+enlace.href =
+
+URL.createObjectURL(blob);
+
+
+
+
+
+enlace.download =
+
+nombre;
+
+
+
+
+
+document.body.appendChild(enlace);
+
+
+
+enlace.click();
+
+
+
+
+
+document.body.removeChild(enlace);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXPORTAR JSON
+===================================================== */
+
+
+function exportarJSONSPAE(){
+
+
+
+const proyecto =
+
+prepararExportacionSPAE();
+
+
+
+
+
+const contenido =
+
+JSON.stringify(
+
+proyecto,
+
+null,
+
+4
+
+);
+
+
+
+
+
+const blob = new Blob(
+
+[
+
+"\ufeff" + contenido
+
+],
+
+{
+
+
+type:
+
+"application/json;charset=utf-8"
+
+
+}
+
+);
+
+
+
+
+
+const enlace =
+
+document.createElement(
+
+"a"
+
+);
+
+
+
+
+
+enlace.href =
+
+URL.createObjectURL(blob);
+
+
+
+
+
+enlace.download =
+
+"spae_proyecto.json";
+
+
+
+
+
+enlace.click();
+
+
+
+
+
+mostrarMensajeExportacion(
+
+"Proyecto JSON exportado correctamente."
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXPORTAR ESTUDIANTE TXT
+===================================================== */
+
+
+function exportarEstudianteTXT(){
+
+
+
+const texto =
+
+generarTextoEstudiante();
+
+
+
+
+
+descargarArchivo(
+
+texto,
+
+"examen_estudiante.txt"
+
+);
+
+
+
+
+
+mostrarMensajeExportacion(
+
+"Examen estudiante exportado."
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   GENERAR TEXTO ESTUDIANTE
+===================================================== */
+
+
+function generarTextoEstudiante(){
+
+
+
+let texto = "";
+
+
+
+
+
+texto +=
+
+"EXAMEN\n\n";
+
+
+
+
+
+
+texto +=
+
+"Evaluación: "
+
++
+
+SPAE.evaluacion.nombre
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Programa: "
+
++
+
+SPAE.curso.programa
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Curso: "
+
++
+
+SPAE.curso.nombre
+
++
+
+"\n";
+
+
+
+
+
+
+texto +=
+
+"Tiempo: "
+
++
+
+SPAE.evaluacion.tiempo
+
++
+
+" minutos\n\n";
+
+
+
+
+
+
+
+texto +=
+
+"INSTRUCCIONES\n\n";
+
+
+
+
+
+
+
+SPAE.preguntas.forEach(
+
+(p,index)=>{
+
+
+
+
+
+texto +=
+
+"================================\n";
+
+
+
+texto +=
+
+"PREGUNTA "
+
++
+
+(index+1)
+
++
+
+"\n";
+
+
+
+texto +=
+
+"================================\n\n";
+
+
+
+
+
+
+
+
+if(
+
+p.tipo==="opcion_multiple"
+
+){
+
+
+
+
+
+texto +=
+
+p.contenido
+
++
+
+"\n\n";
+
+
+
+
+
+
+
+p.alternativas.forEach(
+
+(a,i)=>{
+
+
+
+texto +=
+
+String.fromCharCode(65+i)
+
++
+
+". "
+
++
+
+a
+
++
+
+"\n";
+
+
+
+});
+
+
+
+
+
+
+
+}
+
+
+
+else{
+
+
+
+texto +=
+
+p.contexto
+
++
+
+"\n\n";
+
+
+
+
+texto +=
+
+p.pregunta
+
++
+
+"\n";
+
+
+
+}
+
+
+
+
+
+
+texto +=
+
+"\nRespuesta:\n";
+
+
+
+
+
+texto +=
+
+"____________________________________\n\n";
+
+
+
+
+
+}
+
+
+
+);
+
+
+
+
+
+
+
+return texto;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXPORTAR DOCENTE TXT
+===================================================== */
+
+
+function exportarDocenteTXT(){
+
+
+
+const texto =
+
+generarTextoDocente();
+
+
+
+
+
+descargarArchivo(
+
+texto,
+
+"clave_docente.txt"
+
+);
+
+
+
+
+
+mostrarMensajeExportacion(
+
+"Clave docente exportada."
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   GENERAR TEXTO DOCENTE
+===================================================== */
+
+
+function generarTextoDocente(){
+
+
+
+let texto = "";
+
+
+
+
+
+
+texto +=
+
+"CLAVE DOCENTE\n\n";
+
+
+
+
+
+texto +=
+
+"Evaluación: "
+
++
+
+SPAE.evaluacion.nombre
+
++
+
+"\n";
+
+
+
+
+
+
+texto +=
+
+"Programa: "
+
++
+
+SPAE.curso.programa
+
++
+
+"\n";
+
+
+
+
+
+
+texto +=
+
+"Curso: "
+
++
+
+SPAE.curso.nombre
+
++
+
+"\n\n";
+
+
+
+
+
+
+
+SPAE.preguntas.forEach(
+
+(p,index)=>{
+
+
+
+
+
+texto +=
+
+"================================\n";
+
+
+
+texto +=
+
+"PREGUNTA "
+
++
+
+(index+1)
+
++
+
+"\n";
+
+
+
+texto +=
+
+"================================\n\n";
+
+
+
+
+
+
+
+
+if(
+
+p.tipo==="opcion_multiple"
+
+){
+
+
+
+
+
+texto +=
+
+"ENUNCIADO:\n\n";
+
+
+
+
+
+texto +=
+
+p.contenido
+
++
+
+"\n\n";
+
+
+
+
+
+
+texto +=
+
+"ALTERNATIVAS:\n\n";
+
+
+
+
+
+
+
+p.alternativas.forEach(
+
+(a,i)=>{
+
+
+
+texto +=
+
+String.fromCharCode(65+i)
+
++
+
+". "
+
++
+
+a
+
++
+
+"\n";
+
+
+
+});
+
+
+
+
+
+
+
+texto +=
+
+"\nRESPUESTA CORRECTA: "
+
++
+
+p.respuestaCorrecta
+
++
+
+"\n\n";
+
+
+
+}
+
+
+
+
+
+
+
+else{
+
+
+
+
+
+texto +=
+
+"CONTEXTO:\n\n";
+
+
+
+texto +=
+
+p.contexto
+
++
+
+"\n\n";
+
+
+
+
+
+
+texto +=
+
+"PREGUNTA / INSTRUCCIÓN:\n\n";
+
+
+
+texto +=
+
+p.pregunta
+
++
+
+"\n\n";
+
+
+
+}
+
+
+
+
+
+
+
+texto +=
+
+"Nivel cognitivo: "
+
++
+
+mostrarNivelBloom(
+
+p.nivelCognitivo
+
+)
+
++
+
+"\n";
+
+
+
+
+
+
+
+texto +=
+
+"Resultado de aprendizaje: "
+
++
+
+obtenerResultadoPregunta(p)
+
++
+
+"\n\n";
+
+
+
+
+
+
+texto +=
+
+"RESPUESTA ESPERADA:\n";
+
+
+
+texto +=
+
+(
+
+p.respuestaEsperada || "-"
+
+)
+
++
+
+"\n\n";
+
+
+
+
+
+
+
+texto +=
+
+"CRITERIOS:\n";
+
+
+
+texto +=
+
+(
+
+p.criterios || "-"
+
+)
+
++
+
+"\n\n";
+
+
+
+
+
+
+
+texto +=
+
+"RETROALIMENTACIÓN:\n";
+
+
+
+texto +=
+
+(
+
+p.retroalimentacion || "-"
+
+)
+
++
+
+"\n\n";
+
+
+
+}
+
+);
+
+
+
+
+
+
+
+return texto;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MENSAJE EXPORTACIÓN
+===================================================== */
+
+
+function mostrarMensajeExportacion(mensaje){
+
+
+
+const div =
+
+document.getElementById(
+
+"mensajeExportacion"
+
+);
+
+
+
+
+if(div){
+
+
+div.innerHTML =
+
+`
+
+<p>
+
+${mensaje}
+
+</p>
+
+`;
+
+
+}
+
+
+
+}
 
