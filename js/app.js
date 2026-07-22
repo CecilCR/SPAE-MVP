@@ -5507,37 +5507,22 @@ return texto;
 function mostrarMensajeExportacion(mensaje){
 
 
-
-const div =
-
-document.getElementById(
-
-"mensajeExportacion"
-
-);
+    const div = document.getElementById(
+        "mensajeExportacion"
+    );
 
 
+    if(div){
 
+        div.innerHTML = `
 
-if(div){
+            <p>
+                ${mensaje}
+            </p>
 
+        `;
 
-div.innerHTML =
-
-`
-
-<p>
-
-${mensaje}
-
-</p>
-
-`;
+    }
 
 
 }
-
-
-
-}
-
