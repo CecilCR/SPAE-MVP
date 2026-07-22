@@ -2534,7 +2534,7 @@ Nivel cognitivo:
 </strong>
 
 
-${p.nivelCognitivo}
+${mostrarNivelBloom(p.nivelCognitivo)}
 
 </p>
 
