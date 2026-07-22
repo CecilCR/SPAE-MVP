@@ -4404,9 +4404,7 @@ html += p.alternativas
 
 .map(
 
-`
-
-
+(a,i)=>`
 
 <p>
 
@@ -4415,8 +4413,6 @@ ${String.fromCharCode(65+i)}.
 ${a}
 
 </p>
-
-
 
 `
 
