@@ -367,6 +367,12 @@ SPAE MVP
 </button>
 
 
+<button onclick="abrirModulo('bancoPreguntas')">
+
+7. Banco de preguntas
+
+</button>
+
 
 </aside>
 
