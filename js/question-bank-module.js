@@ -1,148 +1,1008 @@
 /* =====================================================
+
    SPAE MVP v3.3
-   MÓDULO BANCO DE PREGUNTAS
+
+   QUESTION BANK MODULE
+
+   Banco externo de preguntas
+
+   Archivo:
    js/question-bank-module.js
-   ===================================================== */
+
+
+   OBJETIVO:
+
+   - Mantener banco independiente de SPAE
+   - Cargar json/banco-preguntas.json
+   - Normalizar preguntas
+   - Transferir preguntas seleccionadas al examen
+
+
+===================================================== */
+
+
 
 /* =====================================================
-   BANCO DE PREGUNTAS
+   BANCO GLOBAL EXTERNO
 ===================================================== */
+
 
 let BANCO_PREGUNTAS = [];
 
-/* =====================================================
-   CARGAR BANCO DESDE JSON
-===================================================== */
 
-async function cargarBancoPreguntasJSON(url = "json/banco-preguntas.json") {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("No se pudo cargar el JSON");
-        const data = await response.json();
-        if (!Array.isArray(data.preguntas)) {
-            console.warn("JSON no contiene array de preguntas válido");
-            BANCO_PREGUNTAS = [];
-            return;
-        }
-        BANCO_PREGUNTAS = data.preguntas.map(p => migrarPreguntaBanco(p));
-        console.log("Banco de preguntas cargado correctamente:", BANCO_PREGUNTAS.length);
-    } catch (error) {
-        console.error("Error cargando banco de preguntas:", error);
-        BANCO_PREGUNTAS = [];
-    }
-}
+
+
 
 /* =====================================================
-   MIGRAR PREGUNTA DE BANCO A FORMATO SPAE
+   ESTADO DEL BANCO
 ===================================================== */
 
-function migrarPreguntaBanco(p) {
-    return {
-        id: p.id || Date.now().toString(),
-        tipo: p.tipo || "opcion_multiple",
-        contenido: p.contenido || "",
-        alternativas: p.alternativas || [],
-        respuestaCorrecta: p.respuestaCorrecta || "",
-        contexto: p.contexto || "",
-        pregunta: p.pregunta || "",
-        nivelCognitivo: p.nivelCognitivo || "ANALIZAR",
-        resultadoAprendizaje: p.resultadoAprendizaje || "",
-        respuestaEsperada: p.respuestaEsperada || "",
-        criterios: p.criterios || "",
-        retroalimentacion: p.retroalimentacion || ""
-    };
-}
+
+let ESTADO_BANCO = {
+
+
+    cargado:false,
+
+
+    fechaCarga:null,
+
+
+    total:0
+
+
+};
+
+
+
+
+
+
 
 /* =====================================================
-   IMPORTAR PREGUNTAS AL PROYECTO SPAE
+   CARGAR BANCO JSON EXTERNO
 ===================================================== */
 
-function importarPreguntasBanco(indices = []) {
-    if (!Array.isArray(indices) || indices.length === 0) {
-        console.warn("No se seleccionaron preguntas para importar");
-        return;
-    }
 
-    indices.forEach(i => {
-        const pregunta = BANCO_PREGUNTAS[i];
-        if (pregunta) {
-            // Evitar duplicados por ID
-            if (!SPAE.preguntas.some(p => p.id === pregunta.id)) {
-                SPAE.preguntas.push({...pregunta});
-            }
-        }
-    });
+async function cargarBancoPreguntasJSON(){
 
-    actualizarBlueprint();
-    guardarSPAE();
 
-    console.log(`${indices.length} preguntas importadas al proyecto SPAE.`);
+try{
+
+
+
+const respuesta = await fetch(
+
+"json/banco-preguntas.json"
+
+);
+
+
+
+if(!respuesta.ok){
+
+
+throw new Error(
+
+"No existe banco-preguntas.json"
+
+);
+
+
 }
+
+
+
+
+
+
+const datos = await respuesta.json();
+
+
+
+
+
+if(!Array.isArray(datos)){
+
+
+throw new Error(
+
+"El archivo JSON debe contener un arreglo"
+
+);
+
+
+}
+
+
+
+
+
+
+
+BANCO_PREGUNTAS = datos.map(
+
+pregunta =>
+
+normalizarPreguntaBanco(pregunta)
+
+);
+
+
+
+
+
+
+
+
+ESTADO_BANCO.cargado = true;
+
+
+ESTADO_BANCO.fechaCarga =
+
+new Date().toISOString();
+
+
+ESTADO_BANCO.total =
+
+BANCO_PREGUNTAS.length;
+
+
+
+
+
+
+
+console.log(
+
+"Banco de preguntas cargado:",
+
+BANCO_PREGUNTAS.length
+
+);
+
+
+
+
+
+if(typeof renderListaBancoPreguntas === "function"){
+
+
+const lista =
+
+document.getElementById(
+
+"listaBancoPreguntas"
+
+);
+
+
+
+if(lista){
+
+
+lista.innerHTML =
+
+renderListaBancoPreguntas();
+
+
+}
+
+
+
+}
+
+
+
+return BANCO_PREGUNTAS;
+
+
+
+
+}
+
+catch(error){
+
+
+
+console.error(
+
+"Error cargando banco de preguntas",
+
+error
+
+);
+
+
+
+BANCO_PREGUNTAS=[];
+
+
+
+ESTADO_BANCO.cargado=false;
+
+
+
+alert(
+
+"No se pudo cargar banco-preguntas.json"
+
+);
+
+
+
+return [];
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
 
 /* =====================================================
-   LISTAR PREGUNTAS DEL BANCO
+   NORMALIZAR PREGUNTA DEL BANCO
 ===================================================== */
 
-function listarBancoPreguntas() {
-    if (!BANCO_PREGUNTAS || BANCO_PREGUNTAS.length === 0) {
-        return `<p>No hay preguntas disponibles en el banco.</p>`;
-    }
 
-    return BANCO_PREGUNTAS.map((p, index) => {
-        let contenido = p.tipo === "opcion_multiple"
-            ? `<strong>Enunciado:</strong> ${p.contenido}<br>
-               <strong>Respuesta correcta:</strong> ${p.respuestaCorrecta}`
-            : `<strong>Contexto:</strong> ${p.contexto || "-"}<br>
-               <strong>Pregunta:</strong> ${p.pregunta || "-"}`;
+function normalizarPreguntaBanco(p){
 
-        return `
-        <div class="card">
-            <h4>Pregunta ${index + 1}</h4>
-            <p><strong>Tipo:</strong> ${nombreTipoPregunta(p.tipo)}</p>
-            <p>${contenido}</p>
-            <input type="checkbox" id="preguntaBanco_${index}" /> Seleccionar
-        </div>
-        `;
-    }).join("");
+
+
+return {
+
+
+
+id:
+
+p.id ||
+
+"BP-"+Date.now(),
+
+
+
+
+
+tipo:
+
+p.tipo ||
+
+"opcion_multiple",
+
+
+
+
+
+contenido:
+
+p.contenido ||
+
+p.enunciado ||
+
+"",
+
+
+
+
+
+alternativas:
+
+Array.isArray(
+
+p.alternativas
+
+)
+
+?
+
+p.alternativas
+
+:
+
+[],
+
+
+
+
+
+respuestaCorrecta:
+
+p.respuestaCorrecta ||
+
+"",
+
+
+
+
+
+contexto:
+
+p.contexto ||
+
+p.situacion ||
+
+"",
+
+
+
+
+
+pregunta:
+
+p.pregunta ||
+
+p.instruccion ||
+
+"",
+
+
+
+
+
+nivelCognitivo:
+
+normalizarNivelBanco(
+
+p.nivelCognitivo ||
+
+p.competencia
+
+),
+
+
+
+
+
+resultadoAprendizaje:
+
+p.resultadoAprendizaje ||
+
+p.resultado ||
+
+"",
+
+
+
+
+
+respuestaEsperada:
+
+p.respuestaEsperada ||
+
+"",
+
+
+
+
+
+criterios:
+
+p.criterios ||
+
+"",
+
+
+
+
+
+retroalimentacion:
+
+p.retroalimentacion ||
+
+p.justificacion ||
+
+""
+
+
+
+
+
+};
+
+
+
 }
+
+
+
+
+
+
+
+
 
 /* =====================================================
-   OBTENER INDICES SELECCIONADOS
+   NORMALIZAR BLOOM
 ===================================================== */
 
-function obtenerIndicesSeleccionadosBanco() {
-    const indices = [];
-    BANCO_PREGUNTAS.forEach((p, index) => {
-        const checkbox = document.getElementById(`preguntaBanco_${index}`);
-        if (checkbox && checkbox.checked) indices.push(index);
-    });
-    return indices;
+
+function normalizarNivelBanco(valor){
+
+
+
+if(!valor){
+
+
+return "ANALIZAR";
+
+
 }
+
+
+
+
+
+valor =
+
+valor
+
+.toString()
+
+.toUpperCase()
+
+.trim();
+
+
+
+
+
+
+const mapa={
+
+
+"RECORDAR":
+"RECORDAR",
+
+
+"COMPRENDER":
+"COMPRENDER",
+
+
+"APLICAR":
+"APLICAR",
+
+
+"APLICACION":
+"APLICAR",
+
+
+"ANALISIS":
+"ANALIZAR",
+
+
+"ANÁLISIS":
+"ANALIZAR",
+
+
+"ANALIZAR":
+"ANALIZAR",
+
+
+"EVALUAR":
+"EVALUAR",
+
+
+"CREAR":
+"CREAR"
+
+
+
+};
+
+
+
+
+
+
+return mapa[valor]
+
+||
+
+
+"ANALIZAR";
+
+
+
+}
+
+
+
+
+
+
+
+
 
 /* =====================================================
-   BOTÓN IMPORTAR SELECCIONADAS
+   BUSCAR PREGUNTAS
 ===================================================== */
 
-function importarSeleccionadas() {
-    const indices = obtenerIndicesSeleccionadosBanco();
-    if (indices.length === 0) {
-        alert("No se seleccionó ninguna pregunta.");
-        return;
-    }
-    importarPreguntasBanco(indices);
-    alert(`${indices.length} preguntas importadas correctamente.`);
-    // Actualizar UI del banco
-    document.getElementById("listaBancoPreguntas").innerHTML = listarBancoPreguntas();
+
+function buscarPreguntasBanco(texto){
+
+
+
+if(!texto){
+
+
+return BANCO_PREGUNTAS;
+
+
 }
+
+
+
+texto =
+
+texto
+
+.toLowerCase();
+
+
+
+
+
+return BANCO_PREGUNTAS.filter(
+
+p=>{
+
+
+return (
+
+p.contenido
+
+.toLowerCase()
+
+.includes(texto)
+
+||
+
+
+p.pregunta
+
+.toLowerCase()
+
+.includes(texto)
+
+||
+
+
+p.resultadoAprendizaje
+
+.toLowerCase()
+
+.includes(texto)
+
+
+);
+
+
+
+}
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
 
 /* =====================================================
-   INICIALIZACIÓN BANCO
+   FILTRAR POR TIPO
 ===================================================== */
 
-async function inicializarBanco() {
-    await cargarBancoPreguntasJSON();
-    const listaDiv = document.getElementById("listaBancoPreguntas");
-    if (listaDiv) {
-        listaDiv.innerHTML = listarBancoPreguntas();
-    }
+
+function filtrarPreguntasBanco(tipo){
+
+
+
+if(!tipo){
+
+
+return BANCO_PREGUNTAS;
+
+
 }
+
+
+
+
+return BANCO_PREGUNTAS.filter(
+
+p=>
+
+p.tipo===tipo
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   OBTENER PREGUNTA POR ID
+===================================================== */
+
+
+function obtenerPreguntaBanco(id){
+
+
+
+return BANCO_PREGUNTAS.find(
+
+p=>
+
+p.id===id
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   IMPORTAR PREGUNTAS AL EXAMEN SPAE
+===================================================== */
+
+
+function importarPreguntasBancoSeleccionadas(indices){
+
+
+
+if(
+
+!Array.isArray(indices)
+
+){
+
+
+return;
+
+
+}
+
+
+
+
+
+
+
+if(!SPAE.preguntas){
+
+
+SPAE.preguntas=[];
+
+
+}
+
+
+
+
+
+
+
+
+indices.forEach(
+
+indice=>{
+
+
+
+const pregunta =
+
+BANCO_PREGUNTAS[indice];
+
+
+
+
+
+if(!pregunta){
+
+return;
+
+}
+
+
+
+
+
+
+
+
+const copia =
+
+JSON.parse(
+
+JSON.stringify(
+
+pregunta
+
+)
+
+);
+
+
+
+
+
+
+
+copia.id =
+
+Date.now()
+
++
+
+Math.random();
+
+
+
+
+
+
+
+SPAE.preguntas.push(
+
+copia
+
+);
+
+
+
+
+}
+
+);
+
+
+
+
+
+
+
+if(typeof actualizarBlueprint==="function"){
+
+
+actualizarBlueprint();
+
+
+}
+
+
+
+
+
+
+if(typeof guardarSPAE==="function"){
+
+
+guardarSPAE();
+
+
+}
+
+
+
+
+
+console.log(
+
+"Preguntas importadas:",
+
+indices.length
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   IMPORTAR UNA PREGUNTA
+===================================================== */
+
+
+function importarPreguntaBanco(indice){
+
+
+
+importarPreguntasBancoSeleccionadas(
+
+[indice]
+
+);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXPORTAR BANCO JSON
+===================================================== */
+
+
+function exportarBancoPreguntasJSON(){
+
+
+
+const contenido =
+
+JSON.stringify(
+
+BANCO_PREGUNTAS,
+
+null,
+
+4
+
+);
+
+
+
+
+
+const blob =
+
+new Blob(
+
+[contenido],
+
+{
+
+
+type:
+
+"application/json"
+
+}
+
+
+);
+
+
+
+
+
+const enlace =
+
+document.createElement(
+
+"a"
+
+);
+
+
+
+
+
+enlace.href =
+
+URL.createObjectURL(
+
+blob
+
+);
+
+
+
+
+
+enlace.download =
+
+"banco-preguntas.json";
+
+
+
+
+
+enlace.click();
+
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   INICIALIZACIÓN SEGURA
+===================================================== */
+
+
+function iniciarBancoPreguntas(){
+
+
+
+if(
+
+!Array.isArray(BANCO_PREGUNTAS)
+
+){
+
+
+BANCO_PREGUNTAS=[];
+
+
+}
+
+
+
+
+
+console.log(
+
+"Modulo Banco Preguntas activo"
+
+);
+
+
+
+}
+
+
+
+
+
+
+document.addEventListener(
+
+"DOMContentLoaded",
+
+()=>{
+
+
+iniciarBancoPreguntas();
+
+
+}
+
+);
