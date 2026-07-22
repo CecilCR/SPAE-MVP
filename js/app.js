@@ -1061,37 +1061,29 @@ iniciarSPAE();
 
 );
 /* =====================================================
-
+   
    SPAE MVP v3.1
 
    BLOQUE 2/3
 
+   MÓDULO 3B
 
-   - MÓDULO 3B
-   - BANCO DE PREGUNTAS
-   - ACTUALIZACIÓN BLUEPRINT
+   BANCO DE PREGUNTAS DINÁMICO
 
 
 ===================================================== */
 
 
 
-
-
 /* =====================================================
-   MÓDULO 3B
-
-   BANCO DE PREGUNTAS
-
+   RENDER BANCO DE PREGUNTAS
 ===================================================== */
 
 
 function renderPreguntas(){
 
 
-
 return `
-
 
 
 <section class="card">
@@ -1112,8 +1104,8 @@ Tipo de pregunta
 </label>
 
 
-
-<select id="tipoPregunta">
+<select id="tipoPregunta"
+onchange="cambiarTipoPregunta()">
 
 
 <option value="opcion_multiple">
@@ -1123,21 +1115,18 @@ Opción múltiple
 </option>
 
 
-
 <option value="caso_analisis">
 
-Caso análisis
+Caso de análisis
 
 </option>
-
 
 
 <option value="caso_aplicacion">
 
-Caso aplicación
+Caso de aplicación
 
 </option>
-
 
 
 <option value="abierta">
@@ -1152,49 +1141,210 @@ Pregunta abierta
 
 
 
+<div id="editorPregunta">
+
+
+${renderEditorPorTipo("opcion_multiple")}
+
+
+</div>
+
+
+
+<hr>
+
+
+<h3>
+
+Preguntas registradas
+
+</h3>
+
+
+<div id="listaPreguntas">
+
+
+${listarPreguntasSPAE()}
+
+
+</div>
+
+
+
+</section>
+
+
+`;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   CAMBIO DE TIPO DE PREGUNTA
+===================================================== */
+
+
+function cambiarTipoPregunta(){
+
+
+
+const tipo =
+
+document.getElementById(
+
+"tipoPregunta"
+
+).value;
+
+
+
+
+document.getElementById(
+
+"editorPregunta"
+
+).innerHTML =
+
+renderEditorPorTipo(tipo);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   FORMULARIOS DINÁMICOS
+===================================================== */
+
+
+function renderEditorPorTipo(tipo){
+
+
+let html="";
+
+
+
+
+
+if(tipo==="opcion_multiple"){
+
+
+html += `
+
+
+<label>
+
+Contenido
+
+</label>
+
+
+<textarea id="contenidoPregunta"
+rows="5"></textarea>
+
+
+
+<h3>
+
+Alternativas
+
+</h3>
+
+
+
+<input id="altA"
+placeholder="Alternativa A">
+
+
+<br><br>
+
+
+<input id="altB"
+placeholder="Alternativa B">
+
+
+<br><br>
+
+
+<input id="altC"
+placeholder="Alternativa C">
+
+
+<br><br>
+
+
+<input id="altD"
+placeholder="Alternativa D">
+
+
 <br><br>
 
 
 
 <label>
 
-Contenido / Enunciado
+Respuesta correcta
 
 </label>
 
 
-
-<textarea
-
-id="contenidoPregunta"
-
-rows="5"
-
-></textarea>
+<select id="respuestaCorrecta">
 
 
+<option>A</option>
+
+<option>B</option>
+
+<option>C</option>
+
+<option>D</option>
 
 
-<br><br>
+</select>
 
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+if(tipo==="caso_analisis"){
+
+
+html += `
 
 
 <label>
 
-Situación del caso
+Contexto
 
 </label>
 
 
-
-<textarea
-
-id="situacionPregunta"
-
-rows="5"
-
-></textarea>
-
+<textarea id="contextoPregunta"
+rows="7"></textarea>
 
 
 
@@ -1209,80 +1359,38 @@ Pregunta
 </label>
 
 
-
-<textarea
-
-id="preguntaTexto"
-
-rows="3"
-
-></textarea>
+<textarea id="preguntaTexto"
+rows="4"></textarea>
 
 
 
-
-<br><br>
-
-
-
-<h3>
-
-Alternativas
-
-</h3>
+`;
 
 
 
-<input
-
-id="altA"
-
-placeholder="Alternativa A"
-
->
+}
 
 
 
-<br>
 
 
 
-<input
 
-id="altB"
-
-placeholder="Alternativa B"
-
->
+if(tipo==="caso_aplicacion"){
 
 
-
-<br>
-
+html += `
 
 
-<input
+<label>
 
-id="altC"
+Contexto
 
-placeholder="Alternativa C"
-
->
+</label>
 
 
-
-<br>
-
-
-
-<input
-
-id="altD"
-
-placeholder="Alternativa D"
-
->
-
+<textarea id="contextoPregunta"
+rows="7"></textarea>
 
 
 
@@ -1292,50 +1400,63 @@ placeholder="Alternativa D"
 
 <label>
 
-Respuesta correcta
+Pregunta
 
 </label>
 
 
-
-<select id="respuestaCorrecta">
-
-
-<option value="A">
-
-A
-
-</option>
+<textarea id="preguntaTexto"
+rows="4"></textarea>
 
 
-<option value="B">
 
-B
-
-</option>
+`;
 
 
-<option value="C">
 
-C
-
-</option>
+}
 
 
-<option value="D">
-
-D
-
-</option>
 
 
-</select>
 
 
+
+
+if(tipo==="abierta"){
+
+
+html += `
+
+
+<label>
+
+Pregunta
+
+</label>
+
+
+<textarea id="preguntaTexto"
+rows="4"></textarea>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+html += `
 
 
 <br><br>
-
 
 
 <label>
@@ -1345,15 +1466,8 @@ Competencia
 </label>
 
 
-
-<input
-
-id="competenciaPregunta"
-
-placeholder="Ejemplo: ANÁLISIS"
-
->
-
+<input id="competenciaPregunta"
+placeholder="Ejemplo: ANÁLISIS">
 
 
 
@@ -1368,39 +1482,8 @@ Resultado
 </label>
 
 
-
-<input
-
-id="resultadoPregunta"
-
-placeholder="Ejemplo: APLICACIÓN"
-
->
-
-
-
-
-<br><br>
-
-
-
-<label>
-
-Justificación
-
-</label>
-
-
-
-<textarea
-
-id="justificacionPregunta"
-
-rows="4"
-
-></textarea>
-
-
+<input id="resultadoPregunta"
+placeholder="Ejemplo: APLICACIÓN">
 
 
 
@@ -1415,15 +1498,8 @@ Respuesta esperada
 </label>
 
 
-
-<textarea
-
-id="respuestaEsperada"
-
-rows="4"
-
-></textarea>
-
+<textarea id="respuestaEsperada"
+rows="4"></textarea>
 
 
 
@@ -1434,20 +1510,30 @@ rows="4"
 
 <label>
 
-Criterios de evaluación
+Criterios
 
 </label>
 
 
+<textarea id="criteriosPregunta"
+rows="4"></textarea>
 
-<textarea
 
-id="criteriosPregunta"
 
-rows="4"
 
-></textarea>
+<br><br>
 
+
+
+<label>
+
+Retroalimentación
+
+</label>
+
+
+<textarea id="retroalimentacionPregunta"
+rows="4"></textarea>
 
 
 
@@ -1464,43 +1550,21 @@ Guardar pregunta
 
 
 
-
 <div id="mensajePregunta">
 
 </div>
 
 
 
-
-<hr>
-
-
-
-
-<h3>
-
-Preguntas registradas
-
-</h3>
-
-
-
-
-<div id="listaPreguntas">
-
-
-${listarPreguntasSPAE()}
-
-
-</div>
-
-
-
-</section>
-
-
-
 `;
+
+
+
+
+
+return html;
+
+
 
 }
 
@@ -1514,9 +1578,7 @@ ${listarPreguntasSPAE()}
 
 /* =====================================================
    GUARDAR PREGUNTA
-
 ===================================================== */
-
 
 
 function guardarPreguntaSPAE(){
@@ -1535,7 +1597,75 @@ document.getElementById(
 
 
 
-let alternativas = [];
+let pregunta = {
+
+
+
+id:
+
+Date.now().toString(),
+
+
+
+tipo: tipo,
+
+
+
+contenido:"",
+
+
+contexto:"",
+
+
+pregunta:"",
+
+
+alternativas:[],
+
+
+respuestaCorrecta:"",
+
+
+
+competencia:
+document.getElementById(
+"competenciaPregunta"
+).value.trim(),
+
+
+
+resultado:
+document.getElementById(
+"resultadoPregunta"
+).value.trim(),
+
+
+
+respuestaEsperada:
+document.getElementById(
+"respuestaEsperada"
+).value.trim(),
+
+
+
+criterios:
+document.getElementById(
+"criteriosPregunta"
+).value.trim(),
+
+
+
+retroalimentacion:
+document.getElementById(
+"retroalimentacionPregunta"
+).value.trim()
+
+
+
+};
+
+
+
 
 
 
@@ -1544,19 +1674,45 @@ let alternativas = [];
 if(tipo==="opcion_multiple"){
 
 
-alternativas=[
+
+pregunta.contenido =
+
+document.getElementById(
+
+"contenidoPregunta"
+
+).value.trim();
 
 
-document.getElementById("altA").value,
 
-document.getElementById("altB").value,
 
-document.getElementById("altC").value,
 
-document.getElementById("altD").value
+pregunta.alternativas = [
+
+
+document.getElementById("altA").value.trim(),
+
+document.getElementById("altB").value.trim(),
+
+document.getElementById("altC").value.trim(),
+
+document.getElementById("altD").value.trim()
 
 
 ];
+
+
+
+
+
+pregunta.respuestaCorrecta =
+
+document.getElementById(
+
+"respuestaCorrecta"
+
+).value;
+
 
 
 }
@@ -1567,157 +1723,66 @@ document.getElementById("altD").value
 
 
 
-const pregunta = {
 
 
 
-id:
+if(
 
-Date.now(),
+tipo==="caso_analisis"
 
+||
 
+tipo==="caso_aplicacion"
 
-tipo:
-
-
-
-tipo,
+){
 
 
 
-contenido:
-
-
+pregunta.contexto =
 
 document.getElementById(
 
-"contenidoPregunta"
+"contextoPregunta"
 
-).value.trim(),
-
-
-
-
-alternativas:
-
-
-
-alternativas,
+).value.trim();
 
 
 
 
-respuestaCorrecta:
-
-
-
-document.getElementById(
-
-"respuestaCorrecta"
-
-).value,
-
-
-
-
-situacion:
-
-
-
-document.getElementById(
-
-"situacionPregunta"
-
-).value.trim(),
-
-
-
-
-pregunta:
-
-
+pregunta.pregunta =
 
 document.getElementById(
 
 "preguntaTexto"
 
-).value.trim(),
+).value.trim();
+
+
+
+}
 
 
 
 
-justificacion:
 
 
 
-document.getElementById(
-
-"justificacionPregunta"
-
-).value.trim(),
+if(tipo==="abierta"){
 
 
 
-
-respuestaEsperada:
-
-
+pregunta.pregunta =
 
 document.getElementById(
 
-"respuestaEsperada"
+"preguntaTexto"
 
-).value.trim(),
-
-
-
-
-criterios:
+).value.trim();
 
 
 
-document.getElementById(
+}
 
-"criteriosPregunta"
-
-).value.trim(),
-
-
-
-
-competencia:
-
-
-
-document.getElementById(
-
-"competenciaPregunta"
-
-).value.trim(),
-
-
-
-
-resultado:
-
-
-
-document.getElementById(
-
-"resultadoPregunta"
-
-).value.trim(),
-
-
-
-
-retroalimentacion:
-
-""
-
-
-
-};
 
 
 
@@ -1735,15 +1800,11 @@ pregunta
 
 
 
-
 actualizarBlueprint();
 
 
 
-
-
 guardarSPAE();
-
 
 
 
@@ -1770,6 +1831,16 @@ Pregunta registrada correctamente.
 
 
 
+document.getElementById(
+
+"listaPreguntas"
+
+).innerHTML =
+
+listarPreguntasSPAE();
+
+
+
 }
 
 
@@ -1781,8 +1852,7 @@ Pregunta registrada correctamente.
 
 
 /* =====================================================
-   LISTAR PREGUNTAS
-
+   LISTADO
 ===================================================== */
 
 
@@ -1792,20 +1862,21 @@ function listarPreguntasSPAE(){
 
 if(
 
-!SPAE.preguntas ||
-
 SPAE.preguntas.length===0
 
 ){
 
 
+
 return `
+
 
 <p>
 
 No existen preguntas registradas.
 
 </p>
+
 
 `;
 
@@ -1817,15 +1888,24 @@ No existen preguntas registradas.
 
 
 
-return SPAE.preguntas.map(
-
-(p,index)=>
 
 
+let html="";
 
-`
 
-<div class="question">
+
+
+
+SPAE.preguntas.forEach(
+
+(p,index)=>{
+
+
+
+html += `
+
+
+<div class="card">
 
 
 <h4>
@@ -1835,37 +1915,45 @@ Pregunta ${index+1}
 </h4>
 
 
-
 <p>
 
-<strong>
-
-Tipo:
-
-</strong>
-
-${p.tipo}
+Tipo: ${p.tipo}
 
 </p>
 
 
-
 <p>
 
-${p.contenido || p.situacion}
+${
+
+p.contenido ||
+
+p.contexto ||
+
+p.pregunta ||
+
+"Sin contenido"
+
+}
 
 </p>
-
 
 
 </div>
 
 
-`
+
+`;
 
 
 
-).join("");
+});
+
+
+
+
+
+return html;
 
 
 
@@ -1880,10 +1968,8 @@ ${p.contenido || p.situacion}
 
 
 /* =====================================================
-   ACTUALIZAR BLUEPRINT
-
+   BLUEPRINT AUTOMÁTICO
 ===================================================== */
-
 
 
 function actualizarBlueprint(){
@@ -1895,7 +1981,6 @@ SPAE.blueprint = {
 
 preguntasMCQ:
 
-
 SPAE.preguntas.filter(
 
 p=>p.tipo==="opcion_multiple"
@@ -1905,7 +1990,6 @@ p=>p.tipo==="opcion_multiple"
 
 
 casos:
-
 
 SPAE.preguntas.filter(
 
@@ -1923,7 +2007,6 @@ p.tipo==="caso_aplicacion"
 
 abiertas:
 
-
 SPAE.preguntas.filter(
 
 p=>p.tipo==="abierta"
@@ -1933,8 +2016,6 @@ p=>p.tipo==="abierta"
 
 
 };
-
-
 
 
 
