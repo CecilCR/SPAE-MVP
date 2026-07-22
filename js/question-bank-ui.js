@@ -1,25 +1,17 @@
 /* =====================================================
+   SPAE MVP v3.3
 
-SPAE MVP v3.3
+   MÓDULO BANCO DE PREGUNTAS
+   INTERFAZ DE USUARIO
 
-QUESTION BANK UI MODULE
-
-Interfaz Banco de Preguntas
-
-NO MODIFICA:
-- app.js
-- exam-module.js
-- dashboard.js
-
-Depende de:
-- question-bank-module.js
+   Archivo:
+   js/question-bank-ui.js
 
 ===================================================== */
 
 
-
 /* =====================================================
-   RENDER BANCO DE PREGUNTAS
+   RENDER MÓDULO BANCO DE PREGUNTAS
 ===================================================== */
 
 
@@ -42,74 +34,13 @@ return `
 
 <p>
 
-Repositorio complementario de preguntas para importar al examen actual.
+Repositorio externo de preguntas reutilizables.
 
 </p>
 
 
 
-
-<div class="form-group">
-
-
-<label>
-
-Tipo de pregunta
-
-</label>
-
-
-
-<select id="filtroBancoPregunta"
-onchange="filtrarBancoPreguntasUI()">
-
-
-
-<option value="todos">
-
-Todas
-
-</option>
-
-
-
-<option value="opcion_multiple">
-
-Opción múltiple
-
-</option>
-
-
-
-<option value="caso_analisis">
-
-Caso de análisis
-
-</option>
-
-
-
-<option value="caso_aplicacion">
-
-Caso de aplicación
-
-</option>
-
-
-
-<option value="abierta">
-
-Pregunta abierta
-
-</option>
-
-
-</select>
-
-
-</div>
-
-
+<hr>
 
 
 
@@ -117,35 +48,28 @@ Pregunta abierta
 
 class="primary-button"
 
-onclick="cargarBancoPreguntasUI()"
+onclick="inicializarBanco()"
 
 >
 
-Cargar banco JSON
+Cargar banco de preguntas
 
 </button>
 
 
 
 
-
-<button
-
-class="secondary-button"
-
-onclick="importarSeleccionadasBanco()"
-
->
-
-Importar seleccionadas
-
-</button>
+<br><br>
 
 
 
 
 
-<hr>
+<div id="mensajeBancoPreguntas">
+
+
+</div>
+
 
 
 
@@ -164,7 +88,7 @@ Preguntas disponibles
 
 <p>
 
-Banco no cargado.
+Presione "Cargar banco de preguntas".
 
 </p>
 
@@ -174,11 +98,22 @@ Banco no cargado.
 
 
 
+<br>
 
-<div id="mensajeBancoPreguntas">
 
 
-</div>
+
+<button
+
+class="secondary-button"
+
+onclick="importarSeleccionadas()"
+
+>
+
+Importar preguntas seleccionadas
+
+</button>
 
 
 
@@ -190,200 +125,9 @@ Banco no cargado.
 
 `;
 
-}
-
-
-
-
-
-/* =====================================================
-   CARGAR BANCO DESDE MÓDULO PRINCIPAL
-===================================================== */
-
-
-function cargarBancoPreguntasUI(){
-
-
-if(
-typeof cargarBancoPreguntasJSON !== "function"
-){
-
-
-mostrarMensajeBanco(
-
-"No está disponible el módulo de carga del banco."
-
-);
-
-
-return;
-
-}
-
-
-
-cargarBancoPreguntasJSON();
-
-
-actualizarVistaBancoPreguntas();
-
 
 
 }
-
-
-
-
-
-
-/* =====================================================
-   ACTUALIZAR LISTADO VISUAL
-===================================================== */
-
-
-function actualizarVistaBancoPreguntas(){
-
-
-const contenedor =
-
-document.getElementById(
-
-"listaBancoPreguntas"
-
-);
-
-
-
-
-if(!contenedor){
-
-return;
-
-}
-
-
-
-
-if(
-
-typeof BANCO_PREGUNTAS === "undefined"
-
-||
-
-BANCO_PREGUNTAS.length===0
-
-){
-
-
-contenedor.innerHTML =
-
-`
-
-<p>
-
-No existen preguntas disponibles en el banco.
-
-</p>
-
-`;
-
-
-
-return;
-
-
-}
-
-
-
-
-
-
-
-contenedor.innerHTML =
-
-BANCO_PREGUNTAS
-
-.map(
-
-(p,index)=>{
-
-
-
-return `
-
-
-
-<div class="card">
-
-
-
-<input
-
-type="checkbox"
-
-class="checkBancoPregunta"
-
-value="${index}"
-
->
-
-
-
-<strong>
-
-Pregunta ${index+1}
-
-</strong>
-
-
-
-<p>
-
-Tipo:
-
-${nombreTipoPregunta(p.tipo)}
-
-</p>
-
-
-
-<p>
-
-${
-
-p.contenido ||
-
-p.contexto ||
-
-"Sin contenido"
-
-}
-
-</p>
-
-
-
-
-
-</div>
-
-
-
-`;
-
-
-
-}
-
-)
-
-.join("");
-
-
-
-}
-
 
 
 
@@ -393,372 +137,11 @@ p.contexto ||
 
 
 /* =====================================================
-   FILTRO VISUAL
+   MOSTRAR MENSAJE BANCO
 ===================================================== */
 
 
-function filtrarBancoPreguntasUI(){
-
-
-
-const filtro =
-
-document.getElementById(
-
-"filtroBancoPregunta"
-
-).value;
-
-
-
-
-
-const contenedor =
-
-document.getElementById(
-
-"listaBancoPreguntas"
-
-);
-
-
-
-
-
-if(!contenedor){
-
-return;
-
-}
-
-
-
-
-
-
-if(
-
-typeof BANCO_PREGUNTAS==="undefined"
-
-){
-
-return;
-
-}
-
-
-
-
-
-let preguntas =
-
-BANCO_PREGUNTAS;
-
-
-
-
-
-
-if(filtro!=="todos"){
-
-
-
-preguntas =
-
-BANCO_PREGUNTAS.filter(
-
-p=>
-
-p.tipo===filtro
-
-);
-
-
-
-}
-
-
-
-
-
-
-contenedor.innerHTML =
-
-preguntas
-
-.map(
-
-(p,index)=>{
-
-
-
-return `
-
-
-
-<div class="card">
-
-
-
-<input
-
-type="checkbox"
-
-class="checkBancoPregunta"
-
-data-id="${p.id || index}"
-
->
-
-
-
-<strong>
-
-Pregunta ${index+1}
-
-</strong>
-
-
-
-
-<p>
-
-Tipo:
-
-${nombreTipoPregunta(p.tipo)}
-
-</p>
-
-
-
-
-<p>
-
-${
-
-p.contenido ||
-
-p.contexto ||
-
-"Sin contenido"
-
-}
-
-</p>
-
-
-
-
-</div>
-
-
-
-`;
-
-
-
-}
-
-)
-
-.join("");
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   IMPORTAR PREGUNTAS SELECCIONADAS
-===================================================== */
-
-
-function importarSeleccionadasBanco(){
-
-
-
-if(
-
-typeof BANCO_PREGUNTAS==="undefined"
-
-){
-
-
-mostrarMensajeBanco(
-
-"Cargue primero el banco de preguntas."
-
-);
-
-
-return;
-
-
-}
-
-
-
-
-
-const seleccionadas =
-
-Array.from(
-
-document.querySelectorAll(
-
-".checkBancoPregunta:checked"
-
-)
-
-);
-
-
-
-
-
-
-if(
-
-seleccionadas.length===0
-
-){
-
-
-mostrarMensajeBanco(
-
-"No seleccionó preguntas."
-
-);
-
-
-return;
-
-
-}
-
-
-
-
-
-seleccionadas.forEach(
-
-(check)=>{
-
-
-
-let indice =
-
-check.value ||
-
-check.dataset.id;
-
-
-
-
-
-
-let pregunta =
-
-BANCO_PREGUNTAS[indice];
-
-
-
-
-
-if(pregunta){
-
-
-
-SPAE.preguntas.push(
-
-JSON.parse(
-
-JSON.stringify(pregunta)
-
-)
-
-);
-
-
-
-}
-
-
-
-});
-
-
-
-
-
-
-
-if(
-
-typeof actualizarBlueprint==="function"
-
-){
-
-
-actualizarBlueprint();
-
-
-}
-
-
-
-
-
-
-
-if(
-
-typeof guardarSPAE==="function"
-
-){
-
-
-guardarSPAE();
-
-
-}
-
-
-
-
-
-mostrarMensajeBanco(
-
-"Preguntas importadas correctamente."
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   MENSAJES
-===================================================== */
-
-
-function mostrarMensajeBanco(texto){
-
+function mostrarMensajeBanco(mensaje){
 
 
 const div =
@@ -768,8 +151,6 @@ document.getElementById(
 "mensajeBancoPreguntas"
 
 );
-
-
 
 
 
@@ -783,7 +164,7 @@ div.innerHTML =
 
 <p>
 
-${texto}
+${mensaje}
 
 </p>
 
@@ -803,34 +184,435 @@ ${texto}
 
 
 
-
 /* =====================================================
-   COMPATIBILIDAD INICIAL
+   RECARGAR LISTADO BANCO
 ===================================================== */
 
 
-document.addEventListener(
-
-"DOMContentLoaded",
-
-()=>{
-
-
-if(
-
-typeof BANCO_PREGUNTAS==="undefined"
-
-){
+function actualizarVistaBanco(){
 
 
 
-window.BANCO_PREGUNTAS=[];
+const lista =
+
+document.getElementById(
+
+"listaBancoPreguntas"
+
+);
+
+
+
+if(lista){
+
+
+lista.innerHTML =
+
+listarBancoPreguntas();
 
 
 }
 
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   SOBRESCRIBIR INICIALIZACIÓN
+   CON ACTUALIZACIÓN VISUAL
+
+===================================================== */
+
+
+async function cargarBancoUI(){
+
+
+try{
+
+
+await cargarBancoPreguntasJSON();
+
+
+
+actualizarVistaBanco();
+
+
+
+mostrarMensajeBanco(
+
+"Banco cargado correctamente."
+
+);
+
+
+
+}
+
+catch(error){
+
+
+
+console.error(
+
+error
+
+);
+
+
+
+mostrarMensajeBanco(
+
+"Error cargando banco de preguntas."
+
+);
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   SELECCIONAR TODAS
+===================================================== */
+
+
+function seleccionarTodasBanco(){
+
+
+
+BANCO_PREGUNTAS.forEach(
+
+(p,index)=>{
+
+
+const check =
+
+document.getElementById(
+
+`preguntaBanco_${index}`
+
+);
+
+
+
+if(check){
+
+check.checked = true;
+
+}
 
 
 }
 
 );
+
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   DESELECCIONAR TODAS
+===================================================== */
+
+
+function deseleccionarTodasBanco(){
+
+
+
+BANCO_PREGUNTAS.forEach(
+
+(p,index)=>{
+
+
+const check =
+
+document.getElementById(
+
+`preguntaBanco_${index}`
+
+);
+
+
+
+if(check){
+
+check.checked = false;
+
+}
+
+
+}
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   ACTUALIZAR IMPORTACIÓN
+===================================================== */
+
+
+function importarDesdeBancoUI(){
+
+
+
+const indices =
+
+obtenerIndicesSeleccionadosBanco();
+
+
+
+if(indices.length===0){
+
+
+mostrarMensajeBanco(
+
+"No hay preguntas seleccionadas."
+
+);
+
+
+return;
+
+
+}
+
+
+
+
+importarPreguntasBanco(indices);
+
+
+
+
+mostrarMensajeBanco(
+
+`${indices.length} preguntas incorporadas al examen.`
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   ESTADÍSTICAS DEL BANCO
+===================================================== */
+
+
+function resumenBancoPreguntas(){
+
+
+
+if(!BANCO_PREGUNTAS ||
+
+BANCO_PREGUNTAS.length===0){
+
+
+return "";
+
+}
+
+
+
+let total =
+
+BANCO_PREGUNTAS.length;
+
+
+
+let mcq =
+
+BANCO_PREGUNTAS.filter(
+
+p=>p.tipo==="opcion_multiple"
+
+).length;
+
+
+
+
+let casos =
+
+BANCO_PREGUNTAS.filter(
+
+p=>
+
+p.tipo==="caso_analisis"
+
+||
+
+p.tipo==="caso_aplicacion"
+
+).length;
+
+
+
+
+let abiertas =
+
+BANCO_PREGUNTAS.filter(
+
+p=>
+
+p.tipo==="abierta"
+
+).length;
+
+
+
+return `
+
+
+<div class="summary">
+
+
+<h3>
+
+Resumen banco
+
+</h3>
+
+
+<p>
+
+Total preguntas:
+
+<strong>
+
+${total}
+
+</strong>
+
+</p>
+
+
+<p>
+
+Opción múltiple:
+
+<strong>
+
+${mcq}
+
+</strong>
+
+</p>
+
+
+<p>
+
+Casos:
+
+<strong>
+
+${casos}
+
+</strong>
+
+</p>
+
+
+<p>
+
+Abiertas:
+
+<strong>
+
+${abiertas}
+
+</strong>
+
+</p>
+
+
+
+</div>
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXTENSIÓN VISUAL DEL LISTADO
+===================================================== */
+
+
+function renderResumenBanco(){
+
+
+const contenedor =
+
+document.getElementById(
+
+"mensajeBancoPreguntas"
+
+);
+
+
+
+if(contenedor){
+
+
+
+contenedor.innerHTML =
+
+resumenBancoPreguntas();
+
+
+
+}
+
+
+
+}
