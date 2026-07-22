@@ -3392,4 +3392,677 @@ guardarSPAE();
 
 
 }
+/* =====================================================
+   SPAE MVP v4.0
 
+   BLOQUE 7/10
+
+   BANCO DE PREGUNTAS
+
+   - Listado
+   - Normalización
+   - Validación
+   - Blueprint automático
+
+===================================================== */
+
+
+/* =====================================================
+   LISTAR PREGUNTAS REGISTRADAS
+===================================================== */
+
+
+function listarPreguntasSPAE(){
+
+
+if(!SPAE.preguntas || SPAE.preguntas.length===0){
+
+
+return `
+
+<p>
+No existen preguntas registradas.
+</p>
+
+`;
+
+
+}
+
+
+
+return SPAE.preguntas.map(
+
+(p,index)=>{
+
+
+return `
+
+
+<div class="card">
+
+
+<h3>
+
+Pregunta ${index+1}
+
+</h3>
+
+
+
+<p>
+
+<strong>
+Tipo:
+</strong>
+
+${p.tipo}
+
+</p>
+
+
+
+<p>
+
+<strong>
+Nivel cognitivo:
+</strong>
+
+${p.nivelCognitivo}
+
+</p>
+
+
+
+<p>
+
+<strong>
+Resultado aprendizaje:
+</strong>
+
+${p.resultadoAprendizaje}
+
+</p>
+
+
+
+<hr>
+
+
+<p>
+
+${p.contenido || p.contexto}
+
+</p>
+
+
+<button onclick="eliminarPreguntaSPAE(${index})">
+
+Eliminar
+
+</button>
+
+
+</div>
+
+
+
+`;
+
+
+
+}
+
+).join("");
+
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   ELIMINAR PREGUNTA
+===================================================== */
+
+
+function eliminarPreguntaSPAE(index){
+
+
+
+if(confirm(
+
+"¿Desea eliminar esta pregunta?"
+
+)){
+
+
+
+SPAE.preguntas.splice(
+
+index,
+
+1
+
+);
+
+
+
+actualizarBlueprint();
+
+
+guardarSPAE();
+
+
+
+abrirModulo(
+
+"preguntas"
+
+);
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   ACTUALIZAR BLUEPRINT
+===================================================== */
+
+
+function actualizarBlueprint(){
+
+
+
+if(!SPAE.blueprint){
+
+
+SPAE.blueprint={
+
+
+preguntasMCQ:0,
+
+casos:0,
+
+abiertas:0
+
+
+};
+
+
+}
+
+
+
+
+
+const preguntas =
+
+SPAE.preguntas || [];
+
+
+
+
+
+SPAE.blueprint.preguntasMCQ =
+
+preguntas.filter(
+
+p=>
+
+p.tipo==="opcion_multiple"
+
+).length;
+
+
+
+
+
+
+
+SPAE.blueprint.casos =
+
+preguntas.filter(
+
+p=>
+
+p.tipo==="caso_analisis"
+
+||
+
+p.tipo==="caso_aplicacion"
+
+).length;
+
+
+
+
+
+
+
+SPAE.blueprint.abiertas =
+
+preguntas.filter(
+
+p=>
+
+p.tipo==="abierta"
+
+).length;
+
+
+
+
+
+guardarSPAE();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   VALIDACIÓN DE PREGUNTAS
+===================================================== */
+
+
+function validarPreguntaSPAE(p){
+
+
+
+let errores=[];
+
+
+
+
+
+if(!p.tipo){
+
+
+errores.push(
+
+"Tipo de pregunta no definido"
+
+);
+
+
+}
+
+
+
+
+if(
+
+p.tipo==="opcion_multiple"
+
+){
+
+
+
+if(!p.contenido || p.contenido.trim()===""){
+
+
+errores.push(
+
+"Falta el enunciado"
+
+);
+
+
+}
+
+
+
+
+if(
+
+!p.alternativas ||
+
+p.alternativas.length!==4
+
+){
+
+
+errores.push(
+
+"Debe tener cuatro alternativas"
+
+);
+
+
+}
+
+
+
+}
+
+
+
+
+
+if(!p.nivelCognitivo){
+
+
+errores.push(
+
+"Falta nivel cognitivo"
+
+);
+
+
+}
+
+
+
+
+if(!p.resultadoAprendizaje){
+
+
+errores.push(
+
+"Falta resultado de aprendizaje"
+
+);
+
+
+}
+
+
+
+
+
+return errores;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   VALIDAR TODO EL BANCO
+===================================================== */
+
+
+function validarBancoPreguntas(){
+
+
+
+let errores=[];
+
+
+
+
+SPAE.preguntas.forEach(
+
+(p,index)=>{
+
+
+
+const resultado =
+
+validarPreguntaSPAE(p);
+
+
+
+
+
+if(resultado.length>0){
+
+
+
+errores.push(
+
+"Pregunta "
+
++
+
+(index+1)
+
++
+
+": "
+
++
+
+resultado.join(", ")
+
+);
+
+
+
+}
+
+
+
+}
+
+);
+
+
+
+
+
+
+if(errores.length===0){
+
+
+
+alert(
+
+"Banco de preguntas válido."
+
+);
+
+
+
+}
+
+else{
+
+
+
+alert(
+
+errores.join("\n")
+
+);
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   NORMALIZAR DATOS
+===================================================== */
+
+
+function normalizarBancoSPAE(){
+
+
+
+if(!Array.isArray(SPAE.preguntas)){
+
+
+SPAE.preguntas=[];
+
+
+}
+
+
+
+
+
+SPAE.preguntas =
+
+SPAE.preguntas.map(
+
+p=>{
+
+
+return {
+
+
+id:
+
+p.id ||
+
+Date.now().toString(),
+
+
+tipo:
+
+p.tipo ||
+
+"opcion_multiple",
+
+
+contenido:
+
+p.contenido ||
+
+"",
+
+
+alternativas:
+
+p.alternativas ||
+
+[],
+
+
+respuestaCorrecta:
+
+p.respuestaCorrecta ||
+
+"",
+
+
+contexto:
+
+p.contexto ||
+
+"",
+
+
+pregunta:
+
+p.pregunta ||
+
+"",
+
+
+nivelCognitivo:
+
+p.nivelCognitivo ||
+
+"APLICAR",
+
+
+resultadoAprendizaje:
+
+p.resultadoAprendizaje ||
+
+"",
+
+
+respuestaEsperada:
+
+p.respuestaEsperada ||
+
+"",
+
+
+criterios:
+
+p.criterios ||
+
+"",
+
+
+retroalimentacion:
+
+p.retroalimentacion ||
+
+""
+
+
+};
+
+
+
+}
+
+);
+
+
+
+
+guardarSPAE();
+
+
+
+console.log(
+
+"Banco normalizado"
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   INICIALIZAR BANCO
+===================================================== */
+
+
+normalizarBancoSPAE();
