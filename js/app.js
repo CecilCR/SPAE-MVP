@@ -2592,11 +2592,9 @@ BLOQUE 2C/3
 BLUEPRINT
 MIGRACIÓN
 COMPATIBILIDAD
+INTERFAZ
 
 ===================================================== */
-
-
-
 
 
 
@@ -2633,14 +2631,26 @@ abiertas:0
 
 
 
+if(!SPAE.preguntas){
+
+
+SPAE.preguntas = [];
+
+
+}
+
+
+
+
+
 
 SPAE.blueprint.preguntasMCQ =
 
 SPAE.preguntas.filter(
 
-p=>
+p =>
 
-p.tipo==="opcion_multiple"
+p.tipo === "opcion_multiple"
 
 ).length;
 
@@ -2655,13 +2665,13 @@ SPAE.blueprint.casos =
 
 SPAE.preguntas.filter(
 
-p=>
+p =>
 
-p.tipo==="caso_analisis"
+p.tipo === "caso_analisis"
 
 ||
 
-p.tipo==="caso_aplicacion"
+p.tipo === "caso_aplicacion"
 
 ).length;
 
@@ -2676,12 +2686,15 @@ SPAE.blueprint.abiertas =
 
 SPAE.preguntas.filter(
 
-p=>
+p =>
 
-p.tipo==="abierta"
+p.tipo === "abierta"
+
+||
+
+p.tipo === "pregunta_abierta"
 
 ).length;
-
 
 
 
@@ -2707,25 +2720,17 @@ guardarSPAE();
 ===================================================== */
 
 
-
-function migrarPreguntasSPAE(){
+function migrarBancoPreguntas(){
 
 
 
 if(!SPAE.preguntas){
 
 
-
-SPAE.preguntas=[];
-
-
-
-return;
-
+SPAE.preguntas = [];
 
 
 }
-
 
 
 
@@ -2734,88 +2739,95 @@ return;
 
 SPAE.preguntas =
 
+SPAE.preguntas.map(
 
 
-SPAE.preguntas.map(p=>{
+p=>{
 
 
-
-
-
-/*
- ===============================
- Tipo pregunta
- ===============================
-*/
+return {
 
 
 
-p.tipo =
+...p,
+
+
+
+tipo:
 
 p.tipo ||
 
-"opcion_multiple";
+"opcion_multiple",
 
 
 
 
 
+nivelCognitivo:
 
-/*
- ===============================
- Contexto
- ===============================
-*/
+p.nivelCognitivo ||
 
+"",
 
 
-if(
-
-!p.contexto
-
-&&
-
-p.situacion
-
-){
 
 
-p.contexto =
 
-p.situacion;
+resultadoAprendizaje:
+
+p.resultadoAprendizaje ||
+
+"",
+
+
+
+
+
+competencia:
+
+p.competencia ||
+
+"",
+
+
+
+
+
+respuestaEsperada:
+
+p.respuestaEsperada ||
+
+"",
+
+
+
+
+
+criterios:
+
+p.criterios ||
+
+"",
+
+
+
+
+
+retroalimentacion:
+
+p.retroalimentacion ||
+
+""
+
+
+
+};
 
 
 }
 
 
-
-
-
-
-p.contexto =
-
-p.contexto ||
-
-"";
-
-
-
-
-
-
-/*
- ===============================
- Pregunta
- ===============================
-*/
-
-
-
-p.pregunta =
-
-p.pregunta ||
-
-"";
+);
 
 
 
@@ -2823,31 +2835,15 @@ p.pregunta ||
 
 
 
-/*
- ===============================
- Nivel cognitivo
- ===============================
-*/
+guardarSPAE();
 
 
 
-if(
-
-!p.nivelCognitivo
-
-&&
-
-p.competencia
-
-){
 
 
+console.log(
 
-p.nivelCognitivo =
-
-normalizarBloom(
-
-p.competencia
+"Migración completada correctamente"
 
 );
 
@@ -2861,131 +2857,14 @@ p.competencia
 
 
 
-p.nivelCognitivo =
 
-p.nivelCognitivo ||
 
-"ANALIZAR";
+/* =====================================================
+   RENDER BLUEPRINT
+===================================================== */
 
 
-
-
-
-
-
-
-/*
- ===============================
- Resultado aprendizaje
- ===============================
-*/
-
-
-
-p.resultadoAprendizaje =
-
-p.resultadoAprendizaje ||
-
-p.resultado ||
-
-"";
-
-
-
-
-
-
-
-
-/*
- ===============================
- Retroalimentación
- ===============================
-*/
-
-
-
-if(
-
-!p.retroalimentacion
-
-&&
-
-p.justificacion
-
-){
-
-
-
-p.retroalimentacion =
-
-p.justificacion;
-
-
-}
-
-
-
-
-
-
-p.retroalimentacion =
-
-p.retroalimentacion ||
-
-"";
-
-
-
-
-
-
-
-p.respuestaEsperada =
-
-p.respuestaEsperada ||
-
-"";
-
-
-
-
-
-
-p.criterios =
-
-p.criterios ||
-
-"";
-
-
-
-
-
-
-
-p.alternativas =
-
-p.alternativas ||
-
-[];
-
-
-
-
-
-
-
-return p;
-
-
-
-});
-
-
-
-
-
+function renderBlueprint(){
 
 
 
@@ -2993,208 +2872,155 @@ actualizarBlueprint();
 
 
 
-guardarSPAE();
 
 
+return `
+
+
+
+<section class="card">
+
+
+
+<h2>
+
+4. Blueprint de evaluación
+
+</h2>
+
+
+
+
+<p>
+
+Resumen de la estructura actual del examen.
+
+</p>
+
+
+
+
+<hr>
+
+
+
+
+
+<h3>
+
+Distribución por tipo de pregunta
+
+</h3>
+
+
+
+
+
+<p>
+
+Opción múltiple:
+
+<strong>
+
+${SPAE.blueprint.preguntasMCQ}
+
+</strong>
+
+</p>
+
+
+
+
+
+<p>
+
+Casos de análisis:
+
+<strong>
+
+${SPAE.blueprint.casos}
+
+</strong>
+
+</p>
+
+
+
+
+
+<p>
+
+Preguntas abiertas:
+
+<strong>
+
+${SPAE.blueprint.abiertas}
+
+</strong>
+
+</p>
+
+
+
+
+
+<p>
+
+Total preguntas:
+
+<strong>
+
+${
+
+SPAE.blueprint.preguntasMCQ
+
++
+
+SPAE.blueprint.casos
+
++
+
+SPAE.blueprint.abiertas
 
 }
 
+</strong>
 
+</p>
 
 
 
 
 
+<br>
 
 
-/* =====================================================
-   NORMALIZAR BLOOM
-===================================================== */
 
 
-function normalizarBloom(valor){
 
+<button onclick="actualizarBlueprint()">
 
+Actualizar Blueprint
 
-if(!valor){
+</button>
 
-return "";
 
-}
 
 
 
-valor =
+<div id="mensajeBlueprint">
 
-valor.toString()
+</div>
 
-.toUpperCase()
 
-.trim();
 
 
 
+</section>
 
 
 
-
-const equivalencias={
-
-
-
-"RECORDAR":
-
-"RECORDAR",
-
-
-
-"COMPRENDER":
-
-"COMPRENDER",
-
-
-
-"APLICAR":
-
-"APLICAR",
-
-
-
-"APLICACIÓN":
-
-"APLICAR",
-
-
-
-"ANALISIS":
-
-"ANALIZAR",
-
-
-
-"ANÁLISIS":
-
-"ANALIZAR",
-
-
-
-"ANALIZAR":
-
-"ANALIZAR",
-
-
-
-"EVALUAR":
-
-"EVALUAR",
-
-
-
-"CREAR":
-
-"CREAR"
-
-
-
-};
-
-
-
-
-
-
-
-return equivalencias[valor]
-
-||
-
-
-valor;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   PREPARAR DATOS PARA EXPORTACIÓN JSON
-===================================================== */
-
-
-
-function prepararExportacionSPAE(){
-
-
-
-migrarPreguntasSPAE();
-
-
-
-
-
-
-return {
-
-
-version:
-
-SPAE.version,
-
-
-
-fecha:
-
-new Date().toISOString(),
-
-
-
-
-curso:
-
-SPAE.curso,
-
-
-
-evaluacion:
-
-SPAE.evaluacion,
-
-
-
-competencias:
-
-SPAE.competencias,
-
-
-
-resultados:
-
-SPAE.resultados,
-
-
-
-preguntas:
-
-SPAE.preguntas,
-
-
-
-blueprint:
-
-SPAE.blueprint
-
-
-
-};
-
-
+`;
 
 }
 /* =====================================================
