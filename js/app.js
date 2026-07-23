@@ -4250,3 +4250,993 @@ p.contexto ||
 
 
 }
+/* =====================================================
+
+SPAE MVP
+
+BLOQUE 8/9
+
+MÓDULO 6
+
+EXPORTACIÓN PROFESIONAL
+
+===================================================== */
+
+
+
+
+
+/* =====================================================
+   RENDER EXPORTAR
+===================================================== */
+
+
+function renderExportar(){
+
+
+return `
+
+
+<section class="card">
+
+
+<h2>
+
+6. Exportar
+
+</h2>
+
+
+
+<p>
+
+Seleccione el formato de exportación.
+
+</p>
+
+
+
+<button
+
+class="primary-button"
+
+onclick="exportarProyectoJSON()"
+
+>
+
+Exportar proyecto JSON
+
+</button>
+
+
+
+
+<br><br>
+
+
+
+<button
+
+class="secondary-button"
+
+onclick="exportarExamenEstudiante()"
+
+>
+
+Exportar examen estudiante
+
+</button>
+
+
+
+
+<br><br>
+
+
+
+<button
+
+class="secondary-button"
+
+onclick="exportarClaveDocente()"
+
+>
+
+Exportar clave docente
+
+</button>
+
+
+
+
+<div id="mensajeExportacion">
+
+
+</div>
+
+
+
+</section>
+
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   DESCARGAR ARCHIVO
+===================================================== */
+
+
+function descargarArchivoSPAE(
+
+contenido,
+
+nombreArchivo,
+
+tipoArchivo="text/plain"
+
+){
+
+
+
+const blob = new Blob(
+
+[
+
+"\ufeff" + contenido
+
+],
+
+{
+
+type: tipoArchivo
+
+}
+
+);
+
+
+
+
+
+const enlace =
+
+document.createElement("a");
+
+
+
+
+
+enlace.href =
+
+URL.createObjectURL(blob);
+
+
+
+
+
+enlace.download = nombreArchivo;
+
+
+
+
+
+document.body.appendChild(enlace);
+
+
+
+enlace.click();
+
+
+
+document.body.removeChild(enlace);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXPORTAR PROYECTO JSON
+===================================================== */
+
+
+function exportarProyectoJSON(){
+
+
+
+const proyecto = {
+
+
+version:
+
+SPAE.version,
+
+
+
+fecha:
+
+new Date().toISOString(),
+
+
+
+curso:
+
+SPAE.curso,
+
+
+
+evaluacion:
+
+SPAE.evaluacion,
+
+
+
+preguntas:
+
+SPAE.preguntas,
+
+
+
+blueprint:
+
+SPAE.blueprint
+
+
+
+};
+
+
+
+
+
+descargarArchivoSPAE(
+
+JSON.stringify(
+
+proyecto,
+
+null,
+
+4
+
+),
+
+
+"spae_proyecto.json",
+
+
+"application/json;charset=utf-8"
+
+);
+
+
+
+
+
+mostrarMensajeExportacion(
+
+"Proyecto JSON exportado correctamente."
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXPORTAR EXAMEN ESTUDIANTE
+===================================================== */
+
+
+function exportarExamenEstudiante(){
+
+
+
+let texto = "";
+
+
+
+
+
+texto +=
+
+"EXAMEN\n\n";
+
+
+
+
+
+texto +=
+
+"Evaluación: "
+
++
+
+(SPAE.evaluacion.nombre || "-")
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Curso: "
+
++
+
+(SPAE.curso.nombre || "-")
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Programa: "
+
++
+
+(SPAE.curso.programa || "-")
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Tiempo: "
+
++
+
+(SPAE.evaluacion.tiempo || 0)
+
++
+
+" minutos\n\n";
+
+
+
+
+
+
+
+texto +=
+
+"================================\n\n";
+
+
+
+
+
+
+
+SPAE.preguntas.forEach(
+
+(p,index)=>{
+
+
+
+
+
+texto +=
+
+"PREGUNTA "
+
++
+
+(index+1)
+
++
+
+"\n\n";
+
+
+
+
+
+
+
+if(
+
+p.tipo==="opcion_multiple"
+
+){
+
+
+
+
+
+texto +=
+
+(p.contenido || "")
+
++
+
+"\n\n";
+
+
+
+
+
+
+if(Array.isArray(p.alternativas)){
+
+
+
+p.alternativas.forEach(
+
+(a,i)=>{
+
+
+
+texto +=
+
+String.fromCharCode(65+i)
+
++
+
+". "
+
++
+
+a
+
++
+
+"\n";
+
+
+
+}
+
+
+
+);
+
+
+
+}
+
+
+
+
+
+
+}
+
+else{
+
+
+
+texto +=
+
+"CONTEXTO:\n"
+
++
+
+(p.contexto || "")
+
++
+
+"\n\n";
+
+
+
+
+
+
+texto +=
+
+"PREGUNTA:\n"
+
++
+
+(p.pregunta || "")
+
++
+
+"\n";
+
+
+
+}
+
+
+
+
+
+
+
+texto +=
+
+"\nRespuesta:\n";
+
+
+
+texto +=
+
+"________________________________\n\n";
+
+
+
+
+
+}
+
+);
+
+
+
+
+
+
+
+descargarArchivoSPAE(
+
+texto,
+
+"examen_estudiante.txt"
+
+);
+
+
+
+
+
+
+mostrarMensajeExportacion(
+
+"Examen estudiante exportado correctamente."
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EXPORTAR CLAVE DOCENTE
+===================================================== */
+
+
+function exportarClaveDocente(){
+
+
+
+let texto = "";
+
+
+
+
+
+texto +=
+
+"CLAVE DOCENTE\n\n";
+
+
+
+
+
+texto +=
+
+"Evaluación: "
+
++
+
+(SPAE.evaluacion.nombre || "-")
+
++
+
+"\n";
+
+
+
+
+
+texto +=
+
+"Curso: "
+
++
+
+(SPAE.curso.nombre || "-")
+
++
+
+"\n\n";
+
+
+
+
+
+
+
+
+
+SPAE.preguntas.forEach(
+
+(p,index)=>{
+
+
+
+texto +=
+
+"================================\n";
+
+
+
+texto +=
+
+"PREGUNTA "
+
++
+
+(index+1)
+
++
+
+"\n";
+
+
+
+texto +=
+
+"================================\n\n";
+
+
+
+
+
+
+
+if(
+
+p.tipo==="opcion_multiple"
+
+){
+
+
+
+texto +=
+
+"ENUNCIADO:\n\n"
+
++
+
+(p.contenido || "")
+
++
+
+"\n\n";
+
+
+
+
+
+
+
+texto +=
+
+"ALTERNATIVAS:\n\n";
+
+
+
+
+
+
+if(Array.isArray(p.alternativas)){
+
+
+
+p.alternativas.forEach(
+
+(a,i)=>{
+
+
+
+texto +=
+
+String.fromCharCode(65+i)
+
++
+
+". "
+
++
+
+a
+
++
+
+"\n";
+
+
+
+}
+
+
+
+);
+
+
+
+}
+
+
+
+
+
+
+texto +=
+
+"\nRESPUESTA CORRECTA: "
+
++
+
+(p.respuestaCorrecta || "-")
+
++
+
+"\n\n";
+
+
+
+}
+
+else{
+
+
+
+texto +=
+
+"CONTEXTO:\n\n"
+
++
+
+(p.contexto || "")
+
++
+
+"\n\n";
+
+
+
+
+
+
+texto +=
+
+"PREGUNTA:\n\n"
+
++
+
+(p.pregunta || "")
+
++
+
+"\n\n";
+
+
+
+}
+
+
+
+
+
+
+
+texto +=
+
+"NIVEL COGNITIVO: "
+
++
+
+(p.nivelCognitivo || "-")
+
++
+
+"\n";
+
+
+
+
+
+
+
+texto +=
+
+"RESULTADO DE APRENDIZAJE: "
+
++
+
+(p.resultadoAprendizaje || "-")
+
++
+
+"\n";
+
+
+
+
+
+
+texto +=
+
+"RESPUESTA ESPERADA:\n"
+
++
+
+(p.respuestaEsperada || "-")
+
++
+
+"\n\n";
+
+
+
+
+
+
+texto +=
+
+"CRITERIOS:\n"
+
++
+
+(p.criterios || "-")
+
++
+
+"\n\n";
+
+
+
+
+
+
+texto +=
+
+"RETROALIMENTACIÓN:\n"
+
++
+
+(p.retroalimentacion || "-")
+
++
+
+"\n\n";
+
+
+
+}
+
+);
+
+
+
+
+
+
+
+descargarArchivoSPAE(
+
+texto,
+
+"clave_docente.txt"
+
+);
+
+
+
+
+
+
+
+mostrarMensajeExportacion(
+
+"Clave docente exportada correctamente."
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MENSAJE EXPORTACIÓN
+===================================================== */
+
+
+function mostrarMensajeExportacion(mensaje){
+
+
+
+const div =
+
+document.getElementById(
+
+"mensajeExportacion"
+
+);
+
+
+
+
+
+if(div){
+
+
+
+div.innerHTML = `
+
+
+<p>
+
+${mensaje}
+
+</p>
+
+
+`;
+
+
+
+}
+
+
+
+}
