@@ -4349,6 +4349,25 @@ Exportar clave docente
 
 
 
+<br><br>
+
+
+
+<button
+
+class="secondary-button"
+
+onclick="limpiarPreguntasExamen()"
+
+>
+
+Limpiar examen actual
+
+</button>
+
+
+
+
 <div id="mensajeExportacion">
 
 
@@ -4362,14 +4381,6 @@ Exportar clave docente
 `;
 
 }
-
-
-
-
-
-
-
-
 
 /* =====================================================
    DESCARGAR ARCHIVO
