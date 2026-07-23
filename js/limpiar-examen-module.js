@@ -1,190 +1,109 @@
 /* =====================================================
+   SPAE MVP
 
-SPAE MVP
+   MÓDULO LIMPIAR EXAMEN
 
-BLOQUE 10D
-
-MÓDULO LIMPIAR EXAMEN
-
-limpiar-examen-module.js
-
-
-Responsabilidades:
-
-- Eliminar preguntas del examen actual
-- Mantener curso
-- Mantener evaluación
-- Mantener banco de preguntas
-- Actualizar Blueprint
-- Guardar estado SPAE
-
+   Responsabilidad:
+   - Eliminar preguntas del examen actual
+   - Mantener banco de preguntas intacto
+   - Actualizar blueprint
+   - Guardar estado SPAE
 
 ===================================================== */
 
 
-
-
-
-
-
 /* =====================================================
-   LIMPIAR PREGUNTAS DEL EXAMEN
+   LIMPIAR TODAS LAS PREGUNTAS DEL EXAMEN
 ===================================================== */
 
 
 function limpiarPreguntasExamen(){
 
 
+    if(!confirm(
+        "¿Está seguro de eliminar todas las preguntas del examen actual?"
+    )){
 
-const confirmar = confirm(
 
+        return;
 
-"¿Está seguro de eliminar todas las preguntas del examen actual?"
 
-);
+    }
 
 
 
-if(!confirmar){
 
 
-return false;
+    if(!Array.isArray(SPAE.preguntas)){
 
 
-}
+        SPAE.preguntas = [];
 
 
+    }
+    else{
 
 
+        SPAE.preguntas = [];
 
 
+    }
 
 
-/*
- Verificar estructura SPAE
-*/
 
 
-if(
 
-typeof SPAE === "undefined"
+    if(typeof actualizarBlueprint === "function"){
 
-){
 
+        actualizarBlueprint();
 
-console.error(
 
-"No existe objeto SPAE"
+    }
 
-);
 
 
-return false;
 
 
-}
 
+    if(typeof guardarSPAE === "function"){
 
 
+        guardarSPAE();
 
 
+    }
 
 
-/*
- Eliminar solamente preguntas
 
- NO elimina:
 
- - Curso
- - Evaluación
- - Banco
 
-*/
 
+    console.log(
+        "Preguntas del examen eliminadas correctamente"
+    );
 
-SPAE.preguntas = [];
 
 
 
 
 
+    alert(
+        "Examen limpiado correctamente."
+    );
 
 
 
-/*
- Actualizar Blueprint
 
-*/
 
 
-if(
+    if(typeof abrirModulo === "function"){
 
-typeof actualizarBlueprint === "function"
 
-){
+        abrirModulo("preguntas");
 
 
-
-actualizarBlueprint();
-
-
-
-}
-
-
-
-
-
-
-
-
-/*
- Guardar cambios
-
-*/
-
-
-if(
-
-typeof guardarSPAE === "function"
-
-){
-
-
-
-guardarSPAE();
-
-
-
-}
-
-
-
-
-
-
-
-
-alert(
-
-"Preguntas del examen eliminadas correctamente."
-
-);
-
-
-
-console.log(
-
-"SPAE preguntas limpiadas."
-
-);
-
-
-
-
-
-
-return true;
+    }
 
 
 
@@ -199,143 +118,26 @@ return true;
 
 
 /* =====================================================
-   LIMPIAR EXAMEN COMPLETO
-   (OPCIONAL PARA PRUEBAS)
+   LIMPIAR SOLO SI EXISTE SPAE
 ===================================================== */
 
 
-function limpiarEvaluacionCompleta(){
+function cantidadPreguntasExamen(){
 
 
-
-const confirmar = confirm(
-
-
-"Se eliminarán preguntas y datos de la evaluación actual. ¿Continuar?"
-
-);
+    if(
+        SPAE &&
+        Array.isArray(SPAE.preguntas)
+    ){
 
 
-
-if(!confirmar){
-
+        return SPAE.preguntas.length;
 
 
-return false;
+    }
 
+
+    return 0;
 
 
 }
-
-
-
-
-
-
-if(
-
-typeof SPAE !== "undefined"
-
-){
-
-
-
-SPAE.preguntas=[];
-
-
-
-SPAE.evaluacion={};
-
-
-
-}
-
-
-
-
-
-if(
-
-typeof guardarSPAE === "function"
-
-){
-
-
-
-guardarSPAE();
-
-
-
-}
-
-
-
-
-
-alert(
-
-"Evaluación limpiada."
-
-);
-
-
-
-return true;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   BOTÓN AUXILIAR UI
-===================================================== */
-
-
-function mostrarBotonLimpiarExamen(){
-
-
-
-return `
-
-
-
-<button
-
-onclick="limpiarPreguntasExamen()"
-
->
-
-
-Limpiar preguntas del examen
-
-
-</button>
-
-
-
-`;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   FIN MÓDULO 10D
-
-===================================================== */
