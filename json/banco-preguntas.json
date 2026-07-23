@@ -1,1 +1,181 @@
-[]
+[
+  {
+    "id": "ADAPTABILIDAD-001",
+    "tipo": "opcion_multiple",
+    "contenido": "Un coordinador de operaciones en una empresa de logística en Lima nota que, tras la implementación de un nuevo sistema de ruteo por GPS, los conductores siguen anotando las rutas a mano en libretas porque confían más en su método tradicional. El coordinador decide ajustar su plan de trabajo, organizando sesiones individuales en ruta para acompañar a los choferes y modificar gradualmente su rutina diaria hasta lograr el uso del aplicativo. ¿Qué dimensión de la competencia de adaptabilidad está ejerciendo principalmente el coordinador al modificar sus comportamientos tácticos ante este entorno?",
+    "alternativas": [
+      "Flexibilidad cognitiva, porque está cambiando de perspectiva teórica sobre la tecnología.",
+      "Acción estratégica, porque está modificando sus comportamientos directivos reales para responder y ajustarse al nuevo entorno operativo.",
+      "Resiliencia emocional, porque está conteniendo la frustración de los gerentes corporativos.",
+      "Reestructuración incremental, porque modifica el software informático de la empresa."
+    ],
+    "respuestaCorrecta": "B",
+    "nivelCognitivo": "APLICAR",
+    "resultadoAprendizaje": "Aplica las dimensiones de la adaptabilidad para resolver problemas de gestión táctica en las organizaciones.",
+    "competencia": "Liderazgo y Gestión de Personas",
+    "criterios": "Diferencia la Acción Estratégica frente a Flexibilidad Cognitiva y Resiliencia Emocional en escenarios de cambio organizacional.",
+    "retroalimentacion": "La respuesta correcta es B porque la Acción Estratégica implica modificar comportamientos concretos para responder al entorno cambiante. Las demás opciones corresponden a procesos cognitivos, emocionales o técnicos diferentes."
+  },
+
+  {
+    "id": "VUCA-001",
+    "tipo": "opcion_multiple",
+    "contenido": "Una empresa financiera observa que las regulaciones del mercado cambian constantemente y que sus equipos deben ajustar procesos cada pocos meses para cumplir nuevas exigencias legales. El gerente general solicita identificar qué característica del entorno VUCA representa principalmente esta situación.",
+    "alternativas": [
+      "Volatilidad, porque los precios cambian rápidamente.",
+      "Incertidumbre, porque existe dificultad para anticipar con precisión futuros escenarios.",
+      "Complejidad, porque existen múltiples variables relacionadas entre sí.",
+      "Ambigüedad, porque existen interpretaciones contradictorias."
+    ],
+    "respuestaCorrecta": "B",
+    "nivelCognitivo": "ANALIZAR",
+    "resultadoAprendizaje": "Analiza las características de los entornos VUCA para interpretar desafíos organizacionales.",
+    "competencia": "Gestión Estratégica",
+    "criterios": "Distingue incertidumbre frente a otras dimensiones del modelo VUCA.",
+    "retroalimentacion": "La respuesta correcta es B porque la incertidumbre aparece cuando resulta difícil anticipar qué ocurrirá debido a cambios futuros no previsibles."
+  },
+
+  {
+    "id": "MOTIVACION-001",
+    "tipo": "opcion_multiple",
+    "contenido": "Una jefa de área identifica que un colaborador busca asumir proyectos complejos, recibir retroalimentación constante y demostrar resultados superiores frente a sus compañeros. Según la teoría de necesidades adquiridas de McClelland, ¿qué necesidad predomina en este colaborador?",
+    "alternativas": [
+      "Necesidad de afiliación.",
+      "Necesidad de poder.",
+      "Necesidad de logro.",
+      "Necesidad de seguridad."
+    ],
+    "respuestaCorrecta": "C",
+    "nivelCognitivo": "APLICAR",
+    "resultadoAprendizaje": "Aplica teorías motivacionales para interpretar comportamientos laborales.",
+    "competencia": "Gestión de Personas",
+    "criterios": "Relaciona conductas observables con necesidades motivacionales.",
+    "retroalimentacion": "La respuesta correcta es C porque la necesidad de logro se relaciona con alcanzar metas exigentes, superar estándares y buscar excelencia."
+  },
+
+  {
+    "id": "CAMBIO-001",
+    "tipo": "opcion_multiple",
+    "contenido": "Una organización implementará un nuevo sistema digital después de diez años usando procesos manuales. Antes de ejecutar el cambio, el gerente identifica factores que impulsan la transformación y factores que generan resistencia en los colaboradores. ¿Qué herramienta está utilizando?",
+    "alternativas": [
+      "Matriz FODA.",
+      "Análisis de campos de fuerzas.",
+      "Mapa estratégico.",
+      "Matriz de decisiones."
+    ],
+    "respuestaCorrecta": "B",
+    "nivelCognitivo": "APLICAR",
+    "resultadoAprendizaje": "Aplica herramientas de gestión del cambio para intervenir en organizaciones.",
+    "competencia": "Gestión del Cambio Organizacional",
+    "criterios": "Identifica herramientas utilizadas para analizar fuerzas impulsoras y restrictivas.",
+    "retroalimentacion": "La respuesta correcta es B porque el análisis de campos de fuerzas permite identificar factores que favorecen o dificultan un cambio."
+  },
+
+  {
+    "id": "ESCUCHA-001",
+    "tipo": "opcion_multiple",
+    "contenido": "Durante una reunión, un supervisor interrumpe constantemente a su equipo y responde antes de escuchar completamente las propuestas. El gerente recomienda desarrollar una competencia interpersonal para mejorar la comunicación. ¿Cuál corresponde principalmente?",
+    "alternativas": [
+      "Escucha activa.",
+      "Delegación operativa.",
+      "Control administrativo.",
+      "Negociación contractual."
+    ],
+    "respuestaCorrecta": "A",
+    "nivelCognitivo": "APLICAR",
+    "resultadoAprendizaje": "Aplica habilidades comunicacionales para fortalecer relaciones organizacionales.",
+    "competencia": "Comunicación Organizacional",
+    "criterios": "Reconoce comportamientos asociados a escucha activa.",
+    "retroalimentacion": "La respuesta correcta es A porque escuchar activamente implica atención, comprensión y respuesta adecuada al interlocutor."
+  },
+
+  {
+    "id": "LIDERAZGO-001",
+    "tipo": "opcion_multiple",
+    "contenido": "Un líder adapta su estilo de dirección según la experiencia, autonomía y necesidades de cada integrante del equipo. ¿Qué enfoque de liderazgo está aplicando?",
+    "alternativas": [
+      "Liderazgo autoritario permanente.",
+      "Liderazgo situacional.",
+      "Liderazgo basado únicamente en recompensas.",
+      "Liderazgo burocrático."
+    ],
+    "respuestaCorrecta": "B",
+    "nivelCognitivo": "ANALIZAR",
+    "resultadoAprendizaje": "Analiza estilos de liderazgo según características del equipo.",
+    "competencia": "Liderazgo Organizacional",
+    "criterios": "Relaciona estilos de liderazgo con condiciones del colaborador.",
+    "retroalimentacion": "La respuesta correcta es B porque el liderazgo situacional adapta la conducta del líder según la situación y madurez del equipo."
+  },
+
+  {
+    "id": "EMOCIONES-001",
+    "tipo": "opcion_multiple",
+    "contenido": "Un gerente recibe información negativa sobre resultados trimestrales y decide esperar antes de tomar decisiones impulsivas, analizando los datos y regulando su reacción emocional. ¿Qué competencia demuestra?",
+    "alternativas": [
+      "Inteligencia emocional.",
+      "Centralización administrativa.",
+      "Control jerárquico.",
+      "Especialización técnica."
+    ],
+    "respuestaCorrecta": "A",
+    "nivelCognitivo": "EVALUAR",
+    "resultadoAprendizaje": "Evalúa el papel de las emociones en procesos de decisión organizacional.",
+    "competencia": "Inteligencia Emocional",
+    "criterios": "Diferencia regulación emocional de control administrativo.",
+    "retroalimentacion": "La respuesta correcta es A porque la inteligencia emocional implica reconocer y gestionar emociones antes de actuar."
+  },
+
+  {
+    "id": "CULTURA-001",
+    "tipo": "opcion_multiple",
+    "contenido": "Una empresa mantiene prácticas tradicionales porque sus colaboradores consideran que 'siempre se ha hecho así'. El nuevo gerente busca modificar creencias y hábitos compartidos. ¿Qué elemento organizacional debe transformar principalmente?",
+    "alternativas": [
+      "La estructura física.",
+      "La cultura organizacional.",
+      "El sistema contable.",
+      "La infraestructura tecnológica."
+    ],
+    "respuestaCorrecta": "B",
+    "nivelCognitivo": "ANALIZAR",
+    "resultadoAprendizaje": "Analiza elementos culturales que influyen en el comportamiento organizacional.",
+    "competencia": "Cultura Organizacional",
+    "criterios": "Identifica la influencia de valores y creencias compartidas.",
+    "retroalimentacion": "La respuesta correcta es B porque la cultura está formada por valores, creencias y prácticas compartidas."
+  },
+
+  {
+    "id": "TECNOLOGIA-001",
+    "tipo": "opcion_multiple",
+    "contenido": "Una organización incorpora inteligencia artificial para automatizar tareas repetitivas, pero decide capacitar previamente a sus colaboradores para asumir funciones de mayor análisis y decisión. ¿Qué enfoque representa esta acción?",
+    "alternativas": [
+      "Sustitución completa del trabajador.",
+      "Adaptación organizacional frente a transformación tecnológica.",
+      "Eliminación de procesos humanos.",
+      "Reducción inmediata de personal."
+    ],
+    "respuestaCorrecta": "B",
+    "nivelCognitivo": "EVALUAR",
+    "resultadoAprendizaje": "Evalúa impactos organizacionales derivados de nuevas tecnologías.",
+    "competencia": "Transformación Digital",
+    "criterios": "Distingue automatización de reemplazo total del talento humano.",
+    "retroalimentacion": "La respuesta correcta es B porque la transformación digital requiere adaptación de personas, procesos y capacidades."
+  },
+
+  {
+    "id": "EQUIPOS-001",
+    "tipo": "opcion_multiple",
+    "contenido": "Un equipo presenta conflictos porque sus integrantes tienen objetivos individuales diferentes y poca coordinación. El líder decide establecer metas comunes y espacios de colaboración. ¿Qué aspecto está fortaleciendo?",
+    "alternativas": [
+      "Trabajo en equipo.",
+      "Competencia individual.",
+      "Control jerárquico.",
+      "Especialización técnica."
+    ],
+    "respuestaCorrecta": "A",
+    "nivelCognitivo": "APLICAR",
+    "resultadoAprendizaje": "Aplica prácticas de gestión para mejorar la colaboración organizacional.",
+    "competencia": "Gestión de Equipos",
+    "criterios": "Reconoce acciones asociadas al trabajo colaborativo.",
+    "retroalimentacion": "La respuesta correcta es A porque establecer objetivos comunes y coordinación fortalece el trabajo en equipo."
+  }
+]
