@@ -495,17 +495,13 @@ p.retroalimentacion ||
 function importarPreguntaBanco(id){
 
 
-
 const pregunta =
 
 obtenerPreguntaBanco(id);
 
 
 
-
-
 if(!pregunta){
-
 
 
 console.error(
@@ -517,14 +513,10 @@ id
 );
 
 
-
 return false;
 
 
-
 }
-
-
 
 
 
@@ -535,6 +527,126 @@ if(!Array.isArray(SPAE.preguntas)){
 
 
 SPAE.preguntas=[];
+
+
+}
+
+
+
+
+
+
+
+const existe =
+
+SPAE.preguntas.some(
+
+p =>
+
+p.contenido === pregunta.contenido
+
+);
+
+
+
+
+
+
+
+if(existe){
+
+
+console.warn(
+
+"Pregunta ya importada:",
+
+pregunta.id
+
+);
+
+
+return false;
+
+
+}
+
+
+
+
+
+
+
+const nuevaPregunta =
+
+normalizarPreguntaBanco(
+
+pregunta
+
+);
+
+
+
+
+
+
+
+SPAE.preguntas.push(
+
+nuevaPregunta
+
+);
+
+
+
+
+
+
+
+
+if(typeof actualizarBlueprint==="function"){
+
+
+actualizarBlueprint();
+
+
+}
+
+
+
+
+
+
+
+if(typeof guardarSPAE==="function"){
+
+
+guardarSPAE();
+
+
+}
+
+
+
+
+
+
+
+console.log(
+
+"Pregunta importada correctamente",
+
+nuevaPregunta
+
+);
+
+
+
+
+
+
+
+return true;
+
 
 
 }
