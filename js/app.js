@@ -3378,3 +3378,875 @@ return html;
 
 
 }
+/* =====================================================
+
+SPAE MVP
+
+BLOQUE 7/9
+
+MÓDULO 3
+
+BANCO DE PREGUNTAS
+
+===================================================== */
+
+
+
+/* =====================================================
+   RENDER PRINCIPAL
+===================================================== */
+
+
+function renderPreguntas(){
+
+
+return `
+
+
+<section class="card">
+
+
+<h2>
+
+3. Preguntas
+
+</h2>
+
+
+
+
+<label>
+
+Tipo de pregunta
+
+</label>
+
+
+
+<select id="tipoPregunta"
+onchange="cambiarTipoPregunta()">
+
+
+<option value="opcion_multiple">
+
+Opción múltiple
+
+</option>
+
+
+<option value="caso_analisis">
+
+Caso de análisis
+
+</option>
+
+
+<option value="caso_aplicacion">
+
+Caso de aplicación
+
+</option>
+
+
+<option value="abierta">
+
+Pregunta abierta
+
+</option>
+
+
+
+</select>
+
+
+
+<hr>
+
+
+<div id="editorPregunta">
+
+
+${renderEditorPregunta("opcion_multiple")}
+
+
+</div>
+
+
+
+<hr>
+
+
+
+<h3>
+
+Preguntas registradas
+
+</h3>
+
+
+
+<div id="listaPreguntas">
+
+
+${listarPreguntasSPAE()}
+
+
+</div>
+
+
+
+</section>
+
+
+`;
+
+}
+
+
+
+
+
+
+/* =====================================================
+   CAMBIO TIPO PREGUNTA
+===================================================== */
+
+
+function cambiarTipoPregunta(){
+
+
+
+const tipo =
+
+document.getElementById(
+"tipoPregunta"
+).value;
+
+
+
+
+document.getElementById(
+"editorPregunta"
+).innerHTML =
+
+renderEditorPregunta(tipo);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   EDITOR SEGÚN TIPO
+===================================================== */
+
+
+function renderEditorPregunta(tipo){
+
+
+
+let html = "";
+
+
+
+
+if(tipo==="opcion_multiple"){
+
+
+
+html += `
+
+
+<label>
+
+Enunciado
+
+</label>
+
+
+<textarea
+
+id="contenidoPregunta"
+
+rows="5"
+
+></textarea>
+
+
+
+<h3>
+
+Alternativas
+
+</h3>
+
+
+
+<label>
+
+A
+
+</label>
+
+
+<input id="altA">
+
+
+
+<label>
+
+B
+
+</label>
+
+
+<input id="altB">
+
+
+
+<label>
+
+C
+
+</label>
+
+
+<input id="altC">
+
+
+
+<label>
+
+D
+
+</label>
+
+
+<input id="altD">
+
+
+
+<label>
+
+Respuesta correcta
+
+</label>
+
+
+<select id="respuestaCorrecta">
+
+
+<option>A</option>
+
+<option>B</option>
+
+<option>C</option>
+
+<option>D</option>
+
+
+</select>
+
+
+
+`;
+
+
+
+}
+
+else{
+
+
+html += `
+
+
+<label>
+
+Contexto profesional
+
+</label>
+
+
+
+<textarea
+
+id="contextoPregunta"
+
+rows="6"
+
+></textarea>
+
+
+
+<label>
+
+Pregunta / instrucción
+
+</label>
+
+
+
+<textarea
+
+id="preguntaTexto"
+
+rows="4"
+
+></textarea>
+
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+html += `
+
+
+<label>
+
+Nivel cognitivo Bloom
+
+</label>
+
+
+
+<select id="nivelPregunta">
+
+
+<option value="RECORDAR">
+
+Recordar
+
+</option>
+
+
+<option value="COMPRENDER">
+
+Comprender
+
+</option>
+
+
+<option value="APLICAR">
+
+Aplicar
+
+</option>
+
+
+<option value="ANALIZAR">
+
+Analizar
+
+</option>
+
+
+<option value="EVALUAR">
+
+Evaluar
+
+</option>
+
+
+<option value="CREAR">
+
+Crear
+
+</option>
+
+
+</select>
+
+
+
+
+<label>
+
+Resultado de aprendizaje
+
+</label>
+
+
+
+<textarea
+
+id="resultadoPregunta"
+
+rows="3"
+
+></textarea>
+
+
+
+
+
+<label>
+
+Respuesta esperada
+
+</label>
+
+
+
+<textarea
+
+id="respuestaEsperada"
+
+rows="4"
+
+></textarea>
+
+
+
+
+
+<label>
+
+Criterios de evaluación
+
+</label>
+
+
+
+<textarea
+
+id="criteriosPregunta"
+
+rows="4"
+
+></textarea>
+
+
+
+
+
+<label>
+
+Retroalimentación
+
+</label>
+
+
+
+<textarea
+
+id="retroalimentacionPregunta"
+
+rows="4"
+
+></textarea>
+
+
+
+
+<br><br>
+
+
+
+<button
+
+class="primary-button"
+
+onclick="guardarPreguntaSPAE()"
+
+>
+
+Guardar pregunta
+
+</button>
+
+
+
+<div id="mensajePregunta">
+
+
+</div>
+
+
+
+`;
+
+
+
+return html;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   GUARDAR PREGUNTA
+===================================================== */
+
+
+function guardarPreguntaSPAE(){
+
+
+
+if(!Array.isArray(SPAE.preguntas)){
+
+
+SPAE.preguntas=[];
+
+
+}
+
+
+
+
+const tipo =
+
+document.getElementById(
+"tipoPregunta"
+).value;
+
+
+
+
+
+let pregunta = {
+
+
+id:Date.now().toString(),
+
+
+tipo:tipo,
+
+
+contenido:"",
+
+
+alternativas:[],
+
+
+respuestaCorrecta:"",
+
+
+contexto:"",
+
+
+pregunta:"",
+
+
+nivelCognitivo:
+document.getElementById(
+"nivelPregunta"
+).value,
+
+
+resultadoAprendizaje:
+document.getElementById(
+"resultadoPregunta"
+).value.trim(),
+
+
+respuestaEsperada:
+document.getElementById(
+"respuestaEsperada"
+).value.trim(),
+
+
+criterios:
+document.getElementById(
+"criteriosPregunta"
+).value.trim(),
+
+
+retroalimentacion:
+document.getElementById(
+"retroalimentacionPregunta"
+).value.trim()
+
+
+};
+
+
+
+
+
+
+
+if(tipo==="opcion_multiple"){
+
+
+pregunta.contenido =
+
+document.getElementById(
+"contenidoPregunta"
+).value.trim();
+
+
+
+pregunta.alternativas=[
+
+
+document.getElementById("altA").value.trim(),
+
+
+document.getElementById("altB").value.trim(),
+
+
+document.getElementById("altC").value.trim(),
+
+
+document.getElementById("altD").value.trim()
+
+
+];
+
+
+
+pregunta.respuestaCorrecta =
+
+document.getElementById(
+"respuestaCorrecta"
+).value;
+
+
+
+}
+
+else{
+
+
+pregunta.contexto =
+
+document.getElementById(
+"contextoPregunta"
+).value.trim();
+
+
+
+pregunta.pregunta =
+
+document.getElementById(
+"preguntaTexto"
+).value.trim();
+
+
+
+}
+
+
+
+
+
+
+
+SPAE.preguntas.push(pregunta);
+
+
+
+
+
+if(typeof actualizarBlueprint==="function"){
+
+
+actualizarBlueprint();
+
+
+}
+
+
+
+
+guardarSPAE();
+
+
+
+
+
+
+document.getElementById(
+"mensajePregunta"
+).innerHTML = `
+
+
+<p>
+
+Pregunta guardada correctamente.
+
+</p>
+
+
+`;
+
+
+
+
+
+document.getElementById(
+"listaPreguntas"
+).innerHTML =
+
+listarPreguntasSPAE();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   LISTADO
+===================================================== */
+
+
+function listarPreguntasSPAE(){
+
+
+
+if(!SPAE.preguntas ||
+
+SPAE.preguntas.length===0){
+
+
+
+return `
+
+
+<p>
+
+No existen preguntas registradas.
+
+</p>
+
+
+`;
+
+
+
+}
+
+
+
+
+
+return SPAE.preguntas.map(
+
+(p,index)=>{
+
+
+return `
+
+
+<div class="summary">
+
+
+<h4>
+
+Pregunta ${index+1}
+
+</h4>
+
+
+
+<p>
+
+<strong>
+
+Tipo:
+
+</strong>
+
+${p.tipo}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Nivel:
+
+</strong>
+
+${p.nivelCognitivo}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Resultado:
+
+</strong>
+
+${p.resultadoAprendizaje || "-"}
+
+</p>
+
+
+
+<p>
+
+<strong>
+
+Contenido:
+
+</strong>
+
+${
+
+p.contenido ||
+
+p.contexto ||
+
+"-"
+
+}
+
+</p>
+
+
+
+</div>
+
+
+
+`;
+
+
+
+}
+
+).join("");
+
+
+
+}
